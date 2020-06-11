@@ -1,28 +1,32 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <fragment>
+    <!-- NAVIGATION -->
+    <NavbarHeader></NavbarHeader>
+
+    <!-- VALUE SELECT SIDEBAR -->
+    <SidebarMenu></SidebarMenu>
+
+    <!-- MAIN PAGE CONTENT -->
+    <ContainerMain></ContainerMain>
+
+    <!-- FOOTER -->
+    <ContainerFooter></ContainerFooter>
+  </fragment>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+    import NavbarHeader from '@/components/NavbarHeader.vue'
+    import SidebarMenu from "@/components/SidebarMenu";
+    import ContainerMain from "@/components/ContainerMain";
+    import ContainerFooter from "@/components/ContainerFooter";
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+    export default {
+        name: 'App',
+        components: {
+            ContainerFooter,
+            SidebarMenu,
+            NavbarHeader,
+            ContainerMain
+        }
+    }
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>

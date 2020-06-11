@@ -1,0 +1,38 @@
+// Import materialize-css colors
+@import "~materialize-css/sass/components/color-variables";
+@import "~materialize-css/sass/components/color-classes";
+
+// 1. Colors
+// ==========================================================================
+
+$primary-color: color("green", "darken-4") !default;
+$primary-color-light: lighten($primary-color, 15%) !default;
+$primary-color-dark: darken($primary-color, 15%) !default;
+
+$secondary-color: color("deep-purple", "base") !default;
+$success-color: color("green", "base") !default;
+$error-color: color("red", "base") !default;
+$link-color: color("blue", "darken-1") !default;
+
+// 21. Footer
+// ==========================================================================
+
+$footer-font-color: #000 !default;
+$footer-bg-color: #fff !default;
+$footer-copyright-font-color: rgba(255,255,255,.8) !default;
+$footer-copyright-bg-color: $primary-color !default;
+
+
+// Now import the rest of materialize-css to apply the colour changes
+@import "~materialize-css/sass/materialize";
+
+// Other Rules
+// ==========================================================================
+
+.color-text {
+  color: $primary-color;
+}
+
+main {
+  background-color: color("grey", "lighten-2");
+}

@@ -1,0 +1,197 @@
+
+body {
+    font-family: Roboto, sans-serif;
+
+    /*sticky footer*/
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+
+    /* min width */
+    min-width:360px;
+    width: auto !important;
+    width:360px;
+}
+
+main {
+    flex: 1 0 auto;
+}
+
+nav {
+    position:fixed;
+    z-index: 10;
+}
+
+main {
+    padding-top: 65px;
+}
+
+@media only screen and (max-width:600px) {
+    main {
+        padding-top: 56px;
+    }
+}
+
+
+/* header, footer positioning (responsive) */
+
+main, footer {
+    padding-left: 300px;
+}
+
+@media only screen and (max-width : 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+
+@media only screen and (max-width: 992px) {
+    input {
+        height: 2rem !important;
+    }
+}
+
+/* Adjust container width */
+@media only screen and (min-width:993px) {
+    .container {
+        width: 80%;
+    }
+}
+@media only screen and (min-width:601px) {
+    .container {
+        width: 95%;
+    }
+}
+
+
+/* Sidenav */
+
+@media only screen and (min-width : 993px) {
+    .sidenav {
+        top: 65px;
+        height: 100%;
+        padding-bottom: 0;
+    }
+}
+
+a.sidenav-trigger {
+    position: absolute;
+    color: white;
+    font-size: 48px;
+    line-height: 1.0;
+    padding-left: 10px;
+}
+
+.sidenav li {
+    line-height: 1rem;
+    padding: 0 10px 0 10px;
+}
+
+.sidenav li:hover {
+    background-color:#eee;
+}
+
+/* fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
+.sidenav li:last-child {
+    height:65px;
+    background-color:#fff;
+}
+
+
+/* Sidenav elements */
+li.variable-row {
+    padding: 0 20px;
+    white-space: nowrap;
+}
+
+label.variable {
+    display:inline-block;
+    width: 50%;
+    color: rgba(0,0,0, 0.87);
+    padding:0;
+    margin:0;
+    line-height:3rem;
+}
+
+label.variable + input[type="number"]:not(.browser-default) {
+    width:50%;
+    display: inline-block;
+    padding:0;
+    margin:0;
+}
+
+.select-wrapper + label {
+    top:-10px;
+}
+
+/* Footer */
+div.logos {
+    text-align: center;
+}
+img.logos {
+    max-height:100px;
+}
+
+
+/* Helpers */
+.no-margin {
+    margin: 0;
+}
+
+.h1-label {
+    margin-bottom: -35px;
+}
+
+
+/* Element tweaks */
+
+@media only screen and (max-width:992px) {
+    #area-header {
+        font-size: 2.4rem;
+        margin: 3.2rem 0 2rem 0;
+    }
+}
+
+@media only screen and (max-width:600px) {
+    #area-header {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin: 1.5rem 0 1rem 0;
+    }
+}
+
+@media only screen and (max-width:600px) {
+    .card span.card-title {
+        font-size:16px;
+    }
+}
+
+.compare-buttons div {
+    text-align: right;
+    line-height: 45px;
+}
+
+.comment-card a.btn {
+    display: inline-block;
+    min-width: 40px;
+    min-height: 40px;
+}
+
+.comment-card,
+.comment-card div.row:last-child,
+.comment-form,
+.comment-form div.col:last-child p {
+    margin-bottom: 0;
+}
+
+.comment-header {
+    font-size: 2.4rem;
+}
+
+#modal-add-comment .btn {
+    width:100%;
+}
+
+.card .card-title {
+    font-weight: 400;
+}
