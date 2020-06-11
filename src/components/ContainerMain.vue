@@ -12,7 +12,7 @@
       <TabBar/>
 
       <!-- VISUALISATION CONTAINERS (TABBED) -->
-      <ContainerVisualisations/>
+      <TabVisualisations/>
 
       <div class="container col s12">
         <br><br>
@@ -34,11 +34,11 @@
     import AreaDisplayJumbotron from "@/components/AreaDisplayJumbotron";
     import ModalWelcome from "@/components/ModalWelcome";
     import TabBar from "@/components/TabBar";
-    import ContainerVisualisations from "@/components/ContainerVisualisations";
+    import TabVisualisations from "@/components/TabVisualisations";
 
     export default {
         name: "ContainerMain",
-        components: {ContainerVisualisations, TabBar, ModalWelcome, AreaDisplayJumbotron}
+        components: {TabVisualisations, TabBar, ModalWelcome, AreaDisplayJumbotron}
     }
 </script>
 
