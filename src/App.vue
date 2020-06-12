@@ -1,16 +1,20 @@
 <template>
   <fragment>
     <!-- NAVIGATION -->
-    <NavbarHeader></NavbarHeader>
+    <navbar-header
+        :website-title="meta.websiteTitle"
+        :website-url="meta.websiteUrl"
+        :page-title="meta.pageTitle">
+    </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <SidebarMenu></SidebarMenu>
+    <sidebar-menu></sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
-    <ContainerMain></ContainerMain>
+    <container-main></container-main>
 
     <!-- FOOTER -->
-    <ContainerFooter></ContainerFooter>
+    <container-footer></container-footer>
   </fragment>
 </template>
 
@@ -27,6 +31,15 @@
             SidebarMenu,
             NavbarHeader,
             ContainerMain
+        },
+        data: function() {
+            return {
+                meta: {
+                    pageTitle: 'TGRAINS <span class="hide-on-small-only">Crop Model</span>',
+                    websiteTitle: 'TGRAINS Website',
+                    websiteUrl: 'https://tgrains.com'
+                }
+            }
         }
     }
 </script>

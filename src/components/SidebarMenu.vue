@@ -3,7 +3,7 @@
     <!-- VALUE SELECT SIDEBAR -->
     <ul>
 
-      <LandAreaMenu/>
+      <land-area-menu/>
 
       <li>
         <div class="divider"></div>
@@ -14,7 +14,7 @@
         <span class="subheader">Crop Areas</span>
       </li>
 
-      <VariableRow/>
+      <variable-row/>
 
       <li>
         <div class="divider"></div>
@@ -25,7 +25,7 @@
         <span class="subheader">Livestock Areas</span>
       </li>
 
-      <VariableRow/>
+      <variable-row/>
 
       <li>
         <a class="waves-effect waves-light btn">Reset values</a>
