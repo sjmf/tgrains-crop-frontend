@@ -91,6 +91,11 @@ a.sidenav-trigger {
     background-color:#eee;
 }
 
+.sidenav a.btn {
+    margin: 10px 0;
+    width:  100%;
+}
+
 /* fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
 .sidenav li:last-child {
     height:65px;
