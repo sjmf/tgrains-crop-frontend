@@ -10,6 +10,7 @@ import 'materialize-css/dist/js/materialize.min.js';
 
 import 'typeface-roboto';
 import 'material-icons';
+import store from './store'
 
 require('@/css/app.scss');
 require('@/css/styles.css');
@@ -20,9 +21,13 @@ Vue.config.productionTip = false
 
 new Vue({
   render: h => h(App),
+
   mounted: function() {
     M.AutoInit();    // Initialise MaterializeCSS elements
   },
+
+  store,
+
   data: function() {
     return {
       title: 'T-GRAINS Crop Model',

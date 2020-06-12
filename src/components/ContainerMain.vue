@@ -2,28 +2,26 @@
   <main>
 
     <!-- MAIN PAGE CONTENT -->
-    <div class="row white no-margin">
-      <AreaDisplayJumbotron/>
-    </div>
+    <landscape-jumbotron/>
 
     <div class="row">
 
       <!-- TAB DECLARATIONS -->
-      <TabBar/>
+      <tab-bar/>
 
       <!-- VISUALISATION CONTAINERS (TABBED) -->
-      <TabVisualisations/>
+      <tab-visualisations/>
 
       <div class="container col s12">
         <br><br>
       </div>
 
       <!-- COMMENTS CONTAINER -->
-      <!-- Scaled-up feature. Currently disabled -->
-      <!-- <ContainerComments/> -->
+      <!-- Scaled-up version feature. Currently disabled -->
+      <!-- <container-comments/> -->
 
       <!-- Modal for welcome message -->
-      <ModalWelcome/>
+      <modal-welcome/>
 
     </div>
 
@@ -31,14 +29,14 @@
 </template>
 
 <script>
-    import AreaDisplayJumbotron from "@/components/AreaDisplayJumbotron";
+    import LandscapeJumbotron from "@/components/LandscapeJumbotron";
     import ModalWelcome from "@/components/ModalWelcome";
     import TabBar from "@/components/TabBar";
     import TabVisualisations from "@/components/TabVisualisations";
 
     export default {
         name: "ContainerMain",
-        components: {TabVisualisations, TabBar, ModalWelcome, AreaDisplayJumbotron}
+        components: {TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron}
     }
 </script>
 
