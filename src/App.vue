@@ -8,7 +8,7 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu></sidebar-menu>
+    <sidebar-menu @submitForm="submitAJAX($event)"></sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
     <container-main></container-main>
@@ -32,12 +32,30 @@
             NavbarHeader,
             ContainerMain
         },
-        data: function() {
+        data: () => {
             return {
                 meta: {
                     pageTitle: 'TGRAINS <span class="hide-on-small-only">Crop Model</span>',
                     websiteTitle: 'TGRAINS Website',
                     websiteUrl: 'https://tgrains.com'
+                },
+                data: {},
+                loading: false,
+                error: false
+            }
+        },
+        methods: {
+            async submitAJAX (data) {
+                try {
+                    const response = await this.$http.post(
+                        '/echo',
+                        {name: data}
+                    );
+                    console.log(response.data);
+                    this.data = response.data;
+                    return response.data;
+                } catch (err) {
+                    console.error(err);
                 }
             }
         }

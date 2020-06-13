@@ -46,10 +46,12 @@
       <li>
         <div class="row">
           <div class="col l6">
-            <a class="waves-effect waves-light btn red">Reset values</a>
+            <a class="waves-effect waves-light btn red"
+               v-on:click="resetToBAU">Reset values</a>
           </div>
           <div class="col l6">
-            <a class="waves-effect waves-light btn green">Submit</a>
+            <a class="waves-effect waves-light btn green"
+               v-on:click="submitForm">Submit</a>
           </div>
         </div>
       </li>
@@ -91,6 +93,14 @@
                     { name:"lamblowland", label: "Lowland Lamb",   value: 638, description: ""},
                     { name:"lambupland",  label: "Upland Lamb",    value: 0  , description: "", disabled: ""},
                 ]
+            }
+        },
+        methods: {
+            resetToBAU: function(){
+              console.warn("TODO: Implement state reset!");
+            },
+            submitForm: function(){
+                this.$emit('submitForm', [this.crops,this.livestock]);
             }
         }
     }

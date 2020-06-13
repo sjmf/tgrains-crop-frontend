@@ -1,16 +1,21 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import store from './store'
+
 import Fragment from 'vue-fragment'
 Vue.use(Fragment.Plugin)
 
+import axios from 'axios'
+import VueAxios from 'vue-axios'
+
+Vue.use(VueAxios, axios)
+
 import Material from 'materialize-css'
 import M from 'materialize-css'
-import 'materialize-css/dist/js/materialize.min.js';
 
 import 'typeface-roboto';
 import 'material-icons';
-import store from './store'
 
 require('@/css/app.scss');
 require('@/css/styles.css');
@@ -18,6 +23,7 @@ require('@/css/styles.css');
 Vue.use(Material);
 
 Vue.config.productionTip = false
+
 
 new Vue({
   render: h => h(App),
