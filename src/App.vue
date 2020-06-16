@@ -42,7 +42,8 @@
                     websiteUrl: 'https://tgrains.com'
                 },
                 loading: false,
-                error: false
+                error: false,
+                timer: null
             }
         },
         methods: {
