@@ -74,6 +74,8 @@
     import VizHealth from "@/components/VizHealth";
     import VizDebug from "@/components/VizDebug";
 
+    import store from "../store";
+
     export default {
         name: 'TabVisualisations',
         components: {VizDebug, VizHealth, VizPests, VizNutrition, VizProduction},
@@ -111,16 +113,16 @@
         },
         computed: {
             proddata () {
-                return [30, 10, -10, -4, 14]
+                return store.state.data.proddata;
             },
             pestdata () {
-                return [35, 21, -3, -5, 10, 17]
+                return store.state.data.pestdata;
             },
             nutridata () {
-                return [12, 8, 33, 12, 10, 10, 5, 5, 3, 2]
+                return store.state.data.nutridata;
             },
             healthdata () {
-                return [20, -26, 17, 40]
+                return store.state.data.healthdata;
             }
         }
     }

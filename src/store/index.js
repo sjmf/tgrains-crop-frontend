@@ -8,7 +8,12 @@ export default new Vuex.Store({
   state: {
     landscapeID: 101,
     landscapeName: 'East Anglia',
-    data: {},
+    data: {
+      proddata:   [30, 10, -10, -4, 14],
+      pestdata:   [35, 21, -3, -5, 10, 17],
+      nutridata:  [12, 8, 33, 12, 10, 10, 5, 5, 3, 2],
+      healthdata: [20, -26, 17, 40]
+    },
 
     crops: {
       wheat:       { name:"wheat",       label: "Wheat",          value: 800, description: ""},
@@ -32,7 +37,6 @@ export default new Vuex.Store({
       lamblowland: { name:"lamblowland", label: "Lowland Lamb",   value: 638, description: ""},
       lambupland:  { name:"lambupland",  label: "Upland Lamb",    value: 0  , description: "", disabled: ""},
     }
-
   },
   mutations: {
     setLandscapeId (state, id) {
