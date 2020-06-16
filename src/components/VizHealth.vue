@@ -1,17 +1,67 @@
-<template>
-  <div id="health-tab" class="col s12">
-    <div class="card panel">
-      <div class="card-content">
-        <span class="card-title">Health Risks</span>
-        <div class="chart-panel">
-          <canvas id="health-chart" height="100px" width="200px"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 <script>
+    import { Bar, mixins } from 'vue-chartjs'
+    const { reactiveProp } = mixins
+
     export default {
-        name: 'viz-health'
+        name: 'viz-health',
+        extends: Bar,
+        mixins: [reactiveProp],
+        props: {
+            chartData: Array,
+            chartColors: Object
+        },
+        data () {
+            return {
+                labels: ['Stroke', 'Cancer', 'Heart Disease', 'Diabetes'],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    legend: {
+                        display: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            scaleLabel: {
+                                display: true,
+                                labelString: '% change from BAU state',
+                                fontSize: 14
+                            },
+                            ticks: {
+                                suggestedMax: 50,
+                                suggestedMin: -50,
+                            },
+                            type: 'linear',
+                            gridLines: {
+                                zeroLineWidth: .5,
+                                lineWidth: 0
+                            }
+                        }],
+                        xAxes: [{
+                            position: 'top',
+                            offset: true,
+                            ticks: {
+                                beginAtZero: false,
+                                fontSize: 14
+                            },
+                            gridLines: {
+                                zeroLineWidth: .5,
+                                lineWidth: 0
+                            }
+                        }]
+                    }
+                }
+            }
+        },
+        mounted () {
+            this.renderChart({
+                labels: this.labels,
+                datasets: [{
+                    label: '% change from BAU state',
+                    backgroundColor: this.chartColors.translucent[3],
+                    borderWidth: 1,
+                    data: this.chartData //[20, -26, 17, 40]
+                }]
+            }, this.options)
+        }
     }
 </script>
