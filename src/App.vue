@@ -8,10 +8,10 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu @submitForm="submitAJAX($event)"></sidebar-menu>
+    <sidebar-menu @submitForm="doAJAX($event)" :loading="loading"></sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
-    <container-main></container-main>
+    <container-main :loading="loading"></container-main>
 
     <!-- FOOTER -->
     <container-footer></container-footer>
@@ -20,9 +20,11 @@
 
 <script>
     import NavbarHeader from '@/components/NavbarHeader.vue'
-    import SidebarMenu from "@/components/SidebarMenu";
-    import ContainerMain from "@/components/ContainerMain";
-    import ContainerFooter from "@/components/ContainerFooter";
+    import SidebarMenu from '@/components/SidebarMenu';
+    import ContainerMain from '@/components/ContainerMain';
+    import ContainerFooter from '@/components/ContainerFooter';
+
+    import http from '@/services/http'
 
     export default {
         name: 'App',
@@ -39,24 +41,20 @@
                     websiteTitle: 'TGRAINS Website',
                     websiteUrl: 'https://tgrains.com'
                 },
-                data: {},
                 loading: false,
                 error: false
             }
         },
         methods: {
-            async submitAJAX (data) {
+            async doAJAX() {
                 try {
-                    const response = await this.$http.post(
-                        '/echo',
-                        {name: data}
-                    );
-                    console.log(response.data);
-                    this.data = response.data;
-                    return response.data;
-                } catch (err) {
+                    this.timer = setTimeout(()=>{ this.loading = true; }, 100);
+                    await http.queryModel();
+                }
+                catch (err) {
                     console.error(err);
                 }
+                clearTimeout(this.timer);
             }
         }
     }

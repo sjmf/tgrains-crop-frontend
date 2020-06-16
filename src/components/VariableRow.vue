@@ -4,8 +4,8 @@
       {{label}}
     </label>
     <input v-bind:id="name"
+           v-model.number="innerValue"
            type="number"
-           v-bind:value="value"
            step=".5"
            v-bind:disabled="disabled">
   </li>
@@ -19,6 +19,42 @@
             label: String,
             value: Number,
             disabled: Boolean
+        },
+        computed: {
+            innerValue: {
+                get() {
+                    const {value} = this;
+                    return parseFloat(value)
+                },
+                set (_val) {
+                    //console.debug("Emit input ", _val, this.name)
+                    this.$emit('input', _val, this.name);
+                }
+            }
         }
     }
 </script>
+
+<style scoped>
+  /* Sidenav elements */
+  li.variable-row {
+    padding: 0 20px;
+    white-space: nowrap;
+  }
+
+  label.variable {
+    display:inline-block;
+    width: 50%;
+    color: rgba(0,0,0, 0.87);
+    padding:0;
+    margin:0;
+    line-height:3rem;
+  }
+
+  label.variable + input[type="number"]:not(.browser-default) {
+    width:50%;
+    display: inline-block;
+    padding:0;
+    margin:0;
+  }
+</style>

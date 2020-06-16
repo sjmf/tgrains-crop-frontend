@@ -18,8 +18,9 @@
         v-for="(item, index) in crops"
           v-bind:name="item.name"
           v-bind:label="item.label"
+          v-bind:key="index"
           v-bind:value="item.value"
-          v-bind:key="index"/>
+          @input="updateValue('crops', item.name, $event)"/>
 
       <li>
         <div class="divider"></div>
@@ -36,7 +37,8 @@
           v-bind:label="item.label"
           v-bind:value="item.value"
           v-bind:disabled="item.disabled"
-          v-bind:key="20+index"/>
+          v-bind:key="20+index"
+          @input="updateValue('livestock', item.name, $event)"/>
 
 
       <li>
@@ -46,12 +48,12 @@
       <li>
         <div class="row">
           <div class="col l6">
-            <a class="waves-effect waves-light btn red"
-               v-on:click="resetToBAU">Reset values</a>
+            <button class="waves-effect waves-light btn red"
+               v-on:click="resetToBAU">Reset values</button>
           </div>
           <div class="col l6">
-            <a class="waves-effect waves-light btn green"
-               v-on:click="submitForm">Submit</a>
+            <button class="waves-effect waves-light btn green"
+               v-on:click="submitForm">Submit</button>
           </div>
         </div>
       </li>
@@ -62,46 +64,72 @@
     </ul>
   </aside>
 </template>
+
 <script>
     import LandAreaMenu from "@/components/LandAreaMenu"
     import VariableRow from "@/components/VariableRow"
 
+    import store from '../store';
+
     export default {
         name: 'SidebarMenu',
         components: {LandAreaMenu, VariableRow},
-        data: function (){
-            return  {
-                crops: [
-                    { name:"wheat",       label: "Wheat",          value: 800, description: ""},
-                    { name:"barley",      label: "Barley",         value: 230, description: ""},
-                    { name:"oats",        label: "Oats",           value: 609, description: ""},
-                    { name:"osr",         label: "Oilseed Rape",   value: 170, description: ""},
-                    { name:"veg",         label: "Vegetables",     value: 853, description: ""},
-                    { name:"maize",       label: "Maize",          value: 679, description: ""},
-                    { name:"peas",        label: "Peas & Beans",   value: 563, description: ""},
-                    { name:"potatoes",    label: "Potatoes",       value: 903, description: ""},
-                    { name:"softfruit",   label: "Soft fruit",     value: 223, description: ""},
-                    { name:"topfruit",    label: "Top fruit",      value: 396, description: ""},
-                    { name:"sugarbeet",   label: "Sugar beet",     value: 514, description: ""},
-                ],
-                livestock: [
-                    { name:"dairy",       label: "Dairy Cattle",   value: 541, description: ""},
-                    { name:"beef",        label: "Beef Cattle",    value: 775, description: ""},
-                    { name:"chicken",     label: "Chicken",        value: 746, description: ""},
-                    { name:"pork",        label: "Pork",           value: 824, description: ""},
-                    { name:"eggs",        label: "Egg Production", value: 481, description: ""},
-                    { name:"lamblowland", label: "Lowland Lamb",   value: 638, description: ""},
-                    { name:"lambupland",  label: "Upland Lamb",    value: 0  , description: "", disabled: ""},
-                ]
-            }
+        props: {
+            loading: Boolean
         },
         methods: {
-            resetToBAU: function(){
+            resetToBAU() {
               console.warn("TODO: Implement state reset!");
             },
-            submitForm: function(){
+            submitForm() {
                 this.$emit('submitForm', [this.crops,this.livestock]);
+            },
+            updateValue: function (cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
+                this.$store.commit('setFormValue', {cropOrLivestock, name, value});
             }
+        },
+        computed: {
+            crops() { return store.state.crops },
+            livestock() { return store.state.livestock }
         }
     }
 </script>
+
+<style scoped>
+  /* Sidenav */
+  @media only screen and (min-width : 993px) {
+    .sidenav {
+      top: 65px;
+      height: 100%;
+      padding-bottom: 0;
+    }
+  }
+
+  a.sidenav-trigger {
+    position: absolute;
+    color: white;
+    font-size: 48px;
+    line-height: 1.0;
+    padding-left: 10px;
+  }
+
+  .sidenav li {
+    line-height: 1rem;
+    padding: 0 10px 0 10px;
+  }
+
+  .sidenav li:hover {
+    background-color:#eee;
+  }
+
+  .sidenav button.btn {
+    margin: 10px 0;
+    width:  100%;
+  }
+
+  /* fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
+  .sidenav li:last-child {
+    height:65px;
+    background-color:#fff;
+  }
+</style>

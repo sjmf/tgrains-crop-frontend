@@ -1,6 +1,8 @@
 <template>
   <main>
 
+    <loading-overlay :loading="loading"/>
+
     <!-- MAIN PAGE CONTENT -->
     <landscape-jumbotron/>
 
@@ -33,10 +35,15 @@
     import ModalWelcome from "@/components/ModalWelcome";
     import TabBar from "@/components/TabBar";
     import TabVisualisations from "@/components/TabVisualisations";
+    import LoadingOverlay from "@/components/LoadingOverlay";
 
     export default {
         name: "ContainerMain",
-        components: {TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron}
+        components: {LoadingOverlay, TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron},
+        props: {
+            loading: Boolean
+        }
     }
 </script>
+
 

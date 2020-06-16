@@ -14,6 +14,7 @@
     </div>
   </li>
 </template>
+
 <script>
     import store from "../store";
 
@@ -28,3 +29,9 @@
         }
     }
 </script>
+
+<style scoped>
+  .select-wrapper + label {
+    top:-10px;
+  }
+</style>
