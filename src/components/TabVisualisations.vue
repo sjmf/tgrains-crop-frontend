@@ -113,16 +113,16 @@
         },
         computed: {
             proddata () {
-                return store.state.data.proddata;
+                return store.state.data.production;
             },
             pestdata () {
-                return store.state.data.pestdata;
+                return store.state.data.pesticideImpacts;
             },
             nutridata () {
-                return store.state.data.nutridata;
+                return store.state.data.nutritionaldelivery;
             },
             healthdata () {
-                return store.state.data.healthdata;
+                return store.state.data.healthRiskFactors;
             }
         }
     }

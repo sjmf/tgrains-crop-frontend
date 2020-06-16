@@ -9,10 +9,10 @@ export default new Vuex.Store({
     landscapeID: 101,
     landscapeName: 'East Anglia',
     data: {
-      proddata:   [30, 10, -10, -4, 14],
-      pestdata:   [35, 21, -3, -5, 10, 17],
-      nutridata:  [12, 8, 33, 12, 10, 10, 5, 5, 3, 2],
-      healthdata: [20, -26, 17, 40]
+      production:           [30, 10, -10, -4, 14],
+      pesticideImpacts:     [35, 21, -3, -5, 10, 17],
+      nutritionaldelivery:  [12, 8, 33, 12, 10, 10, 5, 5, 3, 2],
+      healthRiskFactors:    [20, -26, 17, 40]
     },
 
     crops: {
