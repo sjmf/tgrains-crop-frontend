@@ -16,14 +16,28 @@
     </div>
 
     <div id="environment-tab" class="col s12">
+      <div class="card panel">
+        <div class="card-content">
+          <span class="card-title">Nutrient Leeching and Pesticides</span>
+          <div class="chart-panel">
+            <viz-pests
+                :chart-data="this.pestdata"
+                :chart-colors="colors"
+                :height="chartHeight"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="health-tab" class="col s12">
       <div class="row">
         <div class="col s12 m6">
           <div class="card panel">
             <div class="card-content">
-              <span class="card-title">Nutrient Leeching and Pesticides</span>
+              <span class="card-title">Health Risks</span>
               <div class="chart-panel">
-                <viz-pests
-                    :chart-data="this.pestdata"
+                <viz-health
+                    :chart-data="this.healthdata"
                     :chart-colors="colors"
                     :height="chartHeight"
                     :width="chartHeight"/>
@@ -47,20 +61,7 @@
           </div>
         </div>
       </div>
-    </div>
 
-    <div id="health-tab" class="col s12">
-      <div class="card panel">
-        <div class="card-content">
-          <span class="card-title">Health Risks</span>
-          <div class="chart-panel">
-            <viz-health
-                :chart-data="this.healthdata"
-                :chart-colors="colors"
-                :height="chartHeight"/>
-          </div>
-        </div>
-      </div>
     </div>
 
     <viz-debug/>
