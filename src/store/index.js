@@ -72,7 +72,7 @@ export default new Vuex.Store({
   },
   mutations: {
     setLandscapeId (state, id) {
-      if(id == 101 || id == 102) {
+      if(id === 101 || id === 102) {
         state.landscape_id = id
       }
     },

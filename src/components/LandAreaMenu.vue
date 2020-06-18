@@ -23,7 +23,7 @@
         methods: {
             onChange(event) {
                 console.log(event.target.value);
-                store.commit("setLandscapeId", event.target.value);
+                store.commit("setLandscapeId", parseInt(event.target.value));
                 store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
             }
         }
