@@ -49,13 +49,14 @@
         methods: {
             async doAJAX() {
                 try {
-                    this.timer = setTimeout(()=>{ this.loading = true; }, 100);
+                    this.timer = setTimeout(()=>{ this.loading = true }, 100);
                     await http.queryModel();
                 }
                 catch (err) {
                     console.error(err);
                 }
                 clearTimeout(this.timer);
+                this.loading = false;
             }
         }
     }
