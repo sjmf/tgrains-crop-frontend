@@ -7,18 +7,10 @@
         extends: Bar,
         mixins: [reactiveProp],
         props: {
-            chartData: Array,
-            chartColors: Object
+            chartData: Object
         },
         data() {
             return {
-                labels: [
-                    'Nitrogen leeching',
-                    'Ground Water',
-                    'Fish',
-                    'Birds',
-                    'Bees',
-                    'Beneficial Arthropods'],
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
@@ -59,15 +51,7 @@
             }
         },
         mounted() {
-            this.renderChart({
-                labels: this.labels,
-                datasets: [{
-                    label: '% change from BAU state',
-                    backgroundColor: this.chartColors.translucent[4],
-                    borderWidth: 1,
-                    data: this.chartData
-                }]
-            }, this.options)
+            this.renderChart(this.chartData, this.options)
         }
     }
 </script>

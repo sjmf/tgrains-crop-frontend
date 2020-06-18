@@ -7,17 +7,10 @@
       extends: Bar,
       mixins: [reactiveProp],
       props: {
-          chartData: Array,
-          chartColors: Object
+          chartData: Object
       },
       data () {
           return {
-              labels: [
-                  'GHG',
-                  'Nitrogen leeching',
-                  'Profit',
-                  'Calories'
-              ],
               options: {
                   responsive: true,
                   maintainAspectRatio: true,
@@ -58,15 +51,7 @@
           }
       },
       mounted () {
-          this.renderChart({
-              labels: this.labels,
-              datasets: [{
-                  label: '% change from BAU state',
-                  backgroundColor: this.chartColors.translucent[2],
-                  borderWidth: 1,
-                  data: this.chartData //[40, 20, -26, 17],
-              }]
-          }, this.options)
+          this.renderChart(this.chartData, this.options)
       }
   }
 </script>

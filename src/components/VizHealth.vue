@@ -7,12 +7,10 @@
         extends: Bar,
         mixins: [reactiveProp],
         props: {
-            chartData: Array,
-            chartColors: Object
+            chartData: Object
         },
         data () {
             return {
-                labels: ['Stroke', 'Cancer', 'Heart Disease', 'Diabetes'],
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
@@ -53,15 +51,7 @@
             }
         },
         mounted () {
-            this.renderChart({
-                labels: this.labels,
-                datasets: [{
-                    label: '% change from BAU state',
-                    backgroundColor: this.chartColors.translucent[3],
-                    borderWidth: 1,
-                    data: this.chartData //[20, -26, 17, 40]
-                }]
-            }, this.options)
+            this.renderChart(this.chartData, this.options)
         }
     }
 </script>

@@ -6,8 +6,7 @@
           <span class="card-title">Change from "Business-as-usual"</span>
           <div class="chart-panel">
             <viz-production
-                :chart-data="this.proddata"
-                :chart-colors="colors"
+                :chart-data="proddata"
                 :height="chartHeight"/>
             <!-- -->
           </div>
@@ -21,8 +20,7 @@
           <span class="card-title">Nutrient Leeching and Pesticides</span>
           <div class="chart-panel">
             <viz-pests
-                :chart-data="this.pestdata"
-                :chart-colors="colors"
+                :chart-data="pestdata"
                 :height="chartHeight"/>
           </div>
         </div>
@@ -37,8 +35,7 @@
               <span class="card-title">Health Risks</span>
               <div class="chart-panel">
                 <viz-health
-                    :chart-data="this.healthdata"
-                    :chart-colors="colors"
+                    :chart-data="healthdata"
                     :height="chartHeight"
                     :width="chartHeight"/>
               </div>
@@ -52,8 +49,7 @@
               <span class="card-title">Nutritional delivery</span>
               <div class="chart-panel">
                 <viz-nutrition
-                    :chart-data="this.nutridata"
-                    :chart-colors="colors"
+                    :chart-data="nutridata"
                     :height="chartHeight"
                     :width="chartHeight"/>
               </div>
@@ -83,7 +79,7 @@
             return {
                 chartHeight: 200,
                 // Use TAB10 colors for charts to aid colorblind use
-                colors: {
+                chartColors: {
                     opaque: [
                         'rgba( 31, 119, 180, 1)',  // blue
                         'rgba(255, 127,  14, 1)',  // orange
@@ -113,16 +109,76 @@
         },
         computed: {
             proddata () {
-                return store.state.data.production;
+               return {
+                    labels: [
+                        'GHG',
+                        'Nitrogen leeching',
+                        'Profit',
+                        'Calories'
+                    ],
+                    datasets: [{
+                        label: '% change from BAU state',
+                        backgroundColor: this.chartColors.translucent[2],
+                        borderWidth: 1,
+                        data: store.state.data.production
+                    }]
+                }
             },
             pestdata () {
-                return store.state.data.pesticideImpacts;
+                return {
+                    labels: [
+                        'Nitrogen leeching',
+                        'Ground Water',
+                        'Fish',
+                        'Birds',
+                        'Bees',
+                        'Beneficial Arthropods'
+                    ],
+                    datasets: [{
+                        label: '% change from BAU state',
+                        backgroundColor: this.chartColors.translucent[4],
+                        borderWidth: 1,
+                        data: store.state.data.pesticideImpacts
+                    }]
+                }
             },
             nutridata () {
-                return store.state.data.nutritionaldelivery;
+                return {
+                    labels: [
+                        'Whole Grains',
+                        'Tubers',
+                        'Vegetables',
+                        'Fruits',
+                        'Dairy',
+                        'Added Fats',
+                        'Saturated Fats',
+                        'Sugars',
+                        'Animal Protein',
+                        'Vegetable Protein'
+                    ],
+                    type: 'outlabeledPie',
+                    datasets: [{
+                        backgroundColor: this.chartColors.opaque,
+                        borderWidth: 1,
+                        data: store.state.data.nutritionaldelivery
+                    }]
+                }
             },
             healthdata () {
-                return store.state.data.healthRiskFactors;
+                return {
+                    labels: [
+                        'Stroke',
+                        'Cancer',
+                        'Heart Disease',
+                        'Diabetes'
+                    ],
+                    datasets: [{
+                        label: '% change from BAU state',
+                        backgroundColor: this.chartColors.translucent[3],
+                        borderWidth: 1,
+                        data: store.state.data.healthRiskFactors
+                    }]
+                }
             }
         }
     }

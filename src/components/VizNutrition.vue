@@ -9,15 +9,11 @@
         extends: OutlabeledPie,
         mixins: [reactiveProp],
         props: {
-            chartData: Array,
-            chartColors: Object,
+            chartData: Object,
             plugins: Array
         },
         data() {
             return {
-                labels: [
-                    'Whole Grains', 'Tubers', 'Vegetables', 'Fruits', 'Dairy',
-                    'Added Fats', 'Saturated Fats', 'Sugars', 'Animal Protein', 'Vegetable Protein'],
                 options: {
                     responsive: true,           // Changed as responsive doesn't work properly with tabs (display:none)
                     maintainAspectRatio: true,  //
@@ -53,15 +49,7 @@
         },
         mounted() {
 
-            this.renderChart({
-                labels: this.labels,
-                type: 'outlabeledPie',
-                datasets: [{
-                    backgroundColor: this.chartColors.opaque,
-                    borderWidth: 1,
-                    data: this.chartData
-                }]
-            }, this.options)
+            this.renderChart(this.chartData, this.options)
         }
     }
 </script>
