@@ -3,12 +3,12 @@
 # Check guides at https://confluence.atlassian.com/x/14UWN for more examples.
 # Only use spaces to indent your .yml configuration.
 # -----
-# You can specify a custom docker image from Docker Hub as your build environment.
-image: node:10.15.3
 
 pipelines:
   default:
     - step:
+        name: "Build dist tarball"
+        image: node:10.15.3
         caches:
           - node
         script: # Modify the commands below to build your repository.
@@ -21,3 +21,16 @@ pipelines:
               BITBUCKET_APP_PASSWORD: ${BITBUCKET_APP_PASSWORD}
               FILENAME: 'dist.tgz'
               REPOSITORY: ${BITBUCKET_REPO_SLUG}
+    - step:
+        name: "Build docker image"
+        image: atlassian/default-image:2
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - export FRONTEND_IMAGE_NAME=${DOCKER_HUB_USERNAME}/tgrains-cropmodel-frontend
+          - docker build -t $FRONTEND_IMAGE_NAME:$BITBUCKET_COMMIT -t $FRONTEND_IMAGE_NAME:latest ./
+          - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+          - docker push $FRONTEND_IMAGE_NAME
+
