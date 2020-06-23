@@ -5,7 +5,6 @@
         <p class="h1-label hide-on-small-only">Selected area:</p>
         <h1 id="area-header">{{landscapeName}}</h1>
         <!--        <p class="hide-on-large-only">Swipe right or click the menu button to show options!</p> -->
-        <div class="divider"></div>
       </div>
     </div>
   </div>
