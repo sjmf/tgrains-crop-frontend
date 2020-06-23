@@ -48,13 +48,9 @@
         },
         methods: {
             async doAJAX() {
-                try {
-                    this.timer = setTimeout(()=>{ this.loading = true }, 100);
-                    await http.queryModel();
-                }
-                catch (err) {
-                    console.error(err);
-                }
+                // Timeout prevents flash of loader in case of fast response
+                this.timer = setTimeout(()=>{ this.loading = true }, 100);
+                await http.queryModel();
                 clearTimeout(this.timer);
                 this.loading = false;
             }

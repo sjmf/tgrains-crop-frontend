@@ -79,7 +79,8 @@
         },
         methods: {
             resetToBAU() {
-              console.warn("TODO: Implement state reset!");
+                store.commit("closeError")
+                console.warn("TODO: Implement state reset!")
             },
             submitForm() {
                 this.$emit('submitForm', [this.crops,this.livestock]);
