@@ -68,7 +68,13 @@ export default new Vuex.Store({
       cow:         { name:"cow",        label: "Beef Cattle",    value: 775, description: ""},
       chickens:    { name:"chicken",     label: "Chicken",        value: 746, description: ""},
       sheep:       { name:"sheep",       label: "Lowland Lamb",   value: 638, description: ""},
-    }
+    },
+
+    // Error handling:
+    error: {
+      message: "",
+      visible: false
+    },
   },
   mutations: {
     setLandscapeId (state, id) {
@@ -103,6 +109,13 @@ export default new Vuex.Store({
       data['healthRiskFactors'] = new_data['healthRiskFactors']
 
       state.data = data;
+    },
+    raiseError(state, message) {
+      state.error['message'] = message
+      state.error['visible'] = true
+    },
+    closeError(state){
+      state.error['visible'] = false
     }
   },
   actions: {

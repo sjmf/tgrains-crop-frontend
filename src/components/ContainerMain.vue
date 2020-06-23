@@ -8,6 +8,9 @@
 
     <div class="row">
 
+      <!-- ERROR BANNER -->
+      <error-message/>
+
       <!-- TAB DECLARATIONS -->
       <tab-bar/>
 
@@ -26,7 +29,6 @@
       <modal-welcome/>
 
     </div>
-
   </main>
 </template>
 
@@ -36,10 +38,11 @@
     import TabBar from "@/components/TabBar";
     import TabVisualisations from "@/components/TabVisualisations";
     import LoadingOverlay from "@/components/LoadingOverlay";
+    import ErrorMessage from "@/components/ErrorMessage";
 
     export default {
         name: "ContainerMain",
-        components: {LoadingOverlay, TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron},
+        components: {ErrorMessage, LoadingOverlay, TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron},
         props: {
             loading: Boolean
         }
