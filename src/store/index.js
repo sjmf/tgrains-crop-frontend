@@ -3,6 +3,12 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+import VuexPersistence from 'vuex-persist'
+const vuexLocal = new VuexPersistence({
+  storage: window.localStorage
+})
+
+
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   state: {
@@ -79,6 +85,9 @@ export default new Vuex.Store({
       message: "",
       visible: false
     },
+
+    // Accepted terms
+    acceptedTerms: false
   },
   mutations: {
     setLandscapeId (state, id) {
@@ -111,12 +120,17 @@ export default new Vuex.Store({
     },
     closeError(state){
       state.error['visible'] = false
+    },
+    acceptTerms(state) {
+      state.acceptedTerms = true
     }
   },
   actions: {
   },
   modules: {
-  }
+  },
+  plugins: [vuexLocal.plugin]
+
 })
 
 /* Helper function */
