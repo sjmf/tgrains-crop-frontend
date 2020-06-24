@@ -8,6 +8,9 @@ module.exports = {
             },
             '/echo': {
                 target:  'http://localhost:8000',
+            },
+            '/status': {
+                target:  'http://localhost:8000',
             }
         }
     }
