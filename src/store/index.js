@@ -51,6 +51,10 @@ export default new Vuex.Store({
         livestock: { }
       }
     },
+    bau: {
+      101: { },
+      102: { }
+    },
     // TODO: Remove these temporary BAU values when model updated
     crops: {
       wheat:       { name:"wheat",       label: "Wheat",          value: 800, description: ""},
@@ -95,20 +99,11 @@ export default new Vuex.Store({
     setDataFromQuery (state, new_data) {
 
       // TODO: Compute percentage change against the BAU state
-      let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], healthRiskFactors: []}
-
-      data['production'] = [
-        new_data['greenhouseGasEmissions'],
-        new_data['nLeach'],
-        new_data['profit'],
-        new_data['production']
-      ]
-
-      data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
-      data['nutritionaldelivery'] = new_data['nutritionaldelivery']
-      data['healthRiskFactors'] = new_data['healthRiskFactors']
-
-      state.data = data;
+      let data = formatData(new_data)
+      state.data = data
+    },
+    setBAUState (state, new_data) {
+      state.bau[new_data['myUniqueLandscapeID']] = formatData(new_data);
     },
     raiseError(state, message) {
       state.error['message'] = message
@@ -123,3 +118,22 @@ export default new Vuex.Store({
   modules: {
   }
 })
+
+/* Helper function */
+/* Format data returned by model for graphing */
+function formatData(new_data){
+  let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], healthRiskFactors: []}
+
+  data['production'] = [
+    new_data['greenhouseGasEmissions'],
+    new_data['nLeach'],
+    new_data['profit'],
+    new_data['production']
+  ]
+
+  data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
+  data['nutritionaldelivery'] = new_data['nutritionaldelivery']
+  data['healthRiskFactors'] = new_data['healthRiskFactors']
+
+  return new_data
+}

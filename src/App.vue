@@ -8,7 +8,7 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu @submitForm="doAJAX($event)" :loading="loading"></sidebar-menu>
+    <sidebar-menu @submitForm="doAJAX($event)" @checkBAULoaded="loadBAUState()" :loading="loading"></sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
     <container-main :loading="loading"></container-main>
@@ -25,6 +25,7 @@
     import ContainerFooter from '@/components/ContainerFooter';
 
     import http from '@/services/http'
+    import store from "@/store";
 
     export default {
         name: 'App',
@@ -53,8 +54,18 @@
                 await http.queryModel();
                 clearTimeout(this.timer);
                 this.loading = false;
+            },
+            async loadBAUState() {
+                // If BAU object is empty, go get it
+                let bau = store.state.bau[store.state.landscape_id]
+                if(Object.keys(bau).length === 0 && bau.constructor === Object) {
+                    console.log('Loading BAU state');
+                    await http.loadBAUState()
+                }
             }
+        },
+        mounted() {
+          this.loadBAUState()
         }
     }
-
 </script>

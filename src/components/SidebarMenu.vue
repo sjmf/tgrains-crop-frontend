@@ -3,7 +3,7 @@
     <!-- VALUE SELECT SIDEBAR -->
     <ul>
 
-      <land-area-menu/>
+      <land-area-menu v-on="$listeners"/>
 
       <li>
         <div class="divider"></div>
