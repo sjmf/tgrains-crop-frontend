@@ -30,6 +30,14 @@ new Vue({
 
   mounted: function() {
     M.AutoInit();    // Initialise MaterializeCSS elements
+
+    // Open modal if terms not accepted.
+    // This lives here because we can't re-import Materialize in components
+    if(store.state.acceptedTerms === false) {
+      let elem = document.querySelector("#modal-welcome")
+      console.log(elem)
+      M.Modal.getInstance(elem).open();
+    }
   },
 
   store,

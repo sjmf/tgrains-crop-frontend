@@ -1,5 +1,5 @@
 <template>
-  <div id="modal-welcome" class="modal open">
+  <div id="modal-welcome" class="modal">
     <div class="modal-content">
       <h4>Welcome to the TGRAINS Crop Model!</h4>
       <p>Thanks for visiting! On this web-page, you can interact with a mathematical model of crop
@@ -20,13 +20,23 @@
     </div>
     <div class="modal-footer">
       <a href="javascript:history.back()" class="waves-effect waves-red btn-flat">Go Back</a>
-      <a href="#!" class="modal-close green darken-2 white-text waves-effect waves-green btn-flat">Agree and
+      <a href="#!" @click="acceptTerms" class="modal-close green darken-2 white-text waves-effect waves-green btn-flat">Agree and
         Continue</a>
     </div>
   </div>
 </template>
 <script>
+    import store from '../store';
+
     export default {
-        name: 'ModalWelcome'
+        name: 'ModalWelcome',
+        methods: {
+          acceptTerms() {
+              store.commit('acceptTerms')
+          }
+        },
+        mounted() {
+            console.info("Welcome modal mounted, acceptedTerms is:", store.state.acceptedTerms)
+        }
     }
 </script>
