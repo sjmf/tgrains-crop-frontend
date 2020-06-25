@@ -22,9 +22,9 @@ export default {
         try {
             // Prepare data from store for the API
             const data = { 'landscape_id': store.state.landscape_id }
-            const crops = Object.values(store.state.crops)
+            const crops = Object.values(store.state.landscapes[store.state.landscape_id].crops)
                     .map(item => ({[item.name]: item.value}))
-            const livestock = Object.values(store.state.livestock)
+            const livestock = Object.values(store.state.landscapes[store.state.landscape_id].livestock)
                     .map(item => ({[item.name]: item.value}))
             Object.assign(data, ...crops, ...livestock)
 
@@ -85,6 +85,26 @@ export default {
         catch (err) {
             console.log(err)
             throw "Loading business-as-usual state failed."
+        }
+    },
+
+    /***
+     * Load strings for crop identifiers
+     * @returns {Promise<void>}
+     */
+    async loadStrings () {
+        try {
+            const data = {params: {'landscape_id': store.state.landscape_id}}
+
+            let response = await axios.get('/strings', data);
+            response = await this.checkCeleryStatus(response);
+
+            store.commit("setStrings", response.data.result)
+            console.info("Crop & Livestock Strings Loaded!")
+        }
+        catch (err) {
+            console.log(err)
+            throw "Loading strings failed."
         }
     }
 }

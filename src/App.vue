@@ -50,7 +50,7 @@
         methods: {
             async doAJAX() {
                 // Timeout prevents flash of loader in case of fast response
-                this.timer = setTimeout(()=>{ this.loading = true }, 100);
+                this.timer = setTimeout(()=>{ this.loading = true }, 200);
                 await http.queryModel();
                 clearTimeout(this.timer);
                 this.loading = false;
@@ -59,13 +59,18 @@
                 // If BAU object is empty, go get it
                 let bau = store.state.bau[store.state.landscape_id]
                 if(Object.keys(bau).length === 0 && bau.constructor === Object) {
-                    console.log('Loading BAU state');
+                    console.log('Loading Strings and BAU state');
+                    await http.loadStrings()
                     await http.loadBAUState()
+
+                    // Populate Landscapes in Vuex using strings and cropAreas from BAU state
+                    store.commit('populate')
                 }
             }
         },
         mounted() {
-          this.loadBAUState()
+            store.commit('closeError')
+            this.loadBAUState()
         }
     }
 </script>

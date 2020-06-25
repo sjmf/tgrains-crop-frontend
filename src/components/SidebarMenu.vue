@@ -80,7 +80,7 @@
         methods: {
             resetToBAU() {
                 store.commit("closeError")
-                console.warn("TODO: Implement state reset!")
+                store.commit("resetToBAU")
             },
             submitForm() {
                 this.$emit('submitForm', [this.crops,this.livestock]);
@@ -90,8 +90,12 @@
             }
         },
         computed: {
-            crops() { return store.state.crops },
-            livestock() { return store.state.livestock }
+            crops() {
+                return store.state.landscapes[store.state.landscape_id].crops
+            },
+            livestock() {
+                return store.state.landscapes[store.state.landscape_id].livestock
+            }
         }
     }
 </script>

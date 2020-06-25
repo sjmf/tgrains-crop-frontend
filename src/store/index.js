@@ -16,68 +16,69 @@ export default new Vuex.Store({
     landscapeName: 'East Anglia',
     data: {
       // GHG, Nitrogen leeching, Profit, Calories
-      production:           [30, 10, -10, -4],
+      production:           [0,0,0,0],             //[30, 10, -10, -4],
       // Nitrogen leeching, ground water, fish, birds, bees, beneficial arthropods
-      pesticideImpacts:     [35, 21, -3, -5, 10, 17],
+      pesticideImpacts:     [0,0,0,0,0,0],         //[35, 21, -3, -5, 10, 17],
       // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
-      nutritionaldelivery:  [12, 8, 33, 12, 10, 10, 5, 5, 3, 2],
+      nutritionaldelivery:  [0,0,0,0,0,0,0,0,0,0], //[12, 8, 33, 12, 10, 10, 5, 5, 3, 2],
       // Stroke, Cancer, Heart Disease, Diabetes
-      healthRiskFactors:    [20, -26, 17, 40]
+      healthRiskFactors:    [0,0,0,0]              //[20, -26, 17, 40]
     },
+    /***
+     * Each landscape [101],[102] contains a crop and livestock data object {crops: {}, livestock: {}}
+     * Within these, we store the string identifier (name), a string label (visually presented to the user),
+     * the value of the crop, and an optional description.
+     *    E.g.: peas: { name:"peas", label: "Peas & Beans", value: 800, description: ""}
+     * These are bound to the VariableRow components in the SidebarMenu, and are used when submitting a Model query.
+     */
     landscapes: {
-      // TODO: Implement loading of appropriate BAU state on area change
-      //       (or just load the BAU state from the server?)
-      101: {
-        crops: {
-          wheat:       { name:"wheat",       label: "Wheat",          value: 800, description: ""},
-          barley:      { name:"barley",      label: "Barley",         value: 230, description: ""},
-          oats:        { name:"oats",        label: "Oats",           value: 609, description: ""},
-          osr:         { name:"osr",         label: "Oilseed Rape",   value: 170, description: ""},
-          veg:         { name:"veg",         label: "Vegetables",     value: 853, description: ""},
-          maize:       { name:"maize",       label: "Maize",          value: 679, description: ""},
-          peas:        { name:"peas",        label: "Peas & Beans",   value: 563, description: ""},
-          potatoes:    { name:"potatoes",    label: "Potatoes",       value: 903, description: ""},
-          softfruit:   { name:"softfruit",   label: "Soft fruit",     value: 223, description: ""},
-          topfruit:    { name:"topfruit",    label: "Top fruit",      value: 396, description: ""},
-          sugarbeet:   { name:"sugarbeet",   label: "Sugar beet",     value: 514, description: ""},
-        },
-        livestock: {
-          dairy:       { name:"dairy",       label: "Dairy Cattle",   value: 541, description: ""},
-          beef:        { name:"beef",        label: "Beef Cattle",    value: 775, description: ""},
-          chicken:     { name:"chicken",     label: "Chicken",        value: 746, description: ""},
-          pork:        { name:"pork",        label: "Pork",           value: 824, description: ""},
-          eggs:        { name:"eggs",        label: "Egg Production", value: 481, description: ""},
-          lamblowland: { name:"lamblowland", label: "Lowland Lamb",   value: 638, description: ""},
-          lambupland:  { name:"lambupland",  label: "Upland Lamb",    value: 0  , description: "", disabled: ""},
-        }
-      },
-      102: {
-        //TODO: Define BAU state for South Wales
-        crops: { },
-        livestock: { }
-      }
+      101: { },
+      102: { }
     },
     bau: {
       101: { },
       102: { }
     },
-    // TODO: Remove these temporary BAU values when model updated
-    crops: {
-      wheat:       { name:"wheat",       label: "Wheat",          value: 800, description: ""},
-      barley:      { name:"barley",      label: "Barley",         value: 230, description: ""},
-      oats:        { name:"oats",        label: "Oats",           value: 609, description: ""},
-      oilseed:     { name:"oilseed",     label: "Oilseed Rape",   value: 170, description: ""},
-      vegetables:  { name:"vegetables",  label: "Vegetables",     value: 853, description: ""},
-      livestock:   { name:"livestock",   label: "Livestock Grazing", value: 853, description: ""},
-      maize:       { name:"maize",       label: "Maize",          value: 679, description: ""},
-      beans:       { name:"beans",       label: "Beans",          value: 563, description: ""},
-      potatoes:    { name:"potatoes",    label: "Potatoes",       value: 903, description: ""},
-      onion:       { name:"onion",       label: "Onion",          value: 514, description: ""},
+    strings: {
+      101: { },
+      102: { }
     },
-    livestock: {
-      cow:         { name:"cow",        label: "Beef Cattle",    value: 775, description: ""},
-      chickens:    { name:"chicken",     label: "Chicken",        value: 746, description: ""},
-      sheep:       { name:"sheep",       label: "Lowland Lamb",   value: 638, description: ""},
+
+    dictionary: {
+      wheat:       "Wheat",
+      barley:      "Barley",
+      oats:        "Oats",
+      osr:         "Oilseed Rape",
+      veg:         "Vegetables",
+      livestock:   "Livestock",
+      maize:       "Maize",
+      peas:        "Peas & Beans",
+      potatoes:    "Potatoes",
+      softfruit:   "Soft fruit",
+      topfruit:    "Top fruit",
+      sugarbeet:   "Sugar beet",
+      dairy:       "Dairy Cattle",
+      beef:        "Beef Cattle",
+      cow:         "Beef Cattle",
+      chicken:     "Chicken",
+      pork:        "Pork",
+      eggs:        "Egg Production",
+      lamblowland: "Lowland Lamb",
+      lambupland:  "Upland Lamb",
+
+      // Prototype-specific strings
+      oilseed:     "Oilseed Rape",
+      vegetables:  "Vegetables",
+      beans:       "Peas & Beans",
+      onion:       "Onions",
+      chickens:    "Chicken",
+      sheep:       "Lowland Lamb",
+    },
+
+    descriptions: {
+      lamblowland: "Lowland Lamb grazing livestock",
+      lambupland: "Upland Lamb grazing livestock. Found predominantly in the Brecon Beacons.",
+      wheat: "Test description for Wheat"
     },
 
     // Error handling:
@@ -103,16 +104,72 @@ export default new Vuex.Store({
     },
     setFormValue (state, {cropOrLivestock, name, value}) {
       //console.debug({cropOrLivestock, name, value})
-      state[cropOrLivestock][name].value = value;
+      state.landscapes[state.landscape_id][cropOrLivestock][name].value = value;
     },
     setDataFromQuery (state, new_data) {
-
-      // TODO: Compute percentage change against the BAU state
-      let data = formatData(new_data)
-      state.data = data
+      // Compute percentage change against the BAU state and store
+      state.data = difference(formatData(state.bau[state.landscape_id]), formatData(new_data))
     },
     setBAUState (state, new_data) {
-      state.bau[new_data['myUniqueLandscapeID']] = formatData(new_data);
+      state.bau[new_data['myUniqueLandscapeID']] = new_data;
+    },
+    setStrings (state, strings) {
+      state.strings[state.landscape_id] = strings
+    },
+    populate (state) {
+      // Check we have strings and BAU state, or raise error.
+      if(!('crops' in state.strings[state.landscape_id]))
+        throw Error("Cannot populate model variables: strings not loaded.")
+      if(!('production' in state.bau[state.landscape_id]))
+        throw Error("Cannot populate model variables: BAU state missing")
+
+      let landscape = {'crops': {}, 'livestock': {}}
+      const crops = state.strings[state.landscape_id].crops
+      const livestock = state.strings[state.landscape_id].livestock
+      const cropAreas = state.bau[state.landscape_id]["cropAreas"]
+      const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]  // TODO: This is likely to change to livestockAreas!
+
+      for(let i in crops) {
+        landscape['crops'][crops[i]] = {
+          'name':  crops[i],
+          'label': state.dictionary[crops[i]],
+          'value': cropAreas[i],
+          'description': (crops[i] in state.descriptions ? state.descriptions[crops[i]] : "")
+        }
+      }
+
+      for(let i in livestock) {
+        landscape['livestock'][livestock[i]] = {
+          'name':  livestock[i],
+          'label': state.dictionary[livestock[i]],
+          'value': livestockNumbers[i],  // TODO: This is likely to change to livestockAreas!
+          'description': (livestock[i] in state.descriptions ? state.descriptions[livestock[i]] : "")
+        }
+      }
+
+      console.info("Landscape populated for ID", state.landscape_id)
+      state.landscapes[state.landscape_id] = landscape
+    },
+    resetToBAU(state) {
+      // Reset graphs
+      let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
+      for(let i in fields) {
+        i = fields[i]
+        state.data[i] = Array.from(state.data[i], ()=>0)
+      }
+      state.data['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
+
+      // Reset landscape values (sidebar data values)
+      const crops = state.strings[state.landscape_id].crops
+      const livestock = state.strings[state.landscape_id].livestock
+      const cropAreas = state.bau[state.landscape_id]["cropAreas"]
+      const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]
+
+      for(let i in crops)
+        state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
+      for(let i in livestock)
+        state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockNumbers[i]
+
     },
     raiseError(state, message) {
       state.error['message'] = message
@@ -134,6 +191,26 @@ export default new Vuex.Store({
 })
 
 /* Helper function */
+/* Perform percentage difference on old data and new data */
+function difference(bau, new_data) {
+  let data = {
+    production: [],
+    pesticideImpacts: [],
+    nutritionaldelivery: new_data['nutritionaldelivery'], // Nutri pie chart not diffed
+    healthRiskFactors: []
+  }
+
+  let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
+  for (let i in fields) {
+    i = fields[i]
+    for (let j in bau[i]) {
+      //console.debug(i, j, new_data[i][j], bau[i][j])
+      data[i][j] = ((new_data[i][j] / bau[i][j]) * 100) - 100
+    }
+  }
+  return data
+}
+
 /* Format data returned by model for graphing */
 function formatData(new_data){
   let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], healthRiskFactors: []}
@@ -149,5 +226,5 @@ function formatData(new_data){
   data['nutritionaldelivery'] = new_data['nutritionaldelivery']
   data['healthRiskFactors'] = new_data['healthRiskFactors']
 
-  return new_data
+  return data
 }
