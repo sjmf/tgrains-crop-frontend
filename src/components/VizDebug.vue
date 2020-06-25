@@ -18,7 +18,7 @@
         name: 'viz-debug',
         computed: {
           debug() {
-              return store.state.data;
+              return store.state;
           }
         }
     }
