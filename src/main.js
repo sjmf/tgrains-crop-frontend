@@ -35,7 +35,6 @@ new Vue({
     // This lives here because we can't re-import Materialize in components
     if(store.state.acceptedTerms === false) {
       let elem = document.querySelector("#modal-welcome")
-      console.log(elem)
       M.Modal.getInstance(elem).open();
     }
   },
