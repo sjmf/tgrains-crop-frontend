@@ -78,7 +78,6 @@ export default new Vuex.Store({
     descriptions: {
       lamblowland: "Lowland Lamb grazing livestock",
       lambupland: "Upland Lamb grazing livestock. Found predominantly in the Brecon Beacons.",
-      wheat: "Test description for Wheat"
     },
 
     // Error handling:
@@ -129,33 +128,34 @@ export default new Vuex.Store({
       const cropAreas = state.bau[state.landscape_id]["cropAreas"]
       const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]  // TODO: This is likely to change to livestockAreas!
 
-      for(let i in crops) {
-        landscape['crops'][crops[i]] = {
-          'name':  crops[i],
-          'label': state.dictionary[crops[i]],
+      for(let i=0; i < crops.length; i++) {
+        let c = crops[i]
+        landscape['crops'][c] = {
+          'name':  c,
+          'label': state.dictionary[c],
           'value': cropAreas[i],
-          'description': (crops[i] in state.descriptions ? state.descriptions[crops[i]] : "")
+          'description': (c in state.descriptions ? state.descriptions[c] : "")
         }
       }
 
-      for(let i in livestock) {
-        landscape['livestock'][livestock[i]] = {
-          'name':  livestock[i],
-          'label': state.dictionary[livestock[i]],
+      for(let i=0; i < livestock.length; i++) {
+        let l = livestock[i]
+        landscape['livestock'][l] = {
+          'name':  l,
+          'label': state.dictionary[l],
           'value': livestockNumbers[i],  // TODO: This is likely to change to livestockAreas!
-          'description': (livestock[i] in state.descriptions ? state.descriptions[livestock[i]] : "")
+          'description': (l in state.descriptions ? state.descriptions[l] : "")
         }
       }
 
       console.info("Landscape populated for ID", state.landscape_id)
       state.landscapes[state.landscape_id] = landscape
     },
-    resetToBAU(state) {
+    resetToBAU (state) {
       // Reset graphs
       let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
-      for(let i in fields) {
-        i = fields[i]
-        state.data[i] = Array.from(state.data[i], ()=>0)
+      for (let i of fields) {
+        state.data[i] = Array.from(state.data[i], () => 0)
       }
       state.data['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
 
@@ -165,9 +165,9 @@ export default new Vuex.Store({
       const cropAreas = state.bau[state.landscape_id]["cropAreas"]
       const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]
 
-      for(let i in crops)
+      for (let i=0; i < crops.length; i++)
         state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
-      for(let i in livestock)
+      for (let i=0; i < livestock.length; i++)
         state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockNumbers[i]
 
     },
@@ -201,9 +201,8 @@ function difference(bau, new_data) {
   }
 
   let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
-  for (let i in fields) {
-    i = fields[i]
-    for (let j in bau[i]) {
+  for (let i of fields) {
+    for (let j=0; j < bau[i].length; j++) {
       //console.debug(i, j, new_data[i][j], bau[i][j])
       data[i][j] = ((new_data[i][j] / bau[i][j]) * 100) - 100
     }
