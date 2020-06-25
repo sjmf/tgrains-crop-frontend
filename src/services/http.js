@@ -3,12 +3,21 @@ import axios from "axios"
 import store from '../store';
 
 export default {
-    sleep(sleepMs){
+    /***
+     * Helper function: use Promise to implement sleep()
+     * @param sleepMs
+     * @returns {Promise<unknown>}
+     */
+    sleep (sleepMs) {
         let res;
         setTimeout(function(){ res(); }, sleepMs);
         return new Promise(function(a){ res = a; });
     },
 
+    /***
+     * POST a query to the model, await response, and commit result to the Vuex store
+     * @returns {Promise<boolean>}
+     */
     async queryModel () {
         try {
             // Prepare data from store for the API
@@ -32,6 +41,12 @@ export default {
             return false
         }
     },
+
+    /***
+     * Check the /status/<job_id> route for the return from the Celery task queue
+     * @param response
+     * @returns {Promise<*>}
+     */
     async checkCeleryStatus (response) {
         const pathname = new URL(response.request.responseURL).pathname
         console.log(pathname)
@@ -52,20 +67,24 @@ export default {
             throw "The crop model is in state '" + response.data.state + "'"
         }
     },
+
+    /***
+     * Load the Business As Usual state into the Vuex store
+     * @returns {Promise<void>}
+     */
     async loadBAUState () {
-        try{
+        try {
             const data = {params: {'landscape_id': store.state.landscape_id}}
 
             let response = await axios.get('/model', data);
-            console.log(response);
-
             response = await this.checkCeleryStatus(response);
+
             store.commit("setBAUState", response.data.result)
             console.info("BAU State Loaded!")
         }
         catch (err) {
             console.log(err)
+            throw "Loading business-as-usual state failed."
         }
-
     }
 }
