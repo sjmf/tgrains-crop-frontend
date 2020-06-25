@@ -6,7 +6,7 @@ module.exports = {
                 //changeOrigin: true
                 //port: 8000,
             },
-            '/echo': {
+            '/strings': {
                 target:  'http://localhost:8000',
             },
             '/status': {
