@@ -1,13 +1,15 @@
 <template>
-  <li class="variable-row">
+  <li class="variable-row"
+      v-bind:class='{tooltipped: description !== ""}'
+      data-position="right"
+      v-bind:data-tooltip="description">
     <label v-bind:for="name" class="variable">
       {{label}}
     </label>
     <input v-bind:id="name"
            v-model.number="innerValue"
            type="number"
-           step=".5"
-           v-bind:disabled="disabled">
+           step=".5">
   </li>
 </template>
 
@@ -18,7 +20,7 @@
             name: String,
             label: String,
             value: Number,
-            disabled: Boolean
+            description: String
         },
         computed: {
             innerValue: {

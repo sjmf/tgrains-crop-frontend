@@ -12,6 +12,7 @@
       <!-- CROP AREAS -->
       <li id="crop-area-menu">
         <span class="subheader">Crop Areas</span>
+        <div><span class="label">All areas are measured in hectares (<strong>ha</strong>).</span></div>
       </li>
 
       <variable-row
@@ -20,6 +21,7 @@
           v-bind:label="item.label"
           v-bind:key="index"
           v-bind:value="item.value"
+          v-bind:description="item.description"
           @input="updateValue('crops', item.name, $event)"/>
 
       <li>
@@ -35,9 +37,9 @@
           v-for="(item, index) in livestock"
           v-bind:name="item.name"
           v-bind:label="item.label"
-          v-bind:value="item.value"
-          v-bind:disabled="item.disabled"
           v-bind:key="20+index"
+          v-bind:value="item.value"
+          v-bind:description="item.description"
           @input="updateValue('livestock', item.name, $event)"/>
 
 
@@ -136,5 +138,10 @@
   .sidenav li:last-child {
     height:65px;
     background-color:#fff;
+  }
+
+  span.label {
+    font-size: 0.8rem;
+    color: #9e9e9e;
   }
 </style>
