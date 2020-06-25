@@ -63,7 +63,7 @@ export default {
         if(response.data.state === 'SUCCESS') {
             return response
         } else {
-            console.err(response.data);
+            console.error(response.data);
             throw "The crop model is in state '" + response.data.state + "'"
         }
     },
