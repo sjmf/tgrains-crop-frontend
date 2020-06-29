@@ -120,7 +120,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[2],
                         borderWidth: 1,
-                        data: store.state.data.production
+                        data: store.state.data[store.state.landscape_id].production
                     }]
                 }
             },
@@ -138,7 +138,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[4],
                         borderWidth: 1,
-                        data: store.state.data.pesticideImpacts
+                        data: store.state.data[store.state.landscape_id].pesticideImpacts
                     }]
                 }
             },
@@ -160,7 +160,7 @@
                     datasets: [{
                         backgroundColor: this.chartColors.opaque,
                         borderWidth: 1,
-                        data: store.state.data.nutritionaldelivery
+                        data: store.state.data[store.state.landscape_id].nutritionaldelivery
                     }]
                 }
             },
@@ -176,7 +176,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[3],
                         borderWidth: 1,
-                        data: store.state.data.healthRiskFactors
+                        data: store.state.data[store.state.landscape_id].healthRiskFactors
                     }]
                 }
             }

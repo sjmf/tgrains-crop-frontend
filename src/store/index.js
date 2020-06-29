@@ -22,14 +22,17 @@ export default new Vuex.Store({
 
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
-      // GHG, Nitrogen leeching, Profit, Calories
-      production:           [0,0,0,0],
-      // Nitrogen leeching, ground water, fish, birds, bees, beneficial arthropods
-      pesticideImpacts:     [0,0,0,0,0,0],
-      // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
-      nutritionaldelivery:  [0,0,0,0,0,0,0,0,0,0],
-      // Stroke, Cancer, Heart Disease, Diabetes
-      healthRiskFactors:    [0,0,0,0]
+      101: {
+        // GHG, Nitrogen leeching, Profit, Calories
+        production:           [0,0,0,0],
+        // Nitrogen leeching, ground water, fish, birds, bees, beneficial arthropods
+        pesticideImpacts:     [0,0,0,0,0,0],
+        // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
+        nutritionaldelivery:  [0,0,0,0,0,0,0,0,0,0],
+        // Stroke, Cancer, Heart Disease, Diabetes
+        healthRiskFactors:    [0,0,0,0]
+      },
+      102: {}
     },
 
     /*
@@ -159,7 +162,7 @@ export default new Vuex.Store({
      */
     setDataFromQuery (state, new_data) {
       // Compute percentage change against the BAU state and store
-      state.data = difference(formatData(state.bau[state.landscape_id]), formatData(new_data))
+      state.data[state.landscape_id] = difference(formatData(state.bau[state.landscape_id]), formatData(new_data))
     },
 
     /***
@@ -172,7 +175,7 @@ export default new Vuex.Store({
      */
     setBAUState (state, new_data) {
       state.bau[new_data['myUniqueLandscapeID']] = new_data
-      state.data.nutritionaldelivery = new_data['nutritionaldelivery']
+      state.data[state.landscape_id].nutritionaldelivery = new_data['nutritionaldelivery']
     },
 
     /***
@@ -239,12 +242,12 @@ export default new Vuex.Store({
      * @param state
      */
     resetToBAU (state) {
-      // Reset graphs
+      // Reset graphs to '0'
       let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
       for (let i of fields) {
-        state.data[i] = Array.from(state.data[i], () => 0)
+        state.data[state.landscape_id][i] = Array.from(state.data[state.landscape_id][i], () => 0)
       }
-      state.data['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
+      state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
 
       // Reset landscape values (sidebar data values)
       const crops = state.strings[state.landscape_id].crops
