@@ -17,5 +17,20 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <script type="text/javascript">
+        // https://stackoverflow.com/a/21712356/1681205
+        // documentMode property exists in IE versions 5-11.
+        if (window.document.documentMode) {
+            //render unsupported message
+            document.write(
+                "<style type='text/css'>body{font-family: Arial, sans-serif; text-align:center}</style>" +
+                "<div><h1>We're really sorry!</h1>" +
+                "<p>The TGRAINS crop model is not supported in Internet Explorer.</p>" +
+                "<p>Please use a more modern browser, such as <a href='https://firefox.com'>Firefox</a>, " +
+                "<a href='https://google.com/chrome'>Chrome</a>, or <a href='https://www.microsoft.com/edge'>Microsoft Edge</a>.</p>" +
+                "</div>"
+            );
+        }
+    </script>
   </body>
 </html>
