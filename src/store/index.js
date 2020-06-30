@@ -60,6 +60,12 @@ export default new Vuex.Store({
       102: { }
     },
 
+    // Name strings for landscapes
+    landscapeNames: {
+      101: "East Anglia",
+      102: "South Wales"
+    },
+
     // Dictionary used to look up labels from the variable name returned by the model
     dictionary: {
       wheat:       "Wheat",
