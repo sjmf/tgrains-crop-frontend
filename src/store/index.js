@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 // Persist all data in the browser's local storage
 import VuexPersistence from 'vuex-persist'
+// eslint-disable-next-line no-unused-vars
 const vuexLocal = new VuexPersistence({
   storage: window.localStorage
 })
@@ -168,14 +169,18 @@ export default new Vuex.Store({
     /***
      * Set the Business-as-usual (BAU) state in the store. The BAU state is kept
      * in the same format/structure that it was returned in from the model.
-     * We also need to set the nutritionaldelivery data in the graphs when this
-     * loads, as it is the only data which is not percentage-differenced.
+     * Also sets the graph data to 0, with the exception of nutritionalDelivery,
+     * as it is the only data which is not percentage-differenced.
      * @param state
      * @param new_data
      */
     setBAUState (state, new_data) {
       state.bau[new_data['myUniqueLandscapeID']] = new_data
       state.data[state.landscape_id].nutritionaldelivery = new_data['nutritionaldelivery']
+
+      for (let i of ['production', 'pesticideImpacts', 'healthRiskFactors']) {
+        state.data[state.landscape_id][i] = Array.from(new_data[i], () => 0)
+      }
     },
 
     /***
@@ -243,9 +248,8 @@ export default new Vuex.Store({
      */
     resetToBAU (state) {
       // Reset graphs to '0'
-      let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
-      for (let i of fields) {
-        state.data[state.landscape_id][i] = Array.from(state.data[state.landscape_id][i], () => 0)
+      for (let i of ['production', 'pesticideImpacts', 'healthRiskFactors']) {
+        state.data[state.landscape_id][i] = Array.from(state.bau[state.landscape_id][i], () => 0)
       }
       state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
 
