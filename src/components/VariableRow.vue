@@ -3,13 +3,22 @@
       v-bind:class='{tooltipped: description !== ""}'
       data-position="right"
       v-bind:data-tooltip="description">
+
     <label v-bind:for="name" class="variable">
       {{label}}
     </label>
+
     <input v-bind:id="name"
            v-model.number="innerValue"
            type="number"
-           step=".5">
+           step=".5"
+           min="0"
+           v-bind:class="{ invalid: errorMessage }"
+           @change="$emit('change', $event)">
+
+    <div v-if="errorMessage" class="error label">
+        <span>{{ errorMessage }}</span>
+    </div>
   </li>
 </template>
 
@@ -19,8 +28,9 @@
         props: {
             name: String,
             label: String,
-            value: Number,
-            description: String
+            value: [String, Number], // Blank inputs return String. Validation should catch this
+            description: String,
+            errorMessage: [String, Boolean]
         },
         computed: {
             innerValue: {
@@ -29,7 +39,6 @@
                     return parseFloat(value)
                 },
                 set (_val) {
-                    //console.debug("Emit input ", _val, this.name)
                     this.$emit('input', _val, this.name);
                 }
             }
@@ -58,5 +67,16 @@
     display: inline-block;
     padding:0;
     margin:0;
+  }
+
+  div.error.label {
+    color: #F44336;
+    text-align:right;
+    font-size: .85rem;
+    margin: 2px 0;
+  }
+
+  .invalid {
+    color: #F44336;
   }
 </style>

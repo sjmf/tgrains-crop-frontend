@@ -10,7 +10,7 @@
       </li>
 
       <!-- CROP AREAS -->
-      <li id="crop-area-menu">
+      <li id="crop-area-menu" class="no-hover">
         <span class="subheader">Crop Areas</span>
         <div><span class="label">All areas are measured in hectares (<strong>ha</strong>).</span></div>
       </li>
@@ -22,14 +22,16 @@
           v-bind:key="index"
           v-bind:value="item.value"
           v-bind:description="item.description"
-          @input="updateValue('crops', item.name, $event)"/>
+          v-bind:error-message="errors[index]"
+          @input="updateValue('crops', item.name, $event)"
+          @change="validateForm($event)"/>
 
       <li>
         <div class="divider"></div>
       </li>
 
       <!-- LIVESTOCK NUMBERS -->
-      <li id="livestock-areas-menu">
+      <li id="livestock-areas-menu" class="no-hover">
         <span class="subheader">Livestock Areas</span>
       </li>
 
@@ -37,17 +39,19 @@
           v-for="(item, index) in livestock"
           v-bind:name="item.name"
           v-bind:label="item.label"
-          v-bind:key="20+index"
+          v-bind:key="crops.length+index"
           v-bind:value="item.value"
           v-bind:description="item.description"
-          @input="updateValue('livestock', item.name, $event)"/>
+          v-bind:error-message="errors[index]"
+          @input="updateValue('livestock', item.name, $event)"
+          @change="validateForm()"/>
 
 
       <li>
         <div class="divider"></div>
       </li>
 
-      <li>
+      <li class="no-hover">
         <div class="row">
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
@@ -55,7 +59,8 @@
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
-               v-on:click="submitForm">Submit</button>
+                    v-bind:disabled="submitDisabled"
+                    v-on:click="submitForm">Submit</button>
           </div>
         </div>
       </li>
@@ -79,16 +84,75 @@
         props: {
             loading: Boolean
         },
+        data() {
+            return {
+                submitDisabled: false,
+                errors: {}
+            }
+        },
         methods: {
+            /***
+             * Reset the sidebar to BAU state, which also triggers a change in the backing data store and graphs
+             */
             resetToBAU() {
                 store.commit("closeError")
                 store.commit("resetToBAU")
+                this.$nextTick(() => this.validateForm())
             },
+
+            /**
+             * Emit an event requesting submission of the form via AJAX.
+             */
             submitForm() {
                 this.$emit('submitForm', [this.crops,this.livestock]);
             },
-            updateValue: function (cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
+
+            /**
+             * Commit the changed form value to the backing data store.
+             * Because we're using Vuex, we do a $store.commit rather than using v-model.
+             * @param cropOrLivestock
+             * @param name
+             * @param value
+             */
+            updateValue(cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
                 this.$store.commit('setFormValue', {cropOrLivestock, name, value});
+            },
+
+            /**
+             * Run form validation on each item in the sidebar backing data, checking for errors.
+             * If errors are found, we disable the 'submit' button to prevent kicking off a model job with bad data.
+             */
+            validateForm() {
+                // To make properties reactive, we need to use Vue.set (this.$set is an alias)
+                // See https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
+                for (let item in this.crops) {
+                    if (Object.prototype.hasOwnProperty.call(this.crops, item)) {
+                        this.$set(this.errors, item, this.checkErrors(this.crops[item].value))
+                    }
+                }
+
+                for (let item in this.livestock) {
+                    if (Object.prototype.hasOwnProperty.call(this.livestock, item)) {
+                        this.$set(this.errors, item, this.checkErrors(this.livestock[item].value))
+                    }
+                }
+
+                // If any item in the errors array isn't false, then disable submit button
+                this.submitDisabled = !Object.entries(this.errors).every(x=>x[1]===false)
+            },
+
+            /**
+             * Checks if the value is NaN, an empty String, or a negative number. All undesirable things!
+             * @param value
+             * @returns {string|boolean}
+             */
+            checkErrors(value) {
+                if(isNaN(value) || value === "")
+                    return 'Enter a number'
+                if(value < 0)
+                    return 'Value cannot be negative!'
+
+                return false
             }
         },
         computed: {
@@ -98,6 +162,22 @@
             livestock() {
                 return store.state.landscapes[store.state.landscape_id].livestock
             }
+        },
+        watch: {
+            // We want to validate the form again if the backing data changes.
+            // This happens when the Landscape Area is changed.
+            crops() {
+                this.$nextTick(() => this.validateForm())
+            },
+            livestock() {
+                this.$nextTick(() => this.validateForm())
+            }
+        },
+        mounted() {
+            // On first load, the Ajax request for form data won't have yet returned,
+            // so don't validate the form unless there's data in the store!
+            if(Object.keys(this.errors).length > 0)
+                this.validateForm()
         }
     }
 </script>
@@ -127,6 +207,10 @@
 
   .sidenav li:hover {
     background-color:#eee;
+  }
+
+  .sidenav li.no-hover:hover {
+    background-color:#fff;
   }
 
   .sidenav button.btn {
