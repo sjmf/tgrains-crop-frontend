@@ -51,6 +51,15 @@
         <div class="divider"></div>
       </li>
 
+      <area-progress
+        v-bind:current-crop-area="total_area"
+        v-bind:max-crop-area="max_area"
+        @area-valid="handleAreaValidity($event)"/>
+
+      <li>
+        <div class="divider"></div>
+      </li>
+
       <li class="no-hover">
         <div class="row">
           <div class="col l6">
@@ -75,18 +84,20 @@
 <script>
     import LandAreaMenu from "@/components/LandAreaMenu"
     import VariableRow from "@/components/VariableRow"
+    import AreaProgress from "@/components/AreaProgress";
 
     import store from '../store';
 
     export default {
         name: 'SidebarMenu',
-        components: {LandAreaMenu, VariableRow},
+        components: {AreaProgress, LandAreaMenu, VariableRow},
         props: {
             loading: Boolean
         },
         data() {
             return {
                 submitDisabled: false,
+                cropAreaExceeded: false,
                 errors: {}
             }
         },
@@ -137,8 +148,11 @@
                     }
                 }
 
-                // If any item in the errors array isn't false, then disable submit button
-                this.submitDisabled = !Object.entries(this.errors).every(x=>x[1]===false)
+                // If the crop area exceeds the MaxCropArea, or
+                // if any item in the errors array is NOT false,
+                // then disable the submit button
+                this.submitDisabled =  this.cropAreaExceeded
+                                       || !Object.entries(this.errors).every(x=>x[1]===false)
             },
 
             /**
@@ -153,6 +167,15 @@
                     return 'Value cannot be negative!'
 
                 return false
+            },
+
+            /**
+             * Has the AreaProgress component told us the area is valid?
+             * @param condition: Boolean
+             */
+            handleAreaValidity(condition) {
+                this.cropAreaExceeded = !condition
+                this.validateForm()
             }
         },
         computed: {
@@ -161,6 +184,21 @@
             },
             livestock() {
                 return store.state.landscapes[store.state.landscape_id].livestock
+            },
+            total_area() {
+                // Handle not-yet-loaded data edge-case
+                if(Object.keys(store.state.landscapes[store.state.landscape_id]).length === 0)
+                    return 0
+
+                let total = Object.values(store.state.landscapes[store.state.landscape_id].crops)
+                                .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0) +
+                            Object.values(store.state.landscapes[store.state.landscape_id].livestock)
+                                .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
+
+                return total
+            },
+            max_area() {
+                return store.state.bau[store.state.landscape_id].maxCropArea || 0  // Zero if undefined
             }
         },
         watch: {
