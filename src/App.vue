@@ -8,7 +8,7 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu @submitForm="doAJAX($event)" @checkBAULoaded="loadBAUState()" :loading="loading"></sidebar-menu>
+    <sidebar-menu @submitForm="doAJAX($event)" @checkBAULoaded="loadBAUState()"></sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
     <container-main :loading="loading"></container-main>

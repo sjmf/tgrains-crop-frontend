@@ -1,5 +1,8 @@
 <template>
   <aside id="slide-out" class="sidenav sidenav-fixed">
+
+    <loading-overlay :loading="loading"/>
+
     <!-- VALUE SELECT SIDEBAR -->
     <ul>
 
@@ -85,15 +88,13 @@
     import LandAreaMenu from "@/components/LandAreaMenu"
     import VariableRow from "@/components/VariableRow"
     import AreaProgress from "@/components/AreaProgress";
+    import LoadingOverlay from "@/components/LoadingOverlay";
 
     import store from '../store';
 
     export default {
         name: 'SidebarMenu',
-        components: {AreaProgress, LandAreaMenu, VariableRow},
-        props: {
-            loading: Boolean
-        },
+        components: {AreaProgress, LandAreaMenu, VariableRow, LoadingOverlay},
         data() {
             return {
                 submitDisabled: false,
@@ -179,26 +180,51 @@
             }
         },
         computed: {
+            /**
+             * Shorthand for Vuex property store.state.landscapes[store.state.landscape_id].crops
+             * @returns {Object, undefined}
+             */
             crops() {
                 return store.state.landscapes[store.state.landscape_id].crops
             },
+
+            /**
+             * Shorthand for Vuex property store.state.landscapes[store.state.landscape_id].livestock
+             * @returns {Object, undefined}
+             */
             livestock() {
                 return store.state.landscapes[store.state.landscape_id].livestock
             },
+
+            /**
+             * Calculate the total area used by crops within the current state
+             * @returns {Number}
+             */
             total_area() {
                 // Handle not-yet-loaded data edge-case
                 if(Object.keys(store.state.landscapes[store.state.landscape_id]).length === 0)
                     return 0
 
-                let total = Object.values(store.state.landscapes[store.state.landscape_id].crops)
+                return Object.values(store.state.landscapes[store.state.landscape_id].crops)
                                 .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0) +
                             Object.values(store.state.landscapes[store.state.landscape_id].livestock)
                                 .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
-
-                return total
             },
+
+            /**
+             * Return the MaxCropArea, or zero if this is undefined (i.e. BAU not loaded)
+             * @returns {Number}
+             */
             max_area() {
                 return store.state.bau[store.state.landscape_id].maxCropArea || 0  // Zero if undefined
+            },
+
+            /**
+             * Whether to display the LoadingOverlay (i.e. if BAU state not yet loaded)
+             * @returns {boolean}
+             */
+            loading() {
+                return Object.keys(store.state.bau[store.state.landscape_id]).length === 0
             }
         },
         watch: {
@@ -265,5 +291,8 @@
   span.label {
     font-size: 0.8rem;
     color: #9e9e9e;
+  }
+  button {
+    z-index:0
   }
 </style>

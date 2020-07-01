@@ -40,8 +40,6 @@
     justify-content: center;
 
     z-index: 1;
-
-    padding-left: 300px;
   }
   .loading .preloader-wrapper {
     opacity: 1.0;
