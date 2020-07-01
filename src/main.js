@@ -31,10 +31,11 @@ new Vue({
   mounted: function() {
     // M.AutoInit();
     // Initialise MaterializeCSS elements individually instead:
-    M.Tabs.init(document.querySelector(".tabs"), {
+    M.Tabs.init(document.querySelectorAll(".tabs"), {
       // swipeable: true
     });
-    M.Modal.init(document.querySelector("#modal-welcome"));
+    M.Modal.init(document.querySelector("#modal-welcome"))
+    M.Sidenav.init(document.querySelectorAll('.sidenav'))
 
     // Open modal if terms not accepted.
     // This lives here because we can't re-import Materialize in components
