@@ -176,7 +176,7 @@
         mounted() {
             // On first load, the Ajax request for form data won't have yet returned,
             // so don't validate the form unless there's data in the store!
-            if(Object.keys(this.errors).length > 0)
+            if(Object.keys(store.state.bau[store.state.landscape_id]).length > 0)
                 this.validateForm()
         }
     }
