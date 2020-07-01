@@ -4,7 +4,7 @@
     <!-- LAND AREA SELECT -->
     <span class="subheader">Land Area</span>
 
-    <div class="select-wrapper">
+    <div class="select-wrapper" id="landscape-input">
       <select id="area" @change="onChange($event)"> <!-- class="browser-default"-->
         <!--<option value="" disabled selected>Choose your area</option>-->
         <option value="101">{{this.strings[101]}}</option>
@@ -36,20 +36,12 @@
             }
         },
         mounted() {
-            this.$nextTick(()=>{
-              // Set select value to landscape ID on load
-              const elem = document.querySelector('.select-wrapper > input')
-              elem.value = this.strings[store.state.landscape_id];
-
-              let event;
-              if (typeof(Event) === 'function') {
-                  event = new Event('change');
-              } else {  // for IE11
-                  event = document.createEvent('Event');
-                  event.initEvent('change', true, true);
-              }
-              elem.dispatchEvent(event);
-            })
+            // Set select value to landscape ID on load
+            const elem = document.querySelector('#landscape-input')
+            const select = elem.querySelector('select')
+            elem.querySelector("option[value='102']").selected = true
+            select.value = store.state.landscape_id
+            elem.value = this.strings[store.state.landscape_id];
         }
     }
 </script>

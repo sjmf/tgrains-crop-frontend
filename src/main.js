@@ -29,7 +29,12 @@ new Vue({
   render: h => h(App),
 
   mounted: function() {
-    M.AutoInit();    // Initialise MaterializeCSS elements
+    // M.AutoInit();
+    // Initialise MaterializeCSS elements individually instead:
+    M.Tabs.init(document.querySelector(".tabs"), {
+      // swipeable: true
+    });
+    M.Modal.init(document.querySelector("#modal-welcome"));
 
     // Open modal if terms not accepted.
     // This lives here because we can't re-import Materialize in components
@@ -37,6 +42,14 @@ new Vue({
       let elem = document.querySelector("#modal-welcome")
       M.Modal.getInstance(elem).open();
     }
+
+    this.$nextTick(()=> {
+        // We need to initialise the dropdown on $nextTick because
+        //  its value (101/102) is loaded from vuex in LandAreaMenu
+        M.FormSelect.init(
+            document.querySelector('#landscape-input select')
+        )
+    })
   },
 
   store,
