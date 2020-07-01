@@ -108,6 +108,9 @@
             }
         },
         computed: {
+            basedata() {
+                return store.state.data[store.state.landscape_id]
+            },
             proddata () {
                return {
                     labels: [
@@ -120,7 +123,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[2],
                         borderWidth: 1,
-                        data: store.state.data[store.state.landscape_id].production
+                        data: this.basedata.production
                     }]
                 }
             },
@@ -138,7 +141,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[4],
                         borderWidth: 1,
-                        data: store.state.data[store.state.landscape_id].pesticideImpacts
+                        data: this.basedata.pesticideImpacts
                     }]
                 }
             },
@@ -160,7 +163,7 @@
                     datasets: [{
                         backgroundColor: this.chartColors.opaque,
                         borderWidth: 1,
-                        data: store.state.data[store.state.landscape_id].nutritionaldelivery
+                        data: this.basedata.nutritionaldelivery
                     }]
                 }
             },
@@ -176,7 +179,7 @@
                         label: '% change from BAU state',
                         backgroundColor: this.chartColors.translucent[3],
                         borderWidth: 1,
-                        data: store.state.data[store.state.landscape_id].healthRiskFactors
+                        data: this.basedata.healthRiskFactors
                     }]
                 }
             }

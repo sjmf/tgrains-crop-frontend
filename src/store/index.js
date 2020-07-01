@@ -33,7 +33,13 @@ export default new Vuex.Store({
         // Stroke, Cancer, Heart Disease, Diabetes
         healthRiskFactors:    [0,0,0,0]
       },
-      102: {}
+      102: {
+        // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
+        production:           [0,0,0,0],
+        pesticideImpacts:     [0,0,0,0,0,0],
+        nutritionaldelivery:  [10,10,10,10,10,10,10,10,10,10],
+        healthRiskFactors:    [0,0,0,0]
+      }
     },
 
     /*
