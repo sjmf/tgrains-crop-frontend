@@ -11,7 +11,7 @@
     <input v-bind:id="name"
            v-model.number="innerValue"
            type="number"
-           step=".5"
+           step="50"
            min="0"
            v-bind:class="{ invalid: errorMessage }"
            @change="$emit('change', $event)">

@@ -8,7 +8,7 @@
       </div>
     </div>
     <span class="label" :class="{invalid: !valid}">
-        {{currentCropArea.toFixed(1)}}/{{maxCropArea}} hectares
+        {{currentCropArea}}/{{maxCropArea}} hectares
     </span>
     <span v-if="!valid" class="label invalid">
       – Area exceeded!
