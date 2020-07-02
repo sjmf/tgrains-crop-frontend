@@ -15,34 +15,6 @@ export default {
     },
 
     /***
-     * POST a query to the model, await response, and commit result to the Vuex store
-     * @returns {Promise<boolean>}
-     */
-    async queryModel () {
-        try {
-            // Prepare data from store for the API
-            const data = { 'landscape_id': store.state.landscape_id }
-            const crops = Object.values(store.state.landscapes[store.state.landscape_id].crops)
-                    .map(item => ({[item.name]: item.value}))
-            const livestock = Object.values(store.state.landscapes[store.state.landscape_id].livestock)
-                    .map(item => ({[item.name]: item.value}))
-            Object.assign(data, ...crops, ...livestock)
-
-            // Query the model and kick off celery task
-            let response = await axios.post('/model', data)
-            console.log(response)
-
-            response = await this.checkCeleryStatus(response);
-            store.commit("setDataFromQuery", response.data.result);
-        }
-        catch (err) {
-            console.error(err);
-            store.commit("raiseError", err)
-            return false
-        }
-    },
-
-    /***
      * Check the /status/<job_id> route for the return from the Celery task queue
      * @param response
      * @returns {Promise<*>}
@@ -65,6 +37,33 @@ export default {
         } else {
             console.error(response.data);
             throw "The crop model is in state '" + response.data.state + "'"
+        }
+    },
+
+    /***
+     * POST a query to the model, await response, and commit result to the Vuex store
+     * @returns {Promise<boolean>}
+     */
+    async queryModel () {
+        try {
+            // Prepare data from store for the API
+            const data = { 'landscape_id': store.state.landscape_id }
+            const crops = Object.values(store.state.landscapes[store.state.landscape_id].crops)
+                    .map(item => ({[item.name]: item.value}))
+            const livestock = Object.values(store.state.landscapes[store.state.landscape_id].livestock)
+                    .map(item => ({[item.name]: item.value}))
+            Object.assign(data, ...crops, ...livestock)
+
+            // Query the model and kick off celery task
+            let response = await axios.post('/model', data)
+            console.log(response)
+
+            response = await this.checkCeleryStatus(response);
+            store.commit("setDataFromQuery", response.data.result);
+        }
+        catch (err) {
+            console.error(err);
+            throw "Model query failed"
         }
     },
 
