@@ -49,6 +49,7 @@
         },
         methods: {
             async doAJAX() {
+                store.commit('closeError')
                 // Timeout prevents flash of loader in case of fast response
                 this.timer = setTimeout(()=>{ this.loading = true }, 200);
 
