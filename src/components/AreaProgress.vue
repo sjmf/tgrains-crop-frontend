@@ -8,7 +8,7 @@
       </div>
     </div>
     <span class="label" :class="{invalid: !valid}">
-        {{currentCropArea}}/{{maxCropArea}} hectares
+        {{formatNumber(currentCropArea)}}/{{formatNumber(maxCropArea)}} hectares
     </span>
     <span v-if="!valid" class="label invalid">
       – Area exceeded!
@@ -21,6 +21,11 @@
         props: {
             maxCropArea: Number,
             currentCropArea: Number
+        },
+        methods: {
+            formatNumber (value) {
+                return parseInt(value)
+            }
         },
         computed: {
             percent() {

@@ -36,7 +36,7 @@
             innerValue: {
                 get() {
                     const {value} = this;
-                    return parseFloat(value)
+                    return parseInt(value)
                 },
                 set (_val) {
                     this.$emit('input', _val, this.name);
