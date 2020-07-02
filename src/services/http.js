@@ -36,7 +36,7 @@ export default {
             return response
         } else {
             console.error(response.data);
-            throw "The crop model is in state '" + response.data.state + "'"
+            throw "The crop model state is '" + response.data.state + "'"
         }
     },
 
@@ -63,7 +63,7 @@ export default {
         }
         catch (err) {
             console.error(err);
-            throw "Model query failed"
+            throw "Model query failed. " + err.toString() || ""
         }
     },
 
@@ -83,7 +83,7 @@ export default {
         }
         catch (err) {
             console.log(err)
-            throw "Loading business-as-usual state failed."
+            throw "Loading business-as-usual state failed. " + err.toString() || ""
         }
     },
 
@@ -103,7 +103,7 @@ export default {
         }
         catch (err) {
             console.log(err)
-            throw "Loading strings failed."
+            throw "Loading strings failed. " + err.toString() || ""
         }
     }
 }
