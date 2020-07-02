@@ -67,7 +67,7 @@
         <div class="row">
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
-               v-on:click="resetToBAU">Reset values</button>
+               v-on:click="resetToBAU">Reset</button>
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
