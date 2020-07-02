@@ -224,7 +224,7 @@ export default new Vuex.Store({
       const crops = state.strings[state.landscape_id].crops
       const livestock = state.strings[state.landscape_id].livestock
       const cropAreas = state.bau[state.landscape_id]["cropAreas"]
-      const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]  // TODO: This is likely to change to livestockAreas!
+      const livestockAreas = state.bau[state.landscape_id]["livestockAreas"]
 
       // Iterate over crop names and populate the landscape with the relevant data
       for(let i=0; i < crops.length; i++) {
@@ -243,7 +243,7 @@ export default new Vuex.Store({
         landscape['livestock'][l] = {
           'name':  l,
           'label': state.dictionary[l],
-          'value': livestockNumbers[i],  // TODO: This is likely to change to livestockAreas!
+          'value': livestockAreas[i],
           'description': (l in state.descriptions ? state.descriptions[l] : "")
         }
       }
@@ -269,12 +269,12 @@ export default new Vuex.Store({
       const crops = state.strings[state.landscape_id].crops
       const livestock = state.strings[state.landscape_id].livestock
       const cropAreas = state.bau[state.landscape_id]["cropAreas"]
-      const livestockNumbers = state.bau[state.landscape_id]["livestockNumbers"]
+      const livestockAreas = state.bau[state.landscape_id]["livestockAreas"]
 
       for (let i=0; i < crops.length; i++)
         state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
       for (let i=0; i < livestock.length; i++)
-        state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockNumbers[i]
+        state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockAreas[i]
 
     },
 
