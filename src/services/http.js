@@ -25,7 +25,7 @@ export default {
 
         // Keep checking the celery status if result is deferred, e.g. state= "PENDING", "STARTED", or "RETRY"
         while (!(['SUCCESS', 'FAILURE', 'REVOKED'].includes(response.data.state))) {
-            await this.sleep(250)
+            await this.sleep(500)
             console.log("Awake! Checking state again...")
 
             response = await axios.get(pathname)
