@@ -88,7 +88,7 @@
             if(store.state.versionHash !== process.env.VUE_APP_GIT_HASH) {
                 console.info(store.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
                 store.commit('resetVuexDefaults')
-                console.warn("Vuex store reloaded")
+                console.warn("Vuex store reloaded from defaults due to changed version hash ", process.env.VUE_APP_GIT_HASH)
             }
 
             // Close errors on clean reload

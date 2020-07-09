@@ -1,6 +1,6 @@
 export const initial_state = () => ({
     // Used for cache-busting Vuex state on version update
-    versionHash: process.env.VUE_APP_GIT_HASH,
+    versionHash: process.env.VUE_APP_GIT_HASH || 'undefined',
 
     // Landscape definitions
     landscape_id: 101,

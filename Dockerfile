@@ -4,11 +4,18 @@ FROM node:12-alpine as build
 MAINTAINER Samantha Finnigan
 
 WORKDIR /usr/src/app
-COPY package*.json ./
 
 # Install app dependencies
+COPY package*.json ./
 RUN npm install
 
+# To enable versionHash reloading of Vuex state
+# Build using `docker build --build-arg VUE_APP_GIT_HASH=$(git rev-parse --short HEAD) .`
+# Or with docker-compose: https://stackoverflow.com/a/50734388/1681205
+ARG VUE_APP_GIT_HASH
+ENV VUE_APP_GIT_HASH ${VUE_APP_GIT_HASH}
+
+# Copy files and build app
 COPY ./ .
 RUN npm run build
 
