@@ -84,7 +84,16 @@
             }
         },
         mounted() {
+            // Check if Vuex state was updated due to new code version:
+            if(store.state.versionHash !== process.env.VUE_APP_GIT_HASH) {
+                console.info(store.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
+                store.commit('resetVuexDefaults')
+                console.warn("Vuex store reloaded")
+            }
+
+            // Close errors on clean reload
             store.commit('closeError')
+            // Load the BAU state from the server
             this.loadBAUState()
         }
     }

@@ -2,6 +2,8 @@
 
 /* Helper functions */
 
+import {initial_state} from "@/store/state";
+
 /***
  * Perform percentage difference on old data and new data
  * @param bau
@@ -233,4 +235,12 @@ export default {
     acceptTerms(state) {
         state.acceptedTerms = true
     },
+
+    /**
+     * Reload entire state from defaults
+     */
+    resetVuexDefaults(state) {
+        const initial = initial_state()
+        Object.keys(initial).forEach(key => { state[key] = initial[key] })
+    }
 }
