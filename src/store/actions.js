@@ -1,5 +1,6 @@
 // actions.js
 
+import { cacheAction } from "vuex-cache";
 import http from "@/services/http";
 
 export default {
@@ -30,28 +31,53 @@ export default {
     },
 
     /***
-     * Query the model using the parameters
+     * Grab the payload, dispatch the query, store the result.
      * @returns {Promise<void>}
      */
     async queryModel() {
+        // Close error message in preparation
         this.commit('closeError')
 
-        // Prepare data from store for the API
-        const data = { 'landscape_id': this.state.landscape_id }
-        const crops = Object.values(this.state.landscapes[this.state.landscape_id].crops)
-            .map(item => ({[item.name]: item.value}))
-        const livestock = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
-            .map(item => ({[item.name]: item.value}))
-        Object.assign(data, ...crops, ...livestock)
+        // Prepare payload...
+        let payload = await this.dispatch('getPayload')
 
-        try {
-            const result = await http.queryModel(data)
-            this.commit("setDataFromQuery",result)
-        }
-        catch (err) {
-            this.commit("raiseError", err)
-        }
+        // ... and send to API!
+        await this.cache.dispatch('doCachedModelQuery', payload)
+            .then((result)=>{
+                return this.commit("setDataFromQuery", result)
+            })
+        console.info("Cached?", this.cache.has('doCachedModelQuery', payload))
     },
+
+    /**
+     * Construct and return payload for model queries
+     * @returns {Object}
+     */
+    getPayload() {
+        const payload = {'landscape_id': this.state.landscape_id}
+        const crops = Object.values(this.state.landscapes[this.state.landscape_id].crops)
+            .map(item => ({[item.name]: parseInt(item.value)}))
+        const livestock = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
+            .map(item => ({[item.name]: parseInt(item.value)}))
+
+        return Object.assign(payload, ...crops, ...livestock)
+    },
+
+    /***
+     * Query the model using the payload provided. Payload is used as cache key.
+     * @returns {Promise<void>}
+     */
+    'doCachedModelQuery': cacheAction(
+        // eslint-disable-next-line no-unused-vars
+        ({ _, commit }, payload) => {
+
+            try {
+                return http.queryModel(payload)
+            }
+            catch (err) {
+                commit("raiseError", err)
+            }
+    }),
 
     /***
      * Check the vuex state against the version hash and replace if changed
