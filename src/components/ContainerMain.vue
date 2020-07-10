@@ -1,7 +1,7 @@
 <template>
   <main>
 
-    <loading-overlay :loading="loading"/>
+    <loading-overlay :loading="loading" :offset="true"/>
 
     <!-- MAIN PAGE CONTENT -->
     <landscape-jumbotron/>
@@ -48,5 +48,3 @@
         }
     }
 </script>
-
-
