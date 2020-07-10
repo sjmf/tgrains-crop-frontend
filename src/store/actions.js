@@ -51,5 +51,16 @@ export default {
         catch (err) {
             this.commit("raiseError", err)
         }
-    }
+    },
+
+    /***
+     * Check the vuex state against the version hash and replace if changed
+     */
+    checkVersion() {
+        if(this.state.versionHash !== process.env.VUE_APP_GIT_HASH) {
+            console.warn(this.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
+            this.commit('resetVuexDefaults')
+            console.warn(`Vuex store reloaded from defaults due to new version hash: '${process.env.VUE_APP_GIT_HASH}'`)
+        }
+    },
 }

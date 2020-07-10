@@ -62,11 +62,7 @@
         },
         mounted() {
             // Check if Vuex state was updated due to new code version:
-            if(store.state.versionHash !== process.env.VUE_APP_GIT_HASH) {
-                console.info(store.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
-                store.commit('resetVuexDefaults')
-                console.warn("Vuex store reloaded from defaults due to changed version hash ", process.env.VUE_APP_GIT_HASH)
-            }
+            store.dispatch('checkVersion')
 
             // Close errors on clean reload
             store.commit('closeError')
