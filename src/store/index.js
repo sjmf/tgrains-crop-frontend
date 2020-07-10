@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 // Persist all data in the browser's local storage
 import createPersistedState from 'vuex-persistedstate'
+import createCache from 'vuex-cache'
 
 import state from './state'
 import mutations from './mutations'
@@ -22,6 +23,7 @@ export default new Vuex.Store({
     actions,
     modules: {},
     plugins: [
-        createPersistedState({key: 'vuex'})
+        createPersistedState({key: 'vuex'}),
+        createCache()
     ]
 })
