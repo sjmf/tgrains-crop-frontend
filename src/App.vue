@@ -24,7 +24,6 @@
     import ContainerMain from '@/components/ContainerMain';
     import ContainerFooter from '@/components/ContainerFooter';
 
-    import http from '@/services/http'
     import store from "@/store";
 
     export default {
@@ -49,38 +48,16 @@
         },
         methods: {
             async doAJAX() {
-                store.commit('closeError')
                 // Timeout prevents flash of loader in case of fast response
                 this.timer = setTimeout(()=>{ this.loading = true }, 200);
 
-                try {
-                    await http.queryModel();
-                }
-                catch (err) {
-                    store.commit("raiseError", err)
-                }
+                await store.dispatch('queryModel')
 
                 clearTimeout(this.timer);
                 this.loading = false;
             },
             async loadBAUState() {
-                // If BAU object is empty, go get it
-                let bau = store.state.bau[store.state.landscape_id]
-                if(Object.keys(bau).length === 0 && bau.constructor === Object) {
-                    console.log('Loading Strings and BAU state');
-                    try {
-                        await http.loadStrings()
-                        await http.loadBAUState()
-                    }
-                    catch(err) {
-                        console.log(err)
-                        store.commit("raiseError", err)
-                    }
-
-
-                    // Populate Landscapes in Vuex using strings and cropAreas from BAU state
-                    store.commit('populate')
-                }
+                await store.dispatch('loadBauState')
             }
         },
         mounted() {

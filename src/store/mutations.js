@@ -1,8 +1,8 @@
 // mutations.js
 
-/* Helper functions */
-
 import {initial_state} from "@/store/state";
+
+/* Helper functions */
 
 /***
  * Perform percentage difference on old data and new data

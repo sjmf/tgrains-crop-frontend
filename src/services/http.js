@@ -1,7 +1,5 @@
 import axios from "axios"
 
-import store from '../store';
-
 export default {
     /***
      * Helper function: use Promise to implement sleep()
@@ -42,24 +40,17 @@ export default {
 
     /***
      * POST a query to the model, await response, and commit result to the Vuex store
+     * @param data - formatted data for POSTing
      * @returns {Promise<boolean>}
      */
-    async queryModel () {
+    async queryModel (data) {
         try {
-            // Prepare data from store for the API
-            const data = { 'landscape_id': store.state.landscape_id }
-            const crops = Object.values(store.state.landscapes[store.state.landscape_id].crops)
-                    .map(item => ({[item.name]: item.value}))
-            const livestock = Object.values(store.state.landscapes[store.state.landscape_id].livestock)
-                    .map(item => ({[item.name]: item.value}))
-            Object.assign(data, ...crops, ...livestock)
-
             // Query the model and kick off celery task
             let response = await axios.post('/model', data)
             console.log(response)
 
-            response = await this.checkCeleryStatus(response);
-            store.commit("setDataFromQuery", response.data.result);
+            response = await this.checkCeleryStatus(response)
+            return response.data.result
         }
         catch (err) {
             console.error(err);
@@ -71,15 +62,15 @@ export default {
      * Load the Business As Usual state into the Vuex store
      * @returns {Promise<void>}
      */
-    async loadBAUState () {
+    async loadBAUState (landscape_id) {
         try {
-            const data = {params: {'landscape_id': store.state.landscape_id}}
+            const data = {params: {'landscape_id': landscape_id}}
 
             let response = await axios.get('/model', data);
             response = await this.checkCeleryStatus(response);
 
-            store.commit("setBAUState", response.data.result)
             console.info("BAU State Loaded!")
+            return response.data.result
         }
         catch (err) {
             console.log(err)
@@ -91,15 +82,15 @@ export default {
      * Load strings for crop identifiers
      * @returns {Promise<void>}
      */
-    async loadStrings () {
+    async loadStrings (landscape_id) {
         try {
-            const data = {params: {'landscape_id': store.state.landscape_id}}
+            const data = {params: {'landscape_id': landscape_id}}
 
             let response = await axios.get('/strings', data);
             response = await this.checkCeleryStatus(response);
 
-            store.commit("setStrings", response.data.result)
             console.info("Crop & Livestock Strings Loaded!")
+            return response.data.result
         }
         catch (err) {
             console.log(err)
