@@ -17,7 +17,7 @@
     <div id="environment-tab" class="col s12">
       <div class="card panel">
         <div class="card-content">
-          <span class="card-title">Nutrient Leeching and Pesticides</span>
+          <span class="card-title">Nutrient Leaching and Pesticides</span>
           <div class="chart-panel">
             <viz-pests
                 :chart-data="pestdata"
@@ -115,7 +115,7 @@
                return {
                     labels: [
                         'GHG',
-                        'Nitrogen leeching',
+                        'Nitrogen leaching',
                         'Profit',
                         'Calories'
                     ],
@@ -130,7 +130,7 @@
             pestdata () {
                 return {
                     labels: [
-                        'Nitrogen leeching',
+                        'Nitrogen leaching',
                         'Ground Water',
                         'Fish',
                         'Birds',

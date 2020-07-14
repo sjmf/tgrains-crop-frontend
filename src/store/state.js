@@ -9,9 +9,9 @@ export const initial_state = () => ({
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {
-            // GHG, Nitrogen leeching, Profit, Calories
+            // GHG, Nitrogen leaching, Profit, Calories
             production:           [0,0,0,0],
-            // Nitrogen leeching, ground water, fish, birds, bees, beneficial arthropods
+            // Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
             pesticideImpacts:     [0,0,0,0,0,0],
             // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
             nutritionaldelivery:  [0,0,0,0,0,0,0,0,0,0],
