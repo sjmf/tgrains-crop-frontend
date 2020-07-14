@@ -8,7 +8,6 @@
             <viz-production
                 :chart-data="proddata"
                 :height="chartHeight"/>
-            <!-- -->
           </div>
         </div>
       </div>
@@ -17,12 +16,13 @@
     <div id="environment-tab" class="col s12">
       <div class="card panel">
         <div class="card-content">
-          <span class="card-title">Nutrient Leaching and Pesticides</span>
+          <span class="card-title">Nitrogen Leaching and Pesticide Impacts</span>
           <div class="chart-panel">
             <viz-pests
                 :chart-data="pestdata"
                 :height="chartHeight"/>
           </div>
+          <p>In this chart, higher values indicate worse environmental impacts.</p>
         </div>
       </div>
     </div>
@@ -32,10 +32,11 @@
         <div class="col s12 m6">
           <div class="card panel">
             <div class="card-content">
-              <span class="card-title">Health Risks</span>
+              <span class="card-title">Target plate</span>
+              <p>The <a href="https://eatforum.org/eat-lancet-commission/" target="_blank">EATLancet report</a> suggests the following plate to achieve a balanced diet sustainably:</p>
               <div class="chart-panel">
-                <viz-health
-                    :chart-data="healthdata"
+                <viz-nutrition
+                    :chart-data="eatlancet"
                     :height="chartHeight"
                     :width="chartHeight"/>
               </div>
@@ -47,6 +48,7 @@
           <div class="card panel">
             <div class="card-content">
               <span class="card-title">Nutritional delivery</span>
+              <p>This chart shows the nutritional delivery from the landscape, crops, and livestock you have defined:</p>
               <div class="chart-panel">
                 <viz-nutrition
                     :chart-data="nutridata"
@@ -67,14 +69,13 @@
     import VizProduction from "@/components/VizProduction";
     import VizPests from "@/components/VizPesticides";
     import VizNutrition from "@/components/VizNutrition";
-    import VizHealth from "@/components/VizHealth";
     import VizDebug from "@/components/VizDebug";
 
     import store from "../store";
 
     export default {
         name: 'TabVisualisations',
-        components: {VizDebug, VizHealth, VizPests, VizNutrition, VizProduction},
+        components: {VizDebug, VizPests, VizNutrition, VizProduction},
         data (){
             return {
                 chartHeight: 200,
@@ -88,9 +89,9 @@
                         'rgba(148, 103, 189, 1)',  // purple
                         'rgba(140,  86,  75, 1)',  // brown
                         'rgba(227, 119, 194, 1)',  // pink
-                        'rgba(127, 127, 127, 1)',  // grey
                         'rgba(188, 189,  34, 1)',  // lime
                         'rgba( 23, 190, 207, 1)',  // turquoise
+                        'rgba(127, 127, 127, 1)',  // grey
                     ],
                     translucent: [
                         'rgba( 31, 119, 180, .3)',  // blue
@@ -100,9 +101,9 @@
                         'rgba(148, 103, 189, .3)',  // purple
                         'rgba(140,  86,  75, .3)',  // brown
                         'rgba(227, 119, 194, .3)',  // pink
-                        'rgba(127, 127, 127, .3)',  // grey
                         'rgba(188, 189,  34, .3)',  // lime
                         'rgba( 23, 190, 207, .3)',  // turquoise
+                        'rgba(127, 127, 127, .3)',  // grey
                     ]
                 }
             }
@@ -115,7 +116,6 @@
                return {
                     labels: [
                         'GHG',
-                        'Nitrogen leaching',
                         'Profit',
                         'Calories'
                     ],
@@ -147,18 +147,8 @@
             },
             nutridata () {
                 return {
-                    labels: [
-                        'Whole Grains',
-                        'Tubers',
-                        'Vegetables',
-                        'Fruits',
-                        'Dairy',
-                        'Added Fats',
-                        'Saturated Fats',
-                        'Sugars',
-                        'Animal Protein',
-                        'Vegetable Protein'
-                    ],
+                    labels: (store.state.strings[store.state.landscape_id]['food_groups'] || [])
+                          .map(x=>store.state.food_groups_dictionary[x]),
                     type: 'outlabeledPie',
                     datasets: [{
                         backgroundColor: this.chartColors.opaque,
@@ -167,19 +157,14 @@
                     }]
                 }
             },
-            healthdata () {
+            eatlancet () {
                 return {
-                    labels: [
-                        'Stroke',
-                        'Cancer',
-                        'Heart Disease',
-                        'Diabetes'
-                    ],
+                    labels: this.nutridata.labels,
+                    type: 'outlabeledPie',
                     datasets: [{
-                        label: '% change from BAU state',
-                        backgroundColor: this.chartColors.translucent[3],
+                        backgroundColor: this.chartColors.opaque,
                         borderWidth: 1,
-                        data: this.basedata.healthRiskFactors
+                        data: this.basedata.eatLancetPlate
                     }]
                 }
             }
@@ -190,5 +175,8 @@
 <style scoped>
   .chart-panel {
     min-height: 300px;
+  }
+  .card .card-content .chart-panel + p {
+    margin-top: 20px;
   }
 </style>

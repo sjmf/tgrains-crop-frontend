@@ -8,17 +8,17 @@ import {initial_state} from "@/store/state";
  * Perform percentage difference on old data and new data
  * @param bau
  * @param new_data
- * @returns {{pesticideImpacts: [], healthRiskFactors: [], production: [], nutritionaldelivery: *}}
+ * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: *}}
  */
 function difference(bau, new_data) {
     let data = {
         production: [],
         pesticideImpacts: [],
         nutritionaldelivery: new_data['nutritionaldelivery'], // Nutri pie chart not diffed
-        healthRiskFactors: []
+        eatLancetPlate: new_data['eatLancetPlate']            // EAT Lancet plate not diffed
     }
 
-    let fields = ['production', 'pesticideImpacts', 'healthRiskFactors']
+    let fields = ['production', 'pesticideImpacts']
     for (let i of fields) {
         for (let j=0; j < bau[i].length; j++) {
             //console.debug(i, j, new_data[i][j], bau[i][j])
@@ -30,11 +30,12 @@ function difference(bau, new_data) {
 
 /***
  * Format data returned by model, ready for graphing or differencing
+ * @param state
  * @param new_data
- * @returns {{pesticideImpacts: [], healthRiskFactors: [], production: [], nutritionaldelivery: []}}
+ * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: []}}
  */
-function formatData(new_data){
-    let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], healthRiskFactors: []}
+function formatData(state, new_data){
+    let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], eatLancetPlate: []}
 
     data['production'] = [
         new_data['greenhouseGasEmissions'],
@@ -45,7 +46,8 @@ function formatData(new_data){
 
     data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
     data['nutritionaldelivery'] = new_data['nutritionaldelivery']
-    data['healthRiskFactors'] = new_data['healthRiskFactors']
+        .map(x => Math.round(x*10000)/100)   // Round the float-point to 2dp
+    data['eatLancetPlate'] = initial_state().data[state.landscape_id].eatLancetPlate // Static. Does not change.
 
     return data
 }
@@ -105,7 +107,9 @@ export default {
      */
     setDataFromQuery (state, new_data) {
         // Compute percentage change against the BAU state and store
-        state.data[state.landscape_id] = difference(formatData(state.bau[state.landscape_id]), formatData(new_data))
+        state.data[state.landscape_id] = difference(
+            formatData(state, state.bau[state.landscape_id]),
+            formatData(state, new_data))
     },
 
     /***
@@ -120,7 +124,7 @@ export default {
         state.bau[new_data['myUniqueLandscapeID']] = new_data
         state.data[state.landscape_id].nutritionaldelivery = new_data['nutritionaldelivery']
 
-        for (let i of ['production', 'pesticideImpacts', 'healthRiskFactors']) {
+        for (let i of ['production', 'pesticideImpacts']) {
             state.data[state.landscape_id][i] = Array.from(new_data[i], () => 0)
         }
     },
@@ -190,7 +194,7 @@ export default {
      */
     resetToBAU (state) {
         // Reset graphs to '0'
-        for (let i of ['production', 'pesticideImpacts', 'healthRiskFactors']) {
+        for (let i of ['production', 'pesticideImpacts']) {
             state.data[state.landscape_id][i] = Array.from(state.bau[state.landscape_id][i], () => 0)
         }
         state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery

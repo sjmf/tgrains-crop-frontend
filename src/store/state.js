@@ -9,21 +9,21 @@ export const initial_state = () => ({
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {
-            // GHG, Nitrogen leaching, Profit, Calories
-            production:           [0,0,0,0],
+            // GHG, Profit, Calories
+            production:           [0,0,0],
             // Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
             pesticideImpacts:     [0,0,0,0,0,0],
             // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
-            nutritionaldelivery:  [0,0,0,0,0,0,0,0,0,0],
-            // Stroke, Cancer, Heart Disease, Diabetes
-            healthRiskFactors:    [0,0,0,0]
+            nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
+            // EAT Lancet plate in same order as nutritionalDelivery
+            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
         },
         102: {
             // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
             production:           [0,0,0,0],
             pesticideImpacts:     [0,0,0,0,0,0],
-            nutritionaldelivery:  [10,10,10,10,10,10,10,10,10,10],
-            healthRiskFactors:    [0,0,0,0]
+            nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
+            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
         }
     },
 
@@ -82,6 +82,20 @@ export const initial_state = () => ({
         eggs:           "Egg Production",
         lamb_lowland:   "Lowland Lamb",
         lamb_upland:    "Upland Lamb",
+    },
+
+    // Dictionary used to look up labels for food group pie charts
+    food_groups_dictionary: {
+        // Food Groups
+        whole_grain:    "Whole Grains",
+        starchy_veg:    "Tubers",
+        dairy:          "Dairy",
+        animal_protein: "Animal Protein",
+        plant_protein:  "Plant Protein",
+        fat:            "Added fats",
+        sugar:          "Added sugars",
+        vegetable:      "Vegetables",
+        fruit:          "Fruits",
     },
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
