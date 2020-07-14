@@ -27,7 +27,7 @@
       </div>
     </div>
 
-    <div id="health-tab" class="col s12">
+    <div id="nutrition-tab" class="col s12">
       <div class="row">
         <div class="col s12 m6">
           <div class="card panel">
