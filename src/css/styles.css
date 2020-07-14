@@ -64,15 +64,6 @@ main, footer {
 }
 
 
-/* Footer */
-div.logos {
-    text-align: center;
-}
-img.logos {
-    max-height:100px;
-}
-
-
 /* Helpers */
 .no-margin {
     margin: 0;

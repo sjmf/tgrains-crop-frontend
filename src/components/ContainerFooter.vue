@@ -15,3 +15,12 @@
         name: 'ContainerFooter'
     }
 </script>
+<style scoped>
+  /* Footer */
+  div.logos {
+    text-align: center;
+  }
+  img.logos {
+    max-height:100px;
+  }
+</style>
