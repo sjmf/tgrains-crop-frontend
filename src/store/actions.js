@@ -27,6 +27,7 @@ export default {
 
             // Populate Landscapes in Vuex using strings and cropAreas from BAU state
             this.commit('populate')
+            this.dispatch("sumArea")
         }
     },
 
@@ -47,6 +48,24 @@ export default {
                 return this.commit("setDataFromQuery", result)
             })
         console.info("Cached?", this.cache.has('doCachedModelQuery', payload))
+    },
+
+    /**
+     * Calculate the total area used by crops within the current state
+     * @returns {Number}
+     */
+    sumArea() {
+        // Handle not-yet-loaded data edge-case
+        if(Object.keys(this.state.landscapes[this.state.landscape_id]).length === 0)
+            this.commit("setTotalArea", 0)
+
+        // Sum crop and livestock areas using .values().reduce()
+        let cropArea = Object.values(this.state.landscapes[this.state.landscape_id].crops)
+            .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
+        let livestockArea = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
+            .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
+
+        this.commit("setTotalArea", cropArea + livestockArea)
     },
 
     /**

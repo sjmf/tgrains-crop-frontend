@@ -55,7 +55,7 @@
       </li>
 
       <area-progress
-        v-bind:current-crop-area="total_area"
+        v-bind:current-crop-area="this.$store.state.totalArea"
         v-bind:max-crop-area="max_area"
         @area-valid="handleAreaValidity($event)"/>
 
@@ -109,6 +109,7 @@
             resetToBAU() {
                 store.commit("closeError")
                 store.commit("resetToBAU")
+                store.dispatch("sumArea")
                 this.$nextTick(() => this.validateForm())
             },
 
@@ -116,7 +117,7 @@
              * Emit an event requesting submission of the form via AJAX.
              */
             submitForm() {
-                this.$emit('submitForm', [this.crops,this.livestock]);
+                this.$emit('submitForm', [this.crops,this.livestock])
             },
 
             /**
@@ -127,7 +128,8 @@
              * @param value
              */
             updateValue(cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
-                this.$store.commit('setFormValue', {cropOrLivestock, name, value});
+                this.$store.commit('setFormValue', {cropOrLivestock, name, value})
+                this.$store.dispatch('sumArea')
             },
 
             /**
@@ -194,21 +196,6 @@
              */
             livestock() {
                 return store.state.landscapes[store.state.landscape_id].livestock
-            },
-
-            /**
-             * Calculate the total area used by crops within the current state
-             * @returns {Number}
-             */
-            total_area() {
-                // Handle not-yet-loaded data edge-case
-                if(Object.keys(store.state.landscapes[store.state.landscape_id]).length === 0)
-                    return 0
-
-                return Object.values(store.state.landscapes[store.state.landscape_id].crops)
-                                .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0) +
-                            Object.values(store.state.landscapes[store.state.landscape_id].livestock)
-                                .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
             },
 
             /**
