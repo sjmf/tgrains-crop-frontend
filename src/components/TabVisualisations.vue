@@ -1,13 +1,28 @@
 <template>
   <div class="container">
     <div id="production-tab" class="col s12">
-      <div class="card panel">
-        <div class="card-content">
-          <span class="card-title">Change from "Business-as-usual"</span>
-          <div class="chart-panel">
-            <viz-production
-                :chart-data="proddata"
-                :height="chartHeight"/>
+      <div class="row">
+        <div class="col s12">
+          <div class="card panel">
+            <div class="card-content">
+              <span class="card-title">Change from "Business-as-usual"</span>
+              <div class="chart-panel">
+                <viz-production
+                    :chart-data="proddata"
+                    :height="chartHeight"/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col s12">
+          <div class="card panel">
+            <div class="card-content">
+              <span class="card-title">Production Values</span>
+              <data-table
+                  :titles="['Factor', 'Value', 'Unit']"
+                  :values="prodvalues"/>
+            </div>
           </div>
         </div>
       </div>
@@ -72,10 +87,11 @@
     import VizDebug from "@/components/VizDebug";
 
     import store from "../store";
+    import DataTable from "@/components/DataTable";
 
     export default {
         name: 'TabVisualisations',
-        components: {VizDebug, VizPests, VizNutrition, VizProduction},
+        components: {DataTable, VizDebug, VizPests, VizNutrition, VizProduction},
         data (){
             return {
                 chartHeight: 200,
@@ -111,6 +127,16 @@
         computed: {
             basedata() {
                 return store.state.data[store.state.landscape_id]
+            },
+            rawdata() {
+                return store.state.data.raw[store.state.landscape_id]
+            },
+            prodvalues() {
+                return [
+                    {label: "Greenhouse Gasses", value: this.rawdata['greenhouseGasEmissions'], unit: "Total emissions in CO2-equiv (average kg/ha/year)" },
+                    {label: "Profit",            value: this.rawdata['profit'],                 unit: "Profit over variable costs (average £ ha-1)"},
+                    {label: "Calories",          value: this.rawdata['production'],             unit: "Calories"}
+                ]
             },
             proddata () {
                return {
