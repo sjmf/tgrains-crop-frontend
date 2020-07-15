@@ -76,22 +76,19 @@
       </div>
 
     </div>
-
-    <viz-debug/>
   </div>
 </template>
 <script>
     import VizProduction from "@/components/VizProduction";
     import VizPests from "@/components/VizPesticides";
     import VizNutrition from "@/components/VizNutrition";
-    import VizDebug from "@/components/VizDebug";
 
     import store from "../store";
     import DataTable from "@/components/DataTable";
 
     export default {
         name: 'TabVisualisations',
-        components: {DataTable, VizDebug, VizPests, VizNutrition, VizProduction},
+        components: {DataTable, VizPests, VizNutrition, VizProduction},
         data (){
             return {
                 chartHeight: 200,

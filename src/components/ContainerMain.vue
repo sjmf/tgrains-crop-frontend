@@ -21,6 +21,14 @@
         <br><br>
       </div>
 
+      <!-- DEBUG INFORMATION -->
+      <div class="container">
+        <div class="col s12">
+          <a class="right smalltext" @click="showDebug = !showDebug">Toggle Debug information</a>
+        </div>
+        <viz-debug v-if="showDebug"/>
+      </div>
+
       <!-- COMMENTS CONTAINER -->
       <!-- Scaled-up version feature. Currently disabled -->
       <!-- <container-comments/> -->
@@ -39,12 +47,34 @@
     import TabVisualisations from "@/components/TabVisualisations";
     import LoadingOverlay from "@/components/LoadingOverlay";
     import ErrorMessage from "@/components/ErrorMessage";
+    import VizDebug from "@/components/VizDebug";
 
     export default {
         name: "ContainerMain",
-        components: {ErrorMessage, LoadingOverlay, TabVisualisations, TabBar, ModalWelcome, LandscapeJumbotron},
+        components: {
+            ErrorMessage,
+            LoadingOverlay,
+            TabVisualisations,
+            TabBar,
+            ModalWelcome,
+            LandscapeJumbotron,
+            VizDebug
+        },
         props: {
             loading: Boolean
+        },
+        data() {
+            return {
+                showDebug: false
+            }
         }
     }
 </script>
+
+<style scoped>
+  .smalltext {
+    font-size:0.8rem;
+    color: #9e9e9e;
+    text-decoration: underline;
+  }
+</style>

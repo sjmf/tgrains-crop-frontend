@@ -1,5 +1,5 @@
 <template>
-  <div id="debug-tab" class="col s12">
+  <div class="col s12">
     <div class="card panel">
       <div class="card-content">
         <span class="card-title">Debug Info</span>
@@ -28,6 +28,8 @@
   .debug-info-panel {
     font-family: 'Ubuntu', 'Consolas', 'Courier New', monospace;
     font-size: .8em;
+    max-height: 40vh;
+    overflow-y: scroll;
   }
   .debug-info-panel pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
