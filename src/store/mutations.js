@@ -106,6 +106,9 @@ export default {
      * @param new_data
      */
     setDataFromQuery (state, new_data) {
+        // Store the raw data
+        state.data.raw[state.landscape_id] = new_data
+
         // Compute percentage change against the BAU state and store
         state.data[state.landscape_id] = difference(
             formatData(state, state.bau[state.landscape_id]),
@@ -121,9 +124,12 @@ export default {
      * @param new_data
      */
     setBAUState (state, new_data) {
-        state.bau[new_data['myUniqueLandscapeID']] = new_data
-        state.data[state.landscape_id].nutritionaldelivery = new_data['nutritionaldelivery']
+        // Store the raw data
+        state.data.raw[state.landscape_id] = new_data
+        state.bau[state.landscape_id] = new_data
 
+        // Initialise graphs
+        state.data[state.landscape_id].nutritionaldelivery = new_data['nutritionaldelivery']
         for (let i of ['production', 'pesticideImpacts']) {
             state.data[state.landscape_id][i] = Array.from(new_data[i], () => 0)
         }

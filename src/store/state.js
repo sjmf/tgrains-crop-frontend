@@ -24,6 +24,11 @@ export const initial_state = () => ({
             pesticideImpacts:     [0,0,0,0,0,0],
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
+        },
+        // Raw data loaded from server
+        raw: {
+            101: {},
+            102: {}
         }
     },
 
