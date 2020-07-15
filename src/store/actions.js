@@ -13,7 +13,7 @@ export default {
         let bau = this.state.bau[this.state.landscape_id]
 
         if (Object.keys(bau).length === 0 && bau.constructor === Object) {
-            console.log('Loading Strings and BAU state');
+            console.log("Loading Strings and BAU state")
             try {
                 const strings = await http.loadStrings(this.state.landscape_id)
                 this.commit("setStrings", strings)
@@ -21,12 +21,12 @@ export default {
                 bau = await http.loadBAUState(this.state.landscape_id)
                 this.commit("setBAUState", bau)
             } catch (err) {
-                console.log(err)
+                console.error(err)
                 this.commit("raiseError", err)
             }
 
             // Populate Landscapes in Vuex using strings and cropAreas from BAU state
-            this.commit('populate')
+            this.commit("populate")
             this.dispatch("sumArea")
         }
     },
@@ -37,17 +37,23 @@ export default {
      */
     async queryModel() {
         // Close error message in preparation
-        this.commit('closeError')
+        this.commit("closeError")
 
         // Prepare payload...
-        let payload = await this.dispatch('getPayload')
+        let payload = await this.dispatch("getPayload")
 
-        // ... and send to API!
-        await this.cache.dispatch('doCachedModelQuery', payload)
-            .then((result)=>{
-                return this.commit("setDataFromQuery", result)
-            })
-        console.info("Cached?", this.cache.has('doCachedModelQuery', payload))
+        try {
+            // ... and send to API!
+            await this.cache.dispatch("doCachedModelQuery", payload)
+                .then((result)=>{
+                    return this.commit("setDataFromQuery", result)
+                })
+        } catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
+        }
+
+        console.info("Cached?", this.cache.has("doCachedModelQuery", payload))
     },
 
     /**
@@ -104,7 +110,7 @@ export default {
     checkVersion() {
         if(this.state.versionHash !== process.env.VUE_APP_GIT_HASH) {
             console.warn(this.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
-            this.commit('resetVuexDefaults')
+            this.commit("resetVuexDefaults")
             console.warn(`Vuex store reloaded from defaults due to new version hash: '${process.env.VUE_APP_GIT_HASH}'`)
         }
     },
