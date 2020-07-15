@@ -154,9 +154,9 @@ export default {
     populate (state) {
         // Check we have strings and BAU state, or raise error.
         if(!('crops' in state.strings[state.landscape_id]))
-            throw Error("Cannot populate model variables: strings not loaded.")
+            throw "Cannot populate model variables: strings not loaded."
         if(!('production' in state.bau[state.landscape_id]))
-            throw Error("Cannot populate model variables: BAU state missing")
+            throw "Cannot populate model variables: BAU state missing"
 
         // Extract variables into more readable names
         let landscape = {'crops': {}, 'livestock': {}}
@@ -234,6 +234,7 @@ export default {
      * @param state
      */
     closeError(state){
+        state.error['message'] = ""
         state.error['visible'] = false
     },
 

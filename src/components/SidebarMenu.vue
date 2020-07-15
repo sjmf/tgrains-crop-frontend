@@ -93,10 +93,15 @@
              * Reset the sidebar to BAU state, which also triggers a change in the backing data store and graphs
              */
             resetToBAU() {
-                this.$store.commit("closeError")
-                this.$store.commit("resetToBAU")
-                this.$store.dispatch("sumArea")
-                this.$nextTick(() => this.validateForm())
+                try {
+                    this.$store.commit("closeError")
+                    this.$store.commit("resetToBAU")
+                    this.$store.dispatch("sumArea")
+                    this.$nextTick(() => this.validateForm())
+                }
+                catch(err) {
+                    this.$store.commit("raiseError", err)
+                }
             },
 
             /**
@@ -186,7 +191,8 @@
              * @returns {boolean}
              */
             loading() {
-                return Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0
+                return (Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0)
+                        && (this.$store.state.error.message === "")
             }
         },
         watch: {
