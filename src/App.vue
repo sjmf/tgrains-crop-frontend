@@ -28,6 +28,7 @@
 
     export default {
         name: 'App',
+        store,
         components: {
             ContainerFooter,
             SidebarMenu,
@@ -51,21 +52,21 @@
                 // Timeout prevents flash of loader in case of fast response
                 this.timer = setTimeout(()=>{ this.loading = true }, 200);
 
-                await store.dispatch('queryModel')
+                await this.$store.dispatch('queryModel')
 
                 clearTimeout(this.timer);
                 this.loading = false;
             },
             async loadBAUState() {
-                await store.dispatch('loadBauState')
+                await this.$store.dispatch('loadBauState')
             }
         },
         mounted() {
             // Check if Vuex state was updated due to new code version:
-            store.dispatch('checkVersion')
+            this.$store.dispatch('checkVersion')
 
             // Close errors on clean reload
-            store.commit('closeError')
+            this.$store.commit('closeError')
             // Load the BAU state from the server
             this.loadBAUState()
         }
