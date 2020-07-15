@@ -6,6 +6,9 @@ export const initial_state = () => ({
     landscape_id: 101,
     landscapeName: 'East Anglia',
 
+    // Calculated sum of all crop Areas:
+    totalArea: 0,
+
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {

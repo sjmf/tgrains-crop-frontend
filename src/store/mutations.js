@@ -75,14 +75,13 @@ export default {
         state.landscapeName = name;
     },
 
-    /**
-     * Write the data which is picked up by the graphs into the store.
-     * See the state definition above for format.
+    /***
+     * Mutate the totalArea value used to set cropping area display
      * @param state
-     * @param data
+     * @param value
      */
-    setData (state, data) {
-        state.data = data;
+    setTotalArea (state, value) {
+        state.totalArea = value
     },
 
     /***
