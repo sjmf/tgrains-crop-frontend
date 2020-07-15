@@ -28,16 +28,21 @@
     }
 </script>
 <style scoped>
+  .sub {
+    margin-bottom: 0.6rem;
+  }
+
   @media only screen and (min-width:601px) {
     .flex {
       display: flex;
-      align-items: center;
+      align-items: end;
     }
 
     .sub {
       flex: 1;
       -webkit-box-flex: 1;
       min-height:100%;
+      margin: 2.8rem 0 1.68rem 0;
     }
   }
 </style>
