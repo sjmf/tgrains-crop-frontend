@@ -1,5 +1,5 @@
 <template>
-  <li class="no-hover">
+  <div>
     <span class="subheader">Available cropping area</span>
     <div class="progress">
       <div class="determinate"
@@ -13,28 +13,47 @@
     <span v-if="!valid" class="label invalid">
       – Area exceeded!
     </span>
-  </li>
+  </div>
 </template>
 <script>
     export default {
         name: 'area-progress',
-        props: {
-            maxCropArea: Number,
-            currentCropArea: Number
-        },
         methods: {
             formatNumber (value) {
                 return parseInt(value)
             }
         },
         computed: {
+            /***
+             * Calculate percentage completion of progress bar
+             * @returns {Number}
+             */
             percent() {
                 return (this.currentCropArea / this.maxCropArea) * 100
             },
+
+            /***
+             * Check validity of total area (used to change progress bar colour to red)
+             * @returns {Boolean}
+             */
             valid () {
-                const condition = this.currentCropArea <= this.maxCropArea
-                this.$emit('area-valid', condition)
-                return condition
+                return this.currentCropArea <= this.maxCropArea
+            },
+
+            /***
+             * Return the MaxCropArea, or zero if this is undefined (i.e. BAU not loaded)
+             * @returns {Number}
+             */
+            maxCropArea() {
+                return this.$store.state.bau[this.$store.state.landscape_id].maxCropArea || 1  // One if undefined
+            },
+
+            /***
+             * Return the current crop area from the state.totalArea value in Vuex
+             * @returns {Number}
+             */
+            currentCropArea() {
+                return this.$store.state.totalArea
             }
         }
     }
@@ -47,5 +66,9 @@
 
   .label.invalid {
     color: #F44336;
+  }
+
+  .progress {
+    margin: 0.5rem 0;
   }
 </style>

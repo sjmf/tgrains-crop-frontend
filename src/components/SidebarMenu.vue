@@ -49,16 +49,6 @@
           @input="updateValue('livestock', item.name, $event)"
           @change="validateForm()"/>
 
-
-      <li>
-        <div class="divider"></div>
-      </li>
-
-      <area-progress
-        v-bind:current-crop-area="this.$store.state.totalArea"
-        v-bind:max-crop-area="max_area"
-        @area-valid="handleAreaValidity($event)"/>
-
       <li>
         <div class="divider"></div>
       </li>
@@ -87,18 +77,14 @@
 <script>
     import LandAreaMenu from "@/components/LandAreaMenu"
     import VariableRow from "@/components/VariableRow"
-    import AreaProgress from "@/components/AreaProgress";
     import LoadingOverlay from "@/components/LoadingOverlay";
-
-    import store from '../store';
 
     export default {
         name: 'SidebarMenu',
-        components: {AreaProgress, LandAreaMenu, VariableRow, LoadingOverlay},
+        components: {LandAreaMenu, VariableRow, LoadingOverlay},
         data() {
             return {
                 submitDisabled: false,
-                cropAreaExceeded: false,
                 errors: {}
             }
         },
@@ -107,9 +93,9 @@
              * Reset the sidebar to BAU state, which also triggers a change in the backing data store and graphs
              */
             resetToBAU() {
-                store.commit("closeError")
-                store.commit("resetToBAU")
-                store.dispatch("sumArea")
+                this.$store.commit("closeError")
+                this.$store.commit("resetToBAU")
+                this.$store.dispatch("sumArea")
                 this.$nextTick(() => this.validateForm())
             },
 
@@ -171,23 +157,20 @@
 
                 return false
             },
-
-            /**
-             * Has the AreaProgress component told us the area is valid?
-             * @param condition: Boolean
-             */
-            handleAreaValidity(condition) {
-                this.cropAreaExceeded = !condition
-                this.validateForm()
-            }
         },
         computed: {
+            /**
+             * Check if crop area is exceeded
+             */
+            cropAreaExceeded() {
+                return ! (this.$store.state.totalArea <= (this.$store.state.bau[this.$store.state.landscape_id].maxCropArea || 1))
+            },
             /**
              * Shorthand for Vuex property store.state.landscapes[store.state.landscape_id].crops
              * @returns {Object, undefined}
              */
             crops() {
-                return store.state.landscapes[store.state.landscape_id].crops
+                return this.$store.state.landscapes[this.$store.state.landscape_id].crops
             },
 
             /**
@@ -195,15 +178,7 @@
              * @returns {Object, undefined}
              */
             livestock() {
-                return store.state.landscapes[store.state.landscape_id].livestock
-            },
-
-            /**
-             * Return the MaxCropArea, or zero if this is undefined (i.e. BAU not loaded)
-             * @returns {Number}
-             */
-            max_area() {
-                return store.state.bau[store.state.landscape_id].maxCropArea || 0  // Zero if undefined
+                return this.$store.state.landscapes[this.$store.state.landscape_id].livestock
             },
 
             /**
@@ -211,7 +186,7 @@
              * @returns {boolean}
              */
             loading() {
-                return Object.keys(store.state.bau[store.state.landscape_id]).length === 0
+                return Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0
             }
         },
         watch: {
@@ -227,7 +202,7 @@
         mounted() {
             // On first load, the Ajax request for form data won't have yet returned,
             // so don't validate the form unless there's data in the store!
-            if(Object.keys(store.state.bau[store.state.landscape_id]).length > 0)
+            if(Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length > 0)
                 this.validateForm()
         }
     }
