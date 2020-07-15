@@ -20,14 +20,14 @@ export default {
 
                 bau = await http.loadBAUState(this.state.landscape_id)
                 this.commit("setBAUState", bau)
+
+                // Populate Landscapes in Vuex using strings and cropAreas from BAU state
+                this.commit("populate")
+                this.dispatch("sumArea")
             } catch (err) {
                 console.error(err)
                 this.commit("raiseError", err)
             }
-
-            // Populate Landscapes in Vuex using strings and cropAreas from BAU state
-            this.commit("populate")
-            this.dispatch("sumArea")
         }
     },
 
