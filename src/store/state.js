@@ -108,8 +108,8 @@ export const initial_state = () => ({
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
     descriptions: {
-        lamblowland: "Lowland Lamb grazing livestock",
-        lambupland: "Upland Lamb grazing livestock. Found predominantly in the Brecon Beacons.",
+        lamb_lowland: "Lowland Lamb grazing livestock",
+        lamb_upland:  "Upland Lamb grazing livestock. Found predominantly in the Brecon Beacons.",
     },
 
     // Error handling:
