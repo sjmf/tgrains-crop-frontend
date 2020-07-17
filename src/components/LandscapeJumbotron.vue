@@ -35,7 +35,7 @@
   @media only screen and (min-width:601px) {
     .flex {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
     }
 
     .sub {
