@@ -6,9 +6,17 @@
 
     <label v-bind:for="name" class="variable">
       {{label}}
+      <vue-slider
+        v-model="innerValue"
+        :max="innerValue + remainingArea"
+        :min="0"
+        :interval="1"
+        :tooltip="'none'">
+      </vue-slider>
     </label>
 
     <input v-bind:id="name"
+           v-bind:title="description"
            v-model.number="innerValue"
            type="number"
            step="500"
@@ -23,14 +31,19 @@
 </template>
 
 <script>
+    import VueSlider from 'vue-slider-component'
+    import 'vue-slider-component/theme/default.css'
+
     export default {
         name: 'VariableRow',
+        components: { VueSlider },
         props: {
             name: String,
             label: String,
             value: [String, Number], // Blank inputs return String. Validation should catch this
             description: String,
-            errorMessage: [String, Boolean]
+            errorMessage: [String, Boolean],
+            remainingArea: Number,
         },
         computed: {
             innerValue: {
@@ -55,7 +68,7 @@
 
   label.variable {
     display:inline-block;
-    width: 50%;
+    width: 66.66%;
     color: rgba(0,0,0, 0.87);
     padding:0;
     margin:0;
@@ -63,8 +76,8 @@
   }
 
   label.variable + input[type="number"]:not(.browser-default) {
-    width:50%;
     display: inline-block;
+    width:33.33%;
     padding:0;
     margin:0;
   }
@@ -78,5 +91,21 @@
 
   .invalid {
     color: #F44336;
+  }
+</style>
+
+<style>
+  .vue-slider {
+    padding:0 !important;
+    margin: -7.5px 15px 10px 5px;
+  }
+
+  .vue-slider-process {
+    background-color: #43A047;
+  }
+
+  .vue-slider-dot-handle-focus {
+    border-color: #81C784;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
   }
 </style>

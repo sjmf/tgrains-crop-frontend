@@ -26,6 +26,7 @@
           v-bind:value="item.value"
           v-bind:description="item.description"
           v-bind:error-message="errors[index]"
+          v-bind:remaining-area="remainingArea"
           @input="updateValue('crops', item.name, $event)"
           @change="validateForm($event)"/>
 
@@ -46,6 +47,7 @@
           v-bind:value="item.value"
           v-bind:description="item.description"
           v-bind:error-message="errors[index]"
+          v-bind:remaining-area="remainingArea"
           @input="updateValue('livestock', item.name, $event)"
           @change="validateForm()"/>
 
@@ -170,6 +172,17 @@
             cropAreaExceeded() {
                 return ! (this.$store.state.totalArea <= (this.$store.state.bau[this.$store.state.landscape_id].maxCropArea || 1))
             },
+
+            /**
+             * Return the remaining area in the landscape
+             */
+            remainingArea() {
+                if(this.$store.state.bau[this.$store.state.landscape_id].maxCropArea === undefined)
+                    return 0
+
+                return Math.floor((this.$store.state.bau[this.$store.state.landscape_id].maxCropArea) - this.$store.state.totalArea)
+            },
+
             /**
              * Shorthand for Vuex property store.state.landscapes[store.state.landscape_id].crops
              * @returns {Object, undefined}
