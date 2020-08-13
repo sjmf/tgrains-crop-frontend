@@ -12,6 +12,12 @@
             {{debug}}
             </vue-code-highlight>
           </div>
+          <br/>
+          <div class="row">
+            <div class="col s6 push-s6">
+              <a class="btn red" @click="reload_store">Reload data store from defaults</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -30,6 +36,12 @@
         data() {
             return {
                 showDebug: false
+            }
+        },
+        methods: {
+            reload_store() {
+                this.$store.commit('invalidateStore');
+                window.location.reload(false);
             }
         },
         computed: {
@@ -57,5 +69,8 @@
     font-size:0.8rem;
     color: #9e9e9e;
     text-decoration: underline;
+  }
+  a.btn {
+    float:right;
   }
 </style>

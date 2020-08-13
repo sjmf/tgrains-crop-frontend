@@ -252,5 +252,12 @@ export default {
     resetVuexDefaults(state) {
         const initial = initial_state()
         Object.keys(initial).forEach(key => { state[key] = initial[key] })
+    },
+
+    /**
+     * Invalidate store version hash
+     */
+    invalidateStore(state) {
+        state.versionHash = 'invalid';
     }
 }
