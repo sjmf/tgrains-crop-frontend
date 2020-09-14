@@ -33,7 +33,7 @@ export default {
         if(response.data.state === 'SUCCESS') {
             return response
         } else {
-            console.error(response.data);
+            console.error(response.data)
             throw "The crop model state is '" + response.data.state + "'"
         }
     },
@@ -66,8 +66,8 @@ export default {
         try {
             const data = {params: {'landscape_id': landscape_id}}
 
-            let response = await axios.get('/model', data);
-            response = await this.checkCeleryStatus(response);
+            let response = await axios.get('/model', data)
+            response = await this.checkCeleryStatus(response)
 
             console.info("BAU State Loaded!")
             return response.data.result
@@ -86,8 +86,8 @@ export default {
         try {
             const data = {params: {'landscape_id': landscape_id}}
 
-            let response = await axios.get('/strings', data);
-            response = await this.checkCeleryStatus(response);
+            let response = await axios.get('/strings', data)
+            response = await this.checkCeleryStatus(response)
 
             console.info("Crop & Livestock Strings Loaded!")
             return response.data.result
