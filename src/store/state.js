@@ -108,8 +108,10 @@ export const initial_state = () => ({
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
     descriptions: {
-        lamb_lowland: "Lowland Lamb grazing livestock",
-        lamb_upland:  "Upland Lamb grazing livestock. Found predominantly in the Brecon Beacons.",
+        fruit_soft: "Soft fruit is fruit like raspberries and strawberries, which grow on ground plants and bushes",
+        fruit_top: "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
+        lamb_lowland: "Lowland Lamb are grazing livestock kept in enclosed fields (i.e. not on hills)",
+        lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons.",
     },
 
     // Error handling:
