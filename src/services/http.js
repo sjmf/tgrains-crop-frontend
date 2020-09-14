@@ -7,9 +7,9 @@ export default {
      * @returns {Promise<unknown>}
      */
     sleep (sleepMs) {
-        let res;
-        setTimeout(function(){ res(); }, sleepMs);
-        return new Promise(function(a){ res = a; });
+        let res
+        setTimeout(function(){ res() }, sleepMs)
+        return new Promise(function(a){ res = a; })
     },
 
     /***
@@ -95,6 +95,73 @@ export default {
         catch (err) {
             console.log(err)
             throw "Loading strings failed. " + err.toString() || ""
+        }
+    },
+
+    /**
+     * Load comments from the database.
+     *
+     * Route: /comment?page=1&size=10
+     * Method: GET
+     *
+     * Get comments from the database in paginated form. The following params control the pagination:
+     *
+     * • page: Integer. The page to load.
+     * • size: Integer. The size of a page.
+     *
+     * Comments are returned as JSON.
+     *
+     * NB: Page counter starts at 1. Requesting page 0 results in 404 not found (from flask-sqlalchemy)
+     *
+     * @param page
+     * @param size
+     * @returns {Promise<any>}
+     */
+    async loadComments(page, size) {
+        try {
+            const data = {params: {'page': page, 'size': size}}
+
+            let response = await axios.get('/comment', data)
+
+            console.info("Loaded comments!")
+            console.debug(response)
+            return response.data
+        }
+        catch (err) {
+            console.log(err)
+            throw "Loading comments failed. " + err.toString() || ""
+        }
+    },
+
+    /**
+     * Post a comment
+     * Route: /comment?page=1&size=10
+     * Method: POST
+     *
+     * Post a comment to the model, to be stored in the database. POST body MUST include the below variables, formatted as
+     * JSON.
+     *
+     * • text: String. The comment body.
+     * • author: String. The author's name.
+     * • email: String. The author's email address (may be NULL for social media login)
+     *
+     * POST body MAY also include the following variable:
+     *
+     * • reply_id: Integer. The comment that this comment is replying to.
+     *
+     * @param data
+     * @returns {Promise<*>}
+     */
+    async postComment(data) {
+        try {
+            let response = await axios.post('/comment', data)
+            console.log(response)
+
+            return response.data
+        }
+        catch (err) {
+            console.error(err);
+            throw "Model query failed. " + err.toString() || ""
         }
     }
 }

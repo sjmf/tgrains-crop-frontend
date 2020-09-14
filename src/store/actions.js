@@ -114,4 +114,34 @@ export default {
             console.warn(`Vuex store reloaded from defaults due to new version hash: '${process.env.VUE_APP_GIT_HASH}'`)
         }
     },
+
+    /***
+     * Retrieve comments from the server and load them into vuex
+     */
+    async loadComments() {
+        try {
+            let comments = await http.loadComments(this.state.comments.page, this.state.comments.size)
+            this.commit("setComments", comments)
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+        }
+    },
+
+    /***
+     * Post a comment
+     * @param state
+     * @param payload
+     * @returns {Promise<void>}
+     */
+    async postComment(state, payload) {
+        try {
+            console.log(payload)
+            let newComments = await http.postComment(payload)
+            this.commit("setComments", newComments)
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+        }
+    }
 }

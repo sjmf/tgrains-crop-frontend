@@ -218,6 +218,15 @@ export default {
     },
 
     /**
+     * Set comments retrieved from the API on the state
+     * @param state
+     * @param comments
+     */
+    setComments(state, comments) {
+        state['comments'] = comments
+    },
+
+    /**
      * Populate the error message field and set the visibility to true. This is used
      * by the ErrorMessage component to display an error to the user.
      * @param state

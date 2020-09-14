@@ -114,6 +114,14 @@ export const initial_state = () => ({
         lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons.",
     },
 
+    // Comments retrieved from the server
+    comments: {
+        comments: {},
+        page: 1,
+        size: 4,
+        length: 0,
+    },
+
     // Error handling:
     error: {
         message: "",
