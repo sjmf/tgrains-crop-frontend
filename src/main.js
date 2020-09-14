@@ -37,6 +37,9 @@ new Vue({
     M.Modal.init(document.querySelector("#modal-welcome"))
     M.Sidenav.init(document.querySelectorAll('.sidenav'))
 
+    // Tooltips do not work because sidebar data is loaded later, via an ajax request.
+    //M.Tooltip.init(document.querySelectorAll('.sidenav li.variable-row[data-tooltip]:not([data-tooltip=""]'))
+
     // Open modal if terms not accepted.
     // This lives here because we can't re-import Materialize in components
     if(store.state.acceptedTerms === false) {
