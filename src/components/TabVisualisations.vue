@@ -2,25 +2,26 @@
   <div class="container">
     <div id="production-tab" class="col s12">
       <div class="row">
-        <div class="col s12">
+        <div class="col s12 m12 l6">
           <div class="card panel">
             <div class="card-content">
               <span class="card-title">Change from "Business-as-usual"</span>
               <div class="chart-panel">
                 <viz-production
                     :chart-data="proddata"
-                    :height="chartHeight"/>
+                    :height="chartHeight*2  "/>
+                <!-- ^ this doesn't support dynamic resize (but is better than nothing)! -->
               </div>
             </div>
           </div>
         </div>
 
-        <div class="col s12">
+        <div class="col s12 m12 l6">
           <div class="card panel">
             <div class="card-content">
               <span class="card-title">Production Values</span>
               <data-table
-                  :titles="['Factor', 'Value', 'Unit']"
+                  :titles="prodtitles"
                   :values="prodvalues"/>
             </div>
           </div>
@@ -74,7 +75,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -83,7 +83,6 @@
     import VizPests from "@/components/VizPesticides";
     import VizNutrition from "@/components/VizNutrition";
 
-    import store from "../store";
     import DataTable from "@/components/DataTable";
 
     export default {
@@ -91,7 +90,7 @@
         components: {DataTable, VizPests, VizNutrition, VizProduction},
         data (){
             return {
-                chartHeight: 200,
+                chartHeight: 125,
                 // Use TAB10 colors for charts to aid colorblind use
                 chartColors: {
                     opaque: [
@@ -123,20 +122,47 @@
         },
         computed: {
             basedata() {
-                return store.state.data[store.state.landscape_id]
+                return this.$store.state.data[this.$store.state.landscape_id]
             },
             rawdata() {
-                return store.state.data.raw[store.state.landscape_id]
+                return this.$store.state.data.raw[this.$store.state.landscape_id]
+            },
+            bau() {
+                return this.$store.state.bau[this.$store.state.landscape_id]
+            },
+            prodtitles() {
+                return ['Factor', 'Value', 'Change', 'Description']
             },
             prodvalues() {
                 return [
-                    {label: "Greenhouse Gasses", value: this.rawdata['greenhouseGasEmissions'], unit: "Total emissions in CO2-equiv (average kg/ha/year)" },
-                    {label: "Profit",            value: this.rawdata['profit'],                 unit: "Profit over variable costs (average £ ha-1)"},
-                    {label: "Calories",          value: this.rawdata['production'],             unit: "Calories"}
+                    {
+                        label: "Greenhouse Gasses",
+                        value: this.rawdata['greenhouseGasEmissions'],
+                        change: this.rawdata['greenhouseGasEmissions'] - this.bau['greenhouseGasEmissions'],
+                        unit: "Total emissions in CO2-equiv (average kg/ha/year)"
+                    },
+                    {
+                        label: "Profit",
+                          value: this.rawdata['profit'],
+                        change: this.rawdata['profit'] - this.bau['profit'],
+                        unit: "Profit over variable costs (average £ ha-1)"
+                    },
+                    {
+                        label: "Calories",
+                        value: this.rawdata['production'],
+                        change: this.rawdata['production'] - this.bau['production'],
+                        unit: "Calories"
+                    },
+                    {
+                         label: "People fed",
+                         value: this.people_fed,
+                         change: this.people_fed - this.people_fed_bau,
+                         unit: "Maximum people receiving a fully-balanced diet"
+                    }
                 ]
             },
-            proddata () {
-               return {
+            proddata() {
+                return {
                     labels: [
                         'GHG',
                         'Profit',
@@ -150,7 +176,7 @@
                     }]
                 }
             },
-            pestdata () {
+            pestdata() {
                 return {
                     labels: [
                         'Nitrogen leaching',
@@ -168,10 +194,10 @@
                     }]
                 }
             },
-            nutridata () {
+            nutridata() {
                 return {
-                    labels: (store.state.strings[store.state.landscape_id]['food_groups'] || [])
-                          .map(x=>store.state.food_groups_dictionary[x]),
+                    labels: (this.$store.state.strings[this.$store.state.landscape_id]['food_groups'] || [])
+                        .map(x => this.$store.state.food_groups_dictionary[x]),
                     type: 'outlabeledPie',
                     datasets: [{
                         backgroundColor: this.chartColors.opaque,
@@ -180,7 +206,7 @@
                     }]
                 }
             },
-            eatlancet () {
+            eatlancet() {
                 return {
                     labels: this.nutridata.labels,
                     type: 'outlabeledPie',
@@ -190,6 +216,42 @@
                         data: this.basedata.eatLancetPlate
                     }]
                 }
+            },
+            people_fed() {
+                return this.calc_people_fed(
+                    this.$store.state.data.raw[this.$store.state.landscape_id].production,
+                    this.$store.state.data[this.$store.state.landscape_id].nutritionaldelivery,
+                    this.$store.state.data[this.$store.state.landscape_id].eatLancetPlate)
+            },
+            people_fed_bau() {
+              return this.calc_people_fed(
+                  this.$store.state.bau[this.$store.state.landscape_id].production,
+                  this.$store.state.bau[this.$store.state.landscape_id].nutritionaldelivery,
+                  this.$store.state.data[this.$store.state.landscape_id].eatLancetPlate)
+            }
+        },
+        methods: {
+            /***
+             * Function sent by Alice to calculate the number of people who can be fed based on the provided nutrition.
+             *
+             * @param totalCalories – the number of calories produced in the region
+             * @param foodGroups are the proportions of each group that comes out of the region (i.e. the stuff that informs the pie chart)
+             * @param eatLancetFoodGroups are the proportions of each group recommended by EatLancet
+             * @param MaxNumGroups – is the size of the two arrays above.
+             */
+            calc_people_fed(totalCalories, foodGroups, eatLancetFoodGroups)
+            {
+                // First find the limiting group
+                let myMin = foodGroups[0] / eatLancetFoodGroups[0]
+                //console.log(totalCalories, myMin, foodGroups, eatLancetFoodGroups)
+
+                for (let i=1 ; i < foodGroups.length; i++)
+                {
+                    if (myMin > foodGroups[i] / eatLancetFoodGroups[i])
+                        myMin = foodGroups[i] / eatLancetFoodGroups[i]
+                }
+
+                return Math.floor((totalCalories*1000000) * myMin / (2500*365.2425))
             }
         }
     }

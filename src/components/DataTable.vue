@@ -1,18 +1,21 @@
 <template>
-  <table>
-    <thead>
-    <tr>
-      <th v-for="title in titles" :key="title">{{title}}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="row in values" :key="row.label">
-      <td>{{row.label}}</td>
-      <td>{{row.value | numberFormat}}</td>
-      <td>{{row.unit}}</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="tcontainer">
+    <table>
+      <thead>
+      <tr>
+        <th v-for="title in titles" :key="title">{{title}}</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="row in values" :key="row.label">
+        <td>{{row.label}}</td>
+        <td>{{row.value | numberFormat}}</td>
+        <td>{{row.change | numberFormat}}</td>
+        <td>{{row.unit}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 <script>
     export default {
@@ -34,5 +37,11 @@
 <style scoped>
   .card .card-content .chart-panel + p {
     margin-top: 20px;
+  }
+  table {
+    min-width:450px;
+  }
+  .tcontainer {
+    overflow-x: scroll;
   }
 </style>
