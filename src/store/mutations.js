@@ -46,7 +46,7 @@ function formatData(state, new_data){
 
     data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
     data['nutritionaldelivery'] = new_data['nutritionaldelivery']
-        .map(x => Math.round(x*10000)/100)   // Round the float-point to 2dp
+        // .map(x => Math.round(x*10000)/100)   // Round the float-point to 2dp
     data['eatLancetPlate'] = initial_state().data[state.landscape_id].eatLancetPlate // Static. Does not change.
 
     return data
