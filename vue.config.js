@@ -13,6 +13,9 @@ module.exports = {
             },
             '/status': {
                 target:  'http://localhost:8000',
+            },
+            '/comment': {
+                target:  'http://localhost:8000',
             }
         }
     }
