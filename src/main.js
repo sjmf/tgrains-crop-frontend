@@ -34,11 +34,15 @@ new Vue({
     M.Tabs.init(document.querySelectorAll(".tabs"), {
       // swipeable: true
     });
-    M.Modal.init(document.querySelector("#modal-welcome"))
-    M.Sidenav.init(document.querySelectorAll('.sidenav'))
+
+    M.Modal.init(document.querySelectorAll(".modal"))
+
+    M.Sidenav.init(document.querySelectorAll(".sidenav"))
 
     // Tooltips do not work because sidebar data is loaded later, via an ajax request.
     //M.Tooltip.init(document.querySelectorAll('.sidenav li.variable-row[data-tooltip]:not([data-tooltip=""]'))
+
+    M.Collapsible.init(document.querySelectorAll(".collapsible"))
 
     // Open modal if terms not accepted.
     // This lives here because we can't re-import Materialize in components
