@@ -130,11 +130,10 @@ export default {
 
     /***
      * Post a comment
-     * @param state
      * @param payload
      * @returns {Promise<void>}
      */
-    async postComment(state, payload) {
+    async postComment(_, payload) {
         try {
             console.log(payload)
             let newComments = await http.postComment(payload)
