@@ -9,8 +9,10 @@
       <tbody>
       <tr v-for="row in values" :key="row.label">
         <td>{{row.label}}</td>
-        <td>{{row.value | numberFormat}}</td>
-        <td>{{row.change | numberFormat}}</td>
+        <td>{{row.value | format_significance}}</td>
+        <td v-bind:class="row.change === 0 ? '' : row.change >= 0 ? 'green-text' : 'red-text'" class="text-darken-2">
+            {{row.change | sign}} {{row.change | format_significance}}
+        </td>
         <td>{{row.unit}}</td>
       </tr>
       </tbody>
@@ -18,6 +20,13 @@
   </div>
 </template>
 <script>
+    function numberFormat(value) {
+      return new Intl.NumberFormat('en-GB', {
+            maximumFractionDigits: 1,
+          }
+      ).format(value)
+    }
+
     export default {
         name: 'DataTable',
         props: {
@@ -25,11 +34,30 @@
             values: Array
         },
         filters: {
-            numberFormat(value) {
-                return new Intl.NumberFormat('en-GB', {
-                        maximumFractionDigits: 0,
-                    }
-                ).format(value)
+            /***
+             * Format a number removing precision and truncating, then adding 'millions', 'billions', etc.
+             * https://stackoverflow.com/questions/36734201/
+             * @param value
+             */
+            format_significance(value) {
+              // Nine Zeroes for Billions
+              return Math.abs(Number(value)) >= 1.0e+9
+
+                  ? numberFormat(Math.abs(Number(value)) / 1.0e+9) + " billion"
+                  // Six Zeroes for Millions
+                  : Math.abs(Number(value)) >= 1.0e+6
+
+                      ? numberFormat(Math.abs(Number(value)) / 1.0e+6) + " million"
+                      // Three Zeroes for Thousands
+                      : Math.abs(Number(value)) >= 1.0e+3
+
+                          ? numberFormat(Math.abs(Number(value)) / 1.0e+3) + " thousand"
+
+                          : Math.abs(Number(value));
+            },
+
+            sign(value) {
+              return (value === 0 ? '' : value >= 0 ? '+' : '-')
             }
         },
     }

@@ -151,13 +151,13 @@
                         label: "Calories",
                         value: this.rawdata['production'],
                         change: this.rawdata['production'] - this.bau['production'],
-                        unit: "Calories"
+                        unit: "Calories delivered"
                     },
                     {
-                         label: "People fed",
+                         label: "People supported",
                          value: this.people_fed,
                          change: this.people_fed - this.people_fed_bau,
-                         unit: "Maximum people receiving a fully-balanced diet"
+                         unit: "Total people receiving a fully-balanced diet"
                     }
                 ]
             },
@@ -237,7 +237,6 @@
              * @param totalCalories – the number of calories produced in the region
              * @param foodGroups are the proportions of each group that comes out of the region (i.e. the stuff that informs the pie chart)
              * @param eatLancetFoodGroups are the proportions of each group recommended by EatLancet
-             * @param MaxNumGroups – is the size of the two arrays above.
              */
             calc_people_fed(totalCalories, foodGroups, eatLancetFoodGroups)
             {
