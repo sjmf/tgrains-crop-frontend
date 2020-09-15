@@ -135,6 +135,9 @@ export default {
      */
     async postComment(_, payload) {
         try {
+            payload['page'] = this.state.comments.page
+            payload['size'] = this.state.comments.size
+
             console.log(payload)
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
