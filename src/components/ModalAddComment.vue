@@ -1,6 +1,7 @@
 <template>
   <div id="modal-add-comment" class="modal">
     <div class="modal-content container">
+      <!--
       <div class="socialmedia-login">
         <div class="row">
           <div class="col s12">
@@ -31,14 +32,15 @@
         </div>
         <div class="row">
           <div class="col s12 m8 offset-m2">
-            <a href="#" onclick="toggleCommentForm();" class="btn waves-effect waves-light white grey-text">
+            <a href="#" :click="toggleCommentForm();" class="btn waves-effect waves-light white grey-text">
               Post without logging in
             </a>
           </div>
         </div>
       </div>
+      -->
 
-      <div class="row comment-form hide">
+      <div class="row comment-form">
         <div class="col s12">
           <p>Please enter your comment below:</p>
         </div>
@@ -48,23 +50,26 @@
           <div class="row">
             <div class="input-field col s6">
               <i class="material-icons prefix">account_circle</i>
-              <input id="name" type="text" class="validate">
+              <input v-model="name" id="name" type="text" class="validate">
               <label for="name">Name</label>
             </div>
             <div class="input-field col s6">
               <i class="material-icons prefix">email</i>
-              <input id="email" type="email" class="validate">
-              <label for="email">Email</label>
+              <input v-model="email" id="email" type="email" class="validate">
+              <label for="email">Email (will not be displayed to others)</label>
             </div>
           </div>
 
           <div class="row">
             <div class="input-field col s12">
-              <textarea id="comment-body" class="materialize-textarea"></textarea>
+              <textarea v-model="text" id="comment-body" class="materialize-textarea"></textarea>
               <label for="comment-body">Comment</label>
+              <span class="grey-text text-length">{{textLength}}/{{comment_string_max_length}}</span>
             </div>
           </div>
 
+          <!-- TAGS COLLAPSIBLE -->
+          <!--
           <div class="row">
             <div class="col s12 tags">
               <p>Next, please add tags using the pre-defined tag categories below to help other users find
@@ -112,7 +117,7 @@
 
             </div>
           </div>
-
+          -->
         </form>
 
         <div class="col s12">
@@ -126,15 +131,43 @@
     <div class="modal-footer">
       <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancel</a>
       <a href="#!" class="modal-close waves-effect green darken-2 white-text waves-green btn-flat"
-         onclick="toggleCommentForm();">Post</a>
+         @click="postComment">Post</a>
     </div>
   </div>
 </template>
 <script>
-    import Lozenge from "@/components/Lozenge"
+    // import Lozenge from "@/components/Lozenge"
 
     export default {
         name: 'ModalComments',
-        components: {Lozenge}
+        // components: {Lozenge},
+        data() {
+          return {
+            comment_string_max_length: 10000,
+            name: '',
+            email: '',
+            text: ''
+          }
+        },
+        props: {
+          reply_id: Number
+        },
+        methods: {
+          postComment() {
+            let payload = {'text': this.text, 'author': this.name, 'email': this.email, 'reply_id': this.reply_id}
+            this.$store.dispatch('postComment', payload)
+          }
+        },
+        computed: {
+          textLength() {
+            return this.text.length
+          }
+        }
     }
 </script>
+<style scoped>
+.text-length {
+  float: right;
+  font-size: .9rem;
+}
+</style>

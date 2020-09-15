@@ -21,12 +21,15 @@
         <br><br>
       </div>
 
+      <!-- COMMENTS CONTAINER -->
+      <container-comments/>
+
+      <div class="container col s12">
+        <br><br>
+      </div>
+
       <!-- DEBUG INFORMATION -->
       <viz-debug/>
-
-      <!-- COMMENTS CONTAINER -->
-      <!-- Scaled-up version feature. Currently disabled -->
-      <!-- <container-comments/> -->
 
       <!-- Modal for welcome message -->
       <modal-welcome/>
@@ -43,6 +46,7 @@
     import LoadingOverlay from "@/components/LoadingOverlay";
     import ErrorMessage from "@/components/ErrorMessage";
     import VizDebug from "@/components/VizDebug";
+    import ContainerComments from "@/components/ContainerComments";
 
     export default {
         name: "ContainerMain",
@@ -53,7 +57,8 @@
             TabBar,
             ModalWelcome,
             LandscapeJumbotron,
-            VizDebug
+            VizDebug,
+            ContainerComments
         },
         props: {
             loading: Boolean
