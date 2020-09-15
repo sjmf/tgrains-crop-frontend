@@ -227,6 +227,15 @@ export default {
     },
 
     /**
+     * Set the page to request for comment pagination
+     * @param state
+     * @param page
+     */
+    setCommentsPage(state, page) {
+        state['comments'].page = page
+    },
+
+    /**
      * Populate the error message field and set the visibility to true. This is used
      * by the ErrorMessage component to display an error to the user.
      * @param state
