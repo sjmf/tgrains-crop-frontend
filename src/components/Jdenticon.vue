@@ -13,7 +13,7 @@ export default {
   computed: {
     identicon: function() {
       return jdenticon.toSvg(this.value, 200)
-          .replace('height="200"', 'height="auto"')
+          .replace('height="200"', 'height="100%"')
           .replace('width="200"', 'width="100%"');
     }
   }
