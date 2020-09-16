@@ -214,7 +214,6 @@ export default {
             state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
         for (let i=0; i < livestock.length; i++)
             state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockAreas[i]
-
     },
 
     /**
@@ -233,6 +232,15 @@ export default {
      */
     setCommentsPage(state, page) {
         state['comments'].page = page
+    },
+
+    /**
+     * Set tags in state
+     * @param state
+     * @param tags
+     */
+    setTags(state, tags) {
+        state['tags'] = tags
     },
 
     /**

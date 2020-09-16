@@ -123,8 +123,7 @@ export default {
 
             let response = await axios.get('/comment', data)
 
-            console.info("Loaded comments!")
-            console.debug(response)
+            console.info("Loaded comments")
             return response.data
         }
         catch (err) {
@@ -155,8 +154,25 @@ export default {
     async postComment(data) {
         try {
             let response = await axios.post('/comment', data)
-            console.log(response)
 
+            console.info("Comment posted")
+            return response.data
+        }
+        catch (err) {
+            console.error(err);
+            throw "Model query failed. " + err.toString() || ""
+        }
+    },
+
+    /***
+     * Retrieve tags from API
+     * @returns {Promise<any>}
+     */
+    async loadTags() {
+        try {
+            let response = await axios.get('/tags')
+
+            console.info("Loaded tags")
             return response.data
         }
         catch (err) {

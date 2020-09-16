@@ -114,6 +114,12 @@ export const initial_state = () => ({
         lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons.",
     },
 
+    // Populations (retrieved from Wikipedia. More accurate ones needed)
+    population: {
+        101: 6235000,
+        102: 2200000
+    },
+
     // Comments retrieved from the server
     comments: {
         comments: {},
@@ -121,6 +127,18 @@ export const initial_state = () => ({
         size: 4,
         length: 0,
     },
+
+    // Tag group colours
+    tag_groups: {
+        0: { colour: "blue lighten-1"   },
+        1: { colour: "brown lighten-1"  },
+        2: { colour: "green lighten-1"  },
+        3: { colour: "amber darken-1"   },
+        4: { colour: "red lighten-2"    },
+        5: { colour: "purple lighten-2" },
+    },
+
+    tags: [],
 
     // Error handling:
     error: {
