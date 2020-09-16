@@ -40,6 +40,7 @@
           v-for="(comment, index) in comments"
           v-bind:key="index"
           v-bind:id="comment.id"
+          v-bind:hash="comment.hash"
           v-bind:reply_id="comment.reply_id"
           v-bind:author="comment.author"
           v-bind:text="comment.text"

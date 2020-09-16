@@ -2,7 +2,7 @@
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="row">
       <div class="col s4 m2">
-        <img src="" alt="avatar" class="circle responsive-img valign">
+        <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
       </div>
 
       <div class="col s8 m10">
@@ -73,12 +73,18 @@
   </div>
 </template>
 <script>
+import Jdenticon from '@/components/Jdenticon.vue'
+
 export default {
   name: 'comment-card',
+  components: {
+    Jdenticon
+  },
   props: {
       id: Number,
       reply_id: Number,
       author: String,
+      hash: String,
       text: String,
       timestamp: Number,
       tags: Array,
