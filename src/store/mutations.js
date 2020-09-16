@@ -249,9 +249,8 @@ export default {
      * @param payload
      */
     setTagSelected(state, payload) {
-        let id, group, value
-        [id, group, value] = Object.values(payload)
-        console.debug(id, group, value)
+        let [id, value] = Object.values(payload)
+
         // id-1 because JS indexes from 0 while MySQL indexes from 1
         state['tags']['tags'][id-1].selected = value
     },

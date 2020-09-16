@@ -23,7 +23,7 @@
                 v-bind:name="tags.tags[i-1].name"
                 v-bind:value="tags.tags[i-1].selected"
                 v-bind:colour="tag_groups[0]['colour']"
-                @input="updateValue(i, 0, $event)"/>
+                @input="updateValue(i, $event)"/>
           </div>
         </li>
 
@@ -39,7 +39,7 @@
                 v-bind:name="tags.tags[i-1].name"
                 v-bind:value="tags.tags[i-1].selected"
                 v-bind:colour="tag_groups[1]['colour']"
-                @input="updateValue(i, 1, $event)"/>
+                @input="updateValue(i, $event)"/>
 
           </div>
         </li>
@@ -57,7 +57,7 @@
                   v-bind:name="tags.tags[i-1].name"
                   v-bind:value="tags.tags[i-1].selected"
                   v-bind:colour="tag_groups[n+1]['colour']"
-                  @input="updateValue(i, n+1, $event)"/>
+                  @input="updateValue(i, $event)"/>
             </span>
 
           </div>
@@ -84,8 +84,8 @@ export default {
     }
   },
   methods: {
-    updateValue(id, group, value) {
-      this.$store.commit('setTagSelected', {id, group, value})
+    updateValue(id, value) {
+      this.$store.commit('setTagSelected', {id, value})
     }
   }
 }
