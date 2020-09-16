@@ -141,6 +141,9 @@ export default {
             payload['page'] = this.state.comments.page
             payload['size'] = this.state.comments.size
 
+            // Add selected tags to payload
+            payload['tags'] = this.state.tags.tags.map(x => x.selected ? x.id : null).filter(x => x!==null)
+
             console.log(payload)
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
