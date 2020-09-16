@@ -1,21 +1,21 @@
 <template>
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="row">
-      <div class="col s4 m2">
+      <div class="col s3 m2">
         <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
       </div>
 
-      <div class="col s8 m10">
+      <div class="col s9 m10">
         <div class="row">
           <div class="col s12 m6">
-                  <span class="username green-text text-darken-2">
-                    {{ author }}
-                  </span>
+            <span class="username green-text text-darken-2">
+              {{ author }}
+            </span>
           </div>
           <div class="col s12 m6 right-align">
-                  <span class="timestamp grey-text">
-                    {{ timestamp | format_datetime }}
-                  </span>
+            <span class="timestamp grey-text">
+              {{ timestamp | format_datetime }}
+            </span>
           </div>
 
         </div>
