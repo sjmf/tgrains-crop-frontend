@@ -244,6 +244,19 @@ export default {
     },
 
     /**
+     * Update a tag's status to selected (or not)
+     * @param state
+     * @param payload
+     */
+    setTagSelected(state, payload) {
+        let id, group, value
+        [id, group, value] = Object.values(payload)
+        console.debug(id, group, value)
+        // id-1 because JS indexes from 0 while MySQL indexes from 1
+        state['tags']['tags'][id-1].selected = value
+    },
+
+    /**
      * Populate the error message field and set the visibility to true. This is used
      * by the ErrorMessage component to display an error to the user.
      * @param state

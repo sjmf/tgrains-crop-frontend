@@ -69,55 +69,7 @@
           </div>
 
           <!-- TAGS COLLAPSIBLE -->
-          <!--
-          <div class="row">
-            <div class="col s12 tags">
-              <p>Next, please add tags using the pre-defined tag categories below to help other users find
-                your comment:
-              </p>
-            </div>
-
-            <div class="col s12 m10 offset-m1">
-
-              <ul class="collapsible">
-                <li class="active">
-                  <div class="collapsible-header">
-                    <i class="material-icons">supervisor_account</i>Themes
-                  </div>
-
-                  <div class="collapsible-body">
-
-                    <Lozenge/>
-
-                  </div>
-                </li>
-
-                <li>
-                  <div class="collapsible-header">
-                    <i class="material-icons">terrain</i>Crops and Livestock
-                  </div>
-                  <div class="collapsible-body">
-
-                    <Lozenge/>
-
-                  </div>
-                </li>
-
-                <li>
-                  <div class="collapsible-header">
-                    <i class="material-icons">pie_chart</i>Outputs
-                  </div>
-                  <div class="collapsible-body">
-
-                    <Lozenge/>
-
-                  </div>
-                </li>
-              </ul>
-
-            </div>
-          </div>
-          -->
+          <TagSelect/>
         </form>
 
         <div class="col s12">
@@ -136,11 +88,11 @@
   </div>
 </template>
 <script>
-    // import Lozenge from "@/components/Lozenge"
+    import TagSelect from "@/components/TagSelect";
 
     export default {
         name: 'ModalComments',
-        // components: {Lozenge},
+        components: {TagSelect},
         data() {
           return {
             comment_string_max_length: 10000,
