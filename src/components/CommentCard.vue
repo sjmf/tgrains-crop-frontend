@@ -14,7 +14,7 @@
           </div>
           <div class="col s12 m6 right-align">
                   <span class="timestamp grey-text">
-                    {{ timestamp }}
+                    {{ timestamp | format_datetime }}
                   </span>
           </div>
 
@@ -76,20 +76,24 @@
 export default {
   name: 'comment-card',
   props: {
-    id: Number,
-    reply_id: Number,
-    author: String,
-    text: String,
-    timestamp: String,
-    tags: Array,
-    model_state: undefined
+      id: Number,
+      reply_id: Number,
+      author: String,
+      text: String,
+      timestamp: Number,
+      tags: Array,
+      model_state: undefined
   },
   filters: {
-    decode(html) {
-      let txt = document.createElement("textarea");
-      txt.innerHTML = html;
-      return txt.value;
-    }
+      format_datetime(unix_timestamp) {
+          let d = new Date(unix_timestamp * 1000)
+          return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB")
+      },
+      decode(html) {
+          let txt = document.createElement("textarea");
+          txt.innerHTML = html;
+          return txt.value;
+      }
   }
 }
 </script>
