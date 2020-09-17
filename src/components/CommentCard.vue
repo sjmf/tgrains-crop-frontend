@@ -29,16 +29,16 @@
           </div>
         </div>
 
-        <div class="row" v-if="tags">
+        <div class="row" v-if="tags.length">
           <div class="col s2">
             <span class="grey-text">Tags:</span>
           </div>
           <div class="col s10">
-            <span class="new badge blue lighten-2" data-badge-caption="small business"></span>
-            <span class="new badge brown lighten-2" data-badge-caption="oats"></span>
-            <span class="new badge green lighten-2" data-badge-caption="greenhouse gas"></span>
-            <span class="new badge purple lighten-2" data-badge-caption="pesticides"></span>
-            <span class="new badge red lighten-2" data-badge-caption="cancer"></span>
+            <span v-for="t in tags"
+                  v-bind:key="t"
+                  class="new badge"
+                  v-bind:class="tag_group(tag_meta(t).group).colour"
+                  v-bind:data-badge-caption="tag_meta(t).name"></span>
           </div>
         </div>
 
@@ -89,6 +89,14 @@ export default {
       timestamp: Number,
       tags: Array,
       model_state: undefined
+  },
+  methods: {
+    tag_meta(id) {
+      return this.$store.state.tags.tags[id-1]
+    },
+    tag_group(id) {
+      return this.$store.state.tag_groups[id]
+    }
   },
   filters: {
       format_datetime(unix_timestamp) {

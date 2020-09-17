@@ -44,6 +44,7 @@
           v-bind:reply_id="comment.reply_id"
           v-bind:author="comment.author"
           v-bind:text="comment.text"
+          v-bind:tags="comment.tags"
           v-bind:timestamp="comment.timestamp"/>
 
     </div>
