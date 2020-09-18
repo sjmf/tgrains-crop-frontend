@@ -147,6 +147,7 @@ export default {
             console.log(payload)
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
+            this.commit("resetAllTagSelected")
         }
         catch (err) {
             this.commit("raiseError", err)

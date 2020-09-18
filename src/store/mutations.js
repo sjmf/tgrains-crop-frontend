@@ -256,6 +256,16 @@ export default {
     },
 
     /**
+     * Reset all tags to non-selected state
+     * @param state
+     */
+    resetAllTagSelected(state) {
+        for (let tag in state['tags']['tags']) {
+            tag.selected = false;
+        }
+    },
+
+    /**
      * Populate the error message field and set the visibility to true. This is used
      * by the ErrorMessage component to display an error to the user.
      * @param state
