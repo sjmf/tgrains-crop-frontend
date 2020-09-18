@@ -10,7 +10,7 @@
 
 <script>
     export default {
-      name: 'Lozenge',
+      name: 'Tag',
       props: {
           name: String,
           colour: String,
