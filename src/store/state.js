@@ -134,8 +134,8 @@ export const initial_state = () => ({
         1: { colour: "brown lighten-1"  },
         2: { colour: "green lighten-1"  },
         3: { colour: "amber darken-1"   },
-        4: { colour: "red lighten-2"    },
-        5: { colour: "purple lighten-2" },
+        4: { colour: "purple lighten-2" },
+        5: { colour: "red lighten-2"    },
     },
 
     tags: [],
