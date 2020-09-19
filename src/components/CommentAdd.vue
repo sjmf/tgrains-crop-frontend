@@ -43,8 +43,24 @@
 
       <div class="row comment-form">
         <form class="col s12">
-          <div class="row">
 
+          <!-- Reply-to comment -->
+          <div v-if="reply_id" class="row">
+            <div class="col s12">
+              <p>Replying to comment: <a @click="$emit('cancelReply')">(cancel)</a></p>
+              <comment-card
+                  v-bind:id="reply_comment.id"
+                  v-bind:hash="reply_comment.hash"
+                  v-bind:reply_id="reply_comment.reply_id"
+                  v-bind:author="reply_comment.author"
+                  v-bind:text="reply_comment.text"
+                  v-bind:tags="reply_comment.tags"
+                  v-bind:timestamp="reply_comment.timestamp"
+                  v-bind:reply_view="true"/>
+            </div>
+          </div>
+
+          <div class="row">
             <!-- VALIDATION -->
             <div v-if="formValid===false" class="col s12 errors">
               <p><strong>Please correct the following error(s):</strong></p>
@@ -117,20 +133,28 @@
       </div>
     </div>
     <div class="card-action">
-      <button class="waves-effect waves-green btn-flat">Cancel</button>
+      <button class="waves-effect waves-green btn-flat"
+              @click="$emit('closeForm')">
+        Cancel
+      </button>
       <button class="waves-effect green darken-2 white-text waves-green btn-flat"
               @click="postComment"
-              v-bind:disabled="formValid===undefined || formValid === false">Post
+              v-bind:disabled="formValid===undefined || formValid === false">
+        Post
       </button>
     </div>
   </div>
 </template>
 <script>
     import TagSelect from "@/components/TagSelect";
+    import CommentCard from "@/components/CommentCard";
 
     export default {
         name: 'CommentAdd',
-        components: {TagSelect},
+        components: {CommentCard, TagSelect},
+        props: {
+          reply_id: Number
+        },
         data() {
           return {
             comment_string_max_length: 10000,
@@ -152,10 +176,16 @@
           },
           formValid() {
             return this.name.valid && this.email.valid && this.text.valid
+          },
+          reply_comment() {
+            // Look up comment from the store by ID
+            // If comments were larger I would use a map, but honestly, this is the simpler solution
+            if (this.reply_id)
+              for (let c of this.$store.state.comments.comments)
+                if (c.id === this.reply_id)
+                  return c
+            return null
           }
-        },
-        props: {
-          reply_id: Number
         },
         methods: {
           async postComment() {
@@ -175,7 +205,7 @@
             this.name = clear
             this.email = clear
             this.text = clear
-            this.$emit('formReset')
+            this.$emit('closeForm')
           },
           setError(key) {
             key.field.error = key.string

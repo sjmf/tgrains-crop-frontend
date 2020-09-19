@@ -16,8 +16,8 @@
             <span class="timestamp grey-text">
               {{ timestamp | format_datetime }}
             </span>
-            <span class="reply">
-              <a @click="$emit('replyToComment', {reply_id})"><i class="material-icons">reply</i> Reply</a>
+            <span class="reply" v-if="!reply_view">
+              <a @click="$emit('replyToComment', {id})"><i class="material-icons">reply</i> Reply</a>
             </span>
           </div>
 
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row" v-if="!reply_view">
       <div class="col s10 offset-s2">
         <div class="row" v-if="tags.length">
           <div class="col s2">
@@ -95,7 +95,8 @@ export default {
       text: String,
       timestamp: Number,
       tags: Array,
-      model_state: undefined
+      model_state: undefined,
+      reply_view: Boolean
   },
   methods: {
     tag_meta(id) {

@@ -18,7 +18,11 @@
     <!-- Add comment form -->
     <transition name="fade">
       <div class="col s12" v-show="show_addcomment">
-        <comment-add v-on:formReset="toggleAddComment"/>
+        <comment-add
+            v-bind:reply_id="reply_id"
+            v-on="$listeners"
+            v-on:cancelReply="reply_id=null"
+            v-on:closeForm="toggleAddComment"/>
       </div>
     </transition>
 
@@ -57,7 +61,7 @@
           v-bind:text="comment.text"
           v-bind:tags="comment.tags"
           v-bind:timestamp="comment.timestamp"
-          v-on:replyToComment="toggleAddComment"/> <!-- TODO: Set reply ID -->
+          v-on:replyToComment="doReply"/>
 
     </div>
   </div>
@@ -75,6 +79,7 @@ export default {
         data() {
           return {
             show_addcomment: false,
+            reply_id: undefined,
           }
         },
         methods: {
@@ -83,6 +88,11 @@ export default {
                     this.$store.commit('setCommentsPage', page)
                     this.$store.dispatch('loadComments')
                 }
+            },
+            doReply (event) {
+              console.log(event)
+              this.show_addcomment = true
+              this.reply_id = event.id
             },
             toggleAddComment () {
               this.show_addcomment = !this.show_addcomment
