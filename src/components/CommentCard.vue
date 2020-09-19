@@ -16,6 +16,9 @@
             <span class="timestamp grey-text">
               {{ timestamp | format_datetime }}
             </span>
+            <span class="reply">
+              <a @click="$emit('replyToComment', {reply_id})"><i class="material-icons">reply</i> Reply</a>
+            </span>
           </div>
 
         </div>
@@ -28,7 +31,11 @@
             </span>
           </div>
         </div>
+      </div>
+    </div>
 
+    <div class="row">
+      <div class="col s10 offset-s2">
         <div class="row" v-if="tags.length">
           <div class="col s2">
             <span class="grey-text">Tags:</span>
@@ -36,9 +43,9 @@
           <div class="col s10">
             <span v-for="t in tags"
                   v-bind:key="t"
-                  class="new badge"
                   v-bind:class="tag_group(tag_meta(t).group).colour"
-                  v-bind:data-badge-caption="tag_meta(t).name"></span>
+                  v-bind:data-badge-caption="tag_meta(t).name"
+                  class="new badge tag"></span>
           </div>
         </div>
 
@@ -111,3 +118,21 @@ export default {
   }
 }
 </script>
+<style scoped>
+span.tag.badge.new[data-badge-caption] {
+  margin: 2px 0 0 14px;
+  float: left;
+}
+span.reply {
+  padding: 0 0 0 10px;
+  cursor: pointer;
+}
+span.reply a:hover {
+  filter: brightness(75%);
+}
+a i.material-icons {
+  height: 18px;
+  width: 18px;
+  font-size: 18px;
+}
+</style>

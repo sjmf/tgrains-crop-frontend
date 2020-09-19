@@ -1,68 +1,56 @@
 <template>
-  <div class="row">
-    <div class="col s12 tags">
-      <p>Next, please add tags using the pre-defined tag categories below to help other users find
-        your comment:
-      </p>
-    </div>
+  <ul class="collapsible">
+    <li class="active">
+      <div class="collapsible-header">
+        <i class="material-icons">supervisor_account</i>Themes
+      </div>
 
-    <div class="col s12 m10 offset-m1">
+      <div class="collapsible-body">
+        <!-- +1 here as MySQL indexes from 1! -->
+        <!--- i == tags.tags[i+1].id -->
+        <Tag v-for="i in tags.groups[0]"
+             v-bind:key="i"
+             v-bind:name="tags.tags[i-1].name"
+             v-bind:value="tags.tags[i-1].selected"
+             v-bind:colour="tag_groups[0]['colour']"
+             @input="updateValue(i, $event)"/>
+      </div>
+    </li>
 
-      <ul class="collapsible">
-        <li class="active">
-          <div class="collapsible-header">
-            <i class="material-icons">supervisor_account</i>Themes
-          </div>
+    <li>
+      <div class="collapsible-header">
+        <i class="material-icons">terrain</i>Crops and Livestock
+      </div>
+      <div class="collapsible-body">
 
-          <div class="collapsible-body">
-            <!-- +1 here as MySQL indexes from 1! -->
-            <!--- i == tags.tags[i+1].id -->
-            <Tag v-for="i in tags.groups[0]"
-                 v-bind:key="i"
-                 v-bind:name="tags.tags[i-1].name"
-                 v-bind:value="tags.tags[i-1].selected"
-                 v-bind:colour="tag_groups[0]['colour']"
-                 @input="updateValue(i, $event)"/>
-          </div>
-        </li>
+        <Tag v-for="i in tags.groups[1]"
+             v-bind:key="i"
+             v-bind:name="tags.tags[i-1].name"
+             v-bind:value="tags.tags[i-1].selected"
+             v-bind:colour="tag_groups[1]['colour']"
+             @input="updateValue(i, $event)"/>
 
-        <li>
-          <div class="collapsible-header">
-            <i class="material-icons">terrain</i>Crops and Livestock
-          </div>
-          <div class="collapsible-body">
+      </div>
+    </li>
 
-            <Tag v-for="i in tags.groups[1]"
-                 v-bind:key="i"
-                 v-bind:name="tags.tags[i-1].name"
-                 v-bind:value="tags.tags[i-1].selected"
-                 v-bind:colour="tag_groups[1]['colour']"
-                 @input="updateValue(i, $event)"/>
+    <li>
+      <div class="collapsible-header">
+        <i class="material-icons">pie_chart</i>Outputs
+      </div>
+      <div class="collapsible-body">
 
-          </div>
-        </li>
+        <span v-for="n in 3" v-bind:key="n">
+          <Tag v-for="i in tags.groups[n+1]"
+               v-bind:key="i"
+               v-bind:name="tags.tags[i-1].name"
+               v-bind:value="tags.tags[i-1].selected"
+               v-bind:colour="tag_groups[n+1]['colour']"
+               @input="updateValue(i, $event)"/>
+        </span>
 
-        <li>
-          <div class="collapsible-header">
-            <i class="material-icons">pie_chart</i>Outputs
-          </div>
-          <div class="collapsible-body">
-
-            <span v-for="n in 3" v-bind:key="n">
-              <Tag v-for="i in tags.groups[n+1]"
-                   v-bind:key="i"
-                   v-bind:name="tags.tags[i-1].name"
-                   v-bind:value="tags.tags[i-1].selected"
-                   v-bind:colour="tag_groups[n+1]['colour']"
-                   @input="updateValue(i, $event)"/>
-            </span>
-
-          </div>
-        </li>
-      </ul>
-
-    </div>
-  </div>
+      </div>
+    </li>
+  </ul>
 </template>
 <script>
 import Tag from "@/components/Tag";
