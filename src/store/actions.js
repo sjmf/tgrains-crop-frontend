@@ -133,6 +133,7 @@ export default {
 
     /***
      * Post a comment
+     * @param _ unused state
      * @param payload
      * @returns {Promise<void>}
      */
@@ -148,6 +149,7 @@ export default {
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
             this.commit("resetAllTagSelected")
+            this.$emit('commentPosted')
         }
         catch (err) {
             this.commit("raiseError", err)
