@@ -260,7 +260,7 @@ export default {
      * @param state
      */
     resetAllTagSelected(state) {
-        for (let tag in state['tags']['tags']) {
+        for (let tag of state['tags']['tags']) {
             tag.selected = false;
         }
     },
