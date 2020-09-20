@@ -27,26 +27,7 @@
     </transition>
 
     <!-- Pagination -->
-    <div class="col s12 m6 offset-m4">
-      <ul class="pagination">
-        <li v-bind:class="[current_page <= 1 ? 'disabled' : 'waves-effect']"
-            @click="set_page(current_page - 1)">
-          <a href="#!"><i class="material-icons">chevron_left</i></a>
-        </li>
-
-        <li v-for="n in total_pages"
-            v-bind:key="n"
-            v-bind:class="[current_page === n ? 'active' : 'waves-effect']"
-            @click="set_page(n)">
-          <a href="#!">{{ n }}</a>
-        </li>
-
-        <li v-bind:class="[current_page >= total_pages ? 'disabled' : 'waves-effect']"
-            @click="set_page(current_page + 1)">
-          <a href="#!"><i class="material-icons">chevron_right</i></a>
-        </li>
-      </ul>
-    </div>
+    <pagination/>
 
     <!-- Comment cards -->
     <div class="col s12 m10 l8 offset-m1 offset-l2">
@@ -64,15 +45,19 @@
           v-on:replyToComment="doReply"/>
 
     </div>
+
+    <!-- Pagination -->
+    <pagination/>
   </div>
 </template>
 <script>
 import CommentAdd from "@/components/CommentAdd"
 import CommentCard from "@/components/CommentCard";
+import Pagination from "@/components/Pagination";
 
 export default {
         name: 'ContainerComments',
-        components: {CommentCard, CommentAdd},
+        components: {Pagination, CommentCard, CommentAdd},
         mounted() {
             this.$store.dispatch('loadComments')
         },
@@ -83,12 +68,6 @@ export default {
           }
         },
         methods: {
-            set_page(page) {
-                if(page !== this.current_page && page > 0 && page <= this.total_pages) {
-                    this.$store.commit('setCommentsPage', page)
-                    this.$store.dispatch('loadComments')
-                }
-            },
             doReply (event) {
               console.log(event)
               this.show_addcomment = true
@@ -101,12 +80,6 @@ export default {
         computed: {
             comments() {
                 return this.$store.state.comments.comments;
-            },
-            current_page() {
-                return this.$store.state.comments.page
-            },
-            total_pages(){
-                return Math.floor((this.$store.state.comments.length-1) / this.$store.state.comments.size) +1
             }
         }
     }
