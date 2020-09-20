@@ -128,7 +128,7 @@ export default {
         }
         catch (err) {
             console.log(err)
-            throw "Loading comments failed. " + err.toString() || ""
+            throw "Comment load failed. " + err.toString() || ""
         }
     },
 
@@ -160,7 +160,7 @@ export default {
         }
         catch (err) {
             console.error(err);
-            throw "Model query failed. " + err.toString() || ""
+            throw "Comment post failed. " + err.toString() || ""
         }
     },
 
@@ -177,7 +177,25 @@ export default {
         }
         catch (err) {
             console.error(err);
-            throw "Model query failed. " + err.toString() || ""
+            throw "Tags load failed. " + err.toString() || ""
+        }
+    },
+
+    /***
+     * Load a single reply from the database
+     * @returns {Promise<void>}
+     */
+    async loadReply(reply_id) {
+        try {
+            const data = {params: {'id': reply_id}}
+            let response = await axios.get('/reply', data)
+
+            console.info("Loaded reply")
+            return response.data
+        }
+        catch (err) {
+            console.error(err);
+            throw "Comment load failed. " + err.toString() || ""
         }
     }
 }

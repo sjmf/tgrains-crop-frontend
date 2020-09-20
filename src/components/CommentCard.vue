@@ -12,12 +12,17 @@
               {{ author }}
             </span>
           </div>
+
           <div class="col s12 m6 right-align">
             <span class="timestamp grey-text">
               {{ timestamp | format_datetime }}
             </span>
+
             <span class="reply" v-if="!reply_view">
-              <a @click="$emit('replyToComment', {id})"><i class="material-icons">reply</i> Reply</a>
+              <a href="#add-comment"
+                 @click="$emit('replyToComment', {id})">
+                <i class="material-icons">reply</i> Reply
+              </a>
             </span>
           </div>
 
@@ -34,9 +39,9 @@
       </div>
     </div>
 
-    <div class="row" v-if="!reply_view">
+    <div class="row" v-if="!reply_view && tags.length">
       <div class="col s10 offset-s2">
-        <div class="row" v-if="tags.length">
+        <div class="row">
           <div class="col s2">
             <span class="grey-text">Tags:</span>
           </div>
@@ -48,7 +53,24 @@
                   class="new badge tag"></span>
           </div>
         </div>
+      </div>
+    </div>
 
+    <div class="row" v-if="reply_id">
+      <div class="col s12">
+        <p class="grey-text small">
+          This comment is a reply: <a v-if="!replyCard" @click="load_reply(reply_id)">(load reply)</a>
+        </p>
+        <comment-card
+            v-if="replyCard"
+            v-bind:id="replyCard.id"
+            v-bind:hash="replyCard.hash"
+            v-bind:reply_id="replyCard.reply_id"
+            v-bind:author="replyCard.author"
+            v-bind:text="replyCard.text"
+            v-bind:tags="replyCard.tags"
+            v-bind:timestamp="replyCard.timestamp"
+            v-bind:reply_view="true" />
       </div>
     </div>
 
@@ -90,13 +112,24 @@ export default {
   props: {
       id: Number,
       reply_id: Number,
+      reply: [Object, undefined],
       author: String,
       hash: String,
       text: String,
       timestamp: Number,
       tags: Array,
-      model_state: undefined,
+      model_state: [Object, undefined],
       reply_view: Boolean
+  },
+  data() {
+    return {
+      loadedReply: undefined
+    }
+  },
+  computed: {
+    replyCard() {
+      return this.reply || this.loadedReply
+    }
   },
   methods: {
     tag_meta(id) {
@@ -104,6 +137,10 @@ export default {
     },
     tag_group(id) {
       return this.$store.state.tag_groups[id]
+    },
+    async load_reply(reply_id) {
+      this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
+      console.log(this.loadedReply)
     }
   },
   filters: {
@@ -127,6 +164,9 @@ span.tag.badge.new[data-badge-caption] {
 span.reply {
   padding: 0 0 0 10px;
   cursor: pointer;
+}
+p.small {
+  font-size: 0.85rem;
 }
 span.reply a:hover {
   filter: brightness(75%);

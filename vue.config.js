@@ -17,6 +17,9 @@ module.exports = {
             '/comment': {
                 target:  'http://localhost:8000',
             },
+            '/reply': {
+                target:  'http://localhost:8000',
+            },
             '/tags': {
                 target:  'http://localhost:8000',
             }

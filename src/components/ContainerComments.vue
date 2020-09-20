@@ -38,6 +38,7 @@
           v-bind:id="comment.id"
           v-bind:hash="comment.hash"
           v-bind:reply_id="comment.reply_id"
+          v-bind:reply="comment.reply"
           v-bind:author="comment.author"
           v-bind:text="comment.text"
           v-bind:tags="comment.tags"

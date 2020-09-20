@@ -154,5 +154,20 @@ export default {
         catch (err) {
             this.commit("raiseError", err)
         }
+    },
+
+    /***
+     * Load a comment reply
+     * @param _ unused state
+     * @param reply_id
+     * @returns {Promise<void>}
+     */
+    async loadReply(_, reply_id) {
+        try {
+            return await http.loadReply(reply_id)
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+        }
     }
 }
