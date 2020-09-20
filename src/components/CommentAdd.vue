@@ -175,7 +175,7 @@
             }
           },
           formValid() {
-            return this.name.valid && this.email.valid && this.text.valid
+            return this.name.valid && this.email.valid
           },
           reply_comment() {
             // Look up comment from the store by ID
@@ -201,10 +201,7 @@
             }
           },
           resetForm() {
-            let clear = {value: '', valid: undefined, error: ''}
-            this.name = clear
-            this.email = clear
-            this.text = clear
+            this.text = {value: '', valid: undefined, error: ''}
             this.$emit('closeForm')
           },
           setError(key) {
@@ -256,9 +253,9 @@
         },
         mounted() {
           this.name.value = this.$store.state.user.name
-          this.validateName()
+          if(this.name.value!=='') this.validateName()
           this.email.value = this.$store.state.user.email
-          this.validateEmail()
+          if(this.email.value!=='') this.validateEmail()
         }
     }
 </script>
