@@ -266,6 +266,17 @@ export default {
     },
 
     /**
+     * Save name and email into state when leaving a comment
+     * @param state
+     * @param payload
+     */
+    saveNameAndEmail(state, payload) {
+        let [name, email] = Object.values(payload)
+        state['user']['name'] = name
+        state['user']['email'] = email
+    },
+
+    /**
      * Populate the error message field and set the visibility to true. This is used
      * by the ErrorMessage component to display an error to the user.
      * @param state

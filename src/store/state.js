@@ -128,6 +128,12 @@ export const initial_state = () => ({
         length: 0,
     },
 
+    // User details
+    user: {
+        name: '',
+        email: ''
+    },
+
     // Tag group colours
     tag_groups: {
         0: { colour: "blue lighten-1"   },

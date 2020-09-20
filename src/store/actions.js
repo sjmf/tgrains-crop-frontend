@@ -149,6 +149,7 @@ export default {
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
             this.commit("resetAllTagSelected")
+            this.commit("saveNameAndEmail", {name: payload['author'], email: payload['email']})
         }
         catch (err) {
             this.commit("raiseError", err)
