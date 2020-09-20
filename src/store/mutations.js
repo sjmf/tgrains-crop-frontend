@@ -274,6 +274,7 @@ export default {
     raiseError(state, message) {
         state.error['message'] = message
         state.error['visible'] = true
+        location.hash = "#area-header"
     },
 
     /**
