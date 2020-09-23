@@ -302,7 +302,7 @@ export default {
             message: message,
             kind: 'error'
         })
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0,0);
     },
 
     /**
@@ -324,7 +324,7 @@ export default {
         if(state.messages.length > state.maxMessages)
             state.messages.shift()
         state.messages.push(payload)
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0,0);
     },
 
     /**
