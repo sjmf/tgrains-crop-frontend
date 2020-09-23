@@ -8,8 +8,17 @@
 
     <div class="row">
 
-      <!-- ERROR BANNER -->
-      <error-message/>
+      <!-- ERROR/MESSAGE BANNERS -->
+      <div class="col s12 white">
+        <transition-group name="fade" tag="div">
+          <message-box
+              v-for="(message, index) in this.$store.state.messages"
+              v-bind:key="index"
+              v-bind:message="message.message"
+              v-bind:kind="message.kind"
+              v-bind:index="index"/>
+        </transition-group>
+      </div>
 
       <!-- TAB DECLARATIONS -->
       <tab-bar/>
@@ -44,21 +53,21 @@
     import TabBar from "@/components/TabBar";
     import TabVisualisations from "@/components/TabVisualisations";
     import LoadingOverlay from "@/components/LoadingOverlay";
-    import ErrorMessage from "@/components/ErrorMessage";
     import VizDebug from "@/components/VizDebug";
     import ContainerComments from "@/components/ContainerComments";
+    import MessageBox from "@/components/MessageBox";
 
     export default {
         name: "ContainerMain",
         components: {
-            ErrorMessage,
             LoadingOverlay,
             TabVisualisations,
             TabBar,
             ModalWelcome,
             LandscapeJumbotron,
             VizDebug,
-            ContainerComments
+            ContainerComments,
+            MessageBox
         },
         props: {
             loading: Boolean
