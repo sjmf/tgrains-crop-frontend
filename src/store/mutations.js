@@ -296,6 +296,8 @@ export default {
      * @param message
      */
     raiseError(state, message) {
+        if(state.messages.length > state.maxMessages)
+            state.messages.shift()
         state.messages.push({
             message: message,
             kind: 'error'
@@ -319,6 +321,8 @@ export default {
      * @param payload
      */
     setMessage(state, payload) {
+        if(state.messages.length > state.maxMessages)
+            state.messages.shift()
         state.messages.push(payload)
         window.scrollTo({ top: 0, behavior: 'smooth' });
     },

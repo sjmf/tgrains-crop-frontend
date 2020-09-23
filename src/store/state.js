@@ -153,6 +153,8 @@ export const initial_state = () => ({
     // },
     messages: [],
 
+    // Max messages to show in UI
+    maxMessages: 3,
 
     // User has accepted the usage terms. Persistence means the modal won't be shown again.
     acceptedTerms: false
