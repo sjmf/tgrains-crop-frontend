@@ -64,9 +64,8 @@
         mounted() {
             // Check if Vuex state was updated due to new code version:
             this.$store.dispatch('checkVersion')
-
-            // Close errors on clean reload
-            this.$store.commit('closeError')
+            // Clear messages on clean reload
+            this.$store.commit('clearMessages')
             // Load the BAU state from the server
             this.loadBAUState()
         }

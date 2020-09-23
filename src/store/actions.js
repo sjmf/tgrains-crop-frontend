@@ -37,7 +37,7 @@ export default {
      */
     async queryModel() {
         // Close error message in preparation
-        this.commit("closeError")
+        this.commit("clearMessages")
 
         // Prepare payload...
         let payload = await this.dispatch("getPayload")

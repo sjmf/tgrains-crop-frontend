@@ -96,7 +96,7 @@
              */
             resetToBAU() {
                 try {
-                    this.$store.commit("closeError")
+                    this.$store.commit("clearMessages")
                     this.$store.commit("resetToBAU")
                     this.$store.dispatch("sumArea")
                     this.$nextTick(() => this.validateForm())
@@ -205,7 +205,7 @@
              */
             loading() {
                 return (Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0)
-                        && (this.$store.state.error.message === "")
+                        // && (this.$store.state.error.message === "")
             }
         },
         watch: {
