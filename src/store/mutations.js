@@ -193,6 +193,19 @@ export default {
     },
 
     /**
+     * Set landscape directly
+     * @param state
+     * @param landscape
+     */
+    updateLandscape(state, landscape) {
+        let id = state.landscape_id
+        for(let i of ['crops', 'livestock'])
+            for(let c in state.landscapes[id][i])
+                if(Object.prototype.hasOwnProperty.call(state.landscapes[id][i], c))
+                    state.landscapes[id][i][c].value = landscape[i][c].value
+    },
+
+    /**
      * Load the values from the stored BAU state, overwriting the existing state.
      * This function MUST ONLY be called after the BAU state has been stored.
      * @param state

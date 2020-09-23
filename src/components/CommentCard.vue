@@ -1,6 +1,6 @@
 <template>
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
-    <div class="row">
+    <div class="comment-main row">
       <div class="col s3 m2">
         <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
       </div>
@@ -28,7 +28,7 @@
 
         </div>
 
-        <div class="row">
+        <div class="row comment-text">
           <div class="col s12">
             <span class="black-text">
               <!-- Never use v-html here. If someone compromises the database, XSS becomes possible -->
@@ -36,25 +36,39 @@
             </span>
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row" v-if="!reply_view && tags.length">
-      <div class="col s10 offset-s2">
-        <div class="row">
-          <div class="col s2">
-            <span class="grey-text">Tags:</span>
-          </div>
-          <div class="col s10">
+        <!-- TAGS -->
+        <div class="row" v-if="!reply_view && tags.length">
+          <div class="col s12">
+            <div class="row">
+              <div class="col s2">
+                <span class="grey-text">Tags:</span>
+              </div>
+              <div class="col s10">
             <span v-for="t in tags"
                   v-bind:key="t"
                   v-bind:class="tag_group(tag_meta(t).group).colour"
                   v-bind:data-badge-caption="tag_meta(t).name"
                   class="new badge tag"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Compare buttons -->
+        <div class="row compare-buttons" v-if="state">
+          <div class="col s12">
+            <a>
+              <i class="material-icons">insert_chart</i> Compare
+            </a>
+            <a @click="set_state">
+              <i class="material-icons">play_arrow</i> Load
+            </a>
           </div>
         </div>
       </div>
     </div>
+
 
     <div class="row" v-if="reply_id">
       <div class="col s12">
@@ -72,32 +86,6 @@
             v-bind:timestamp="replyCard.timestamp"
             v-bind:reply_view="true" />
       </div>
-    </div>
-
-    <div class="row" v-if="model_state">
-      <div class="col s10 offset-s2 divider"></div>
-    </div>
-
-    <div class="row compare-buttons" v-if="model_state">
-
-      <div class="col s10 m2 offset-m4 offset-l6 l2">
-        <span class="grey-text">Compare</span>
-      </div>
-      <div class="col s2 m2 l1">
-        <a class="btn-floating btn waves-effect waves-light amber darken-2">
-          <i class="material-icons">insert_chart</i>
-        </a>
-      </div>
-
-      <div class="col s10 m2 l2">
-        <span class="grey-text">Load</span>
-      </div>
-      <div class="col s2 m2 l1">
-        <a class="btn-floating btn waves-effect waves-light blue darken-2">
-          <i class="material-icons">play_arrow</i>
-        </a>
-      </div>
-
     </div>
   </div>
 </template>
@@ -118,7 +106,7 @@ export default {
       text: String,
       timestamp: Number,
       tags: Array,
-      model_state: [Object, undefined],
+      state: [Object, undefined],
       reply_view: Boolean
   },
   data() {
@@ -141,6 +129,12 @@ export default {
     async load_reply(reply_id) {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
       console.log(this.loadedReply)
+    },
+    set_state(){
+      this.$store.commit("updateLandscape", this.state.inputs)
+      this.$store.commit("setDataFromQuery", this.state.outputs)
+      this.$store.commit("setTotalArea", this.state.totalArea)
+      location.hash = "#area-header"
     }
   },
   filters: {
@@ -192,7 +186,6 @@ a i.material-icons {
 
 .comment-card,
 .comment-card div.row:last-child,
-.comment-form,
 .comment-form div.col:last-child p,
 .comment-main:not(:last-child){
   margin-bottom: 0;

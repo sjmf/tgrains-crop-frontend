@@ -42,6 +42,7 @@
           v-bind:author="comment.author"
           v-bind:text="comment.text"
           v-bind:tags="comment.tags"
+          v-bind:state="comment.state"
           v-bind:timestamp="comment.timestamp"
           v-on:replyToComment="doReply"/>
 
@@ -86,6 +87,10 @@ export default {
     }
 </script>
 <style>
+.comment-header {
+  font-size: 2rem;
+}
+
 /* https://css-tricks.com/using-css-transitions-auto-dimensions/ */
 .fade-enter-active, .fade-leave-active {
   transition: all .5s ease;

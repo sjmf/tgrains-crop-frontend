@@ -145,6 +145,13 @@ export default {
             // Add selected tags to payload
             payload['tags'] = this.state.tags.tags.map(x => x.selected ? x.id : null).filter(x => x!==null)
 
+            // Add model state to payload
+            payload['state'] = {
+                "inputs": this.state.landscapes[this.state.landscape_id],
+                "outputs": this.state.data.raw[this.state.landscape_id],
+                "totalArea": this.state.totalArea
+            }
+
             console.log(payload)
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
