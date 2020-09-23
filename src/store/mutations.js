@@ -290,14 +290,16 @@ export default {
     },
 
     /**
-     * Populate the error message field and set the visibility to true. This is used
-     * by the ErrorMessage component to display an error to the user.
+     * Push an error message onto the messages array. This is used
+     * with the MessageBox component to display an error to the user.
      * @param state
      * @param message
      */
     raiseError(state, message) {
-        state.error['message'] = message
-        state.error['visible'] = true
+        state.messages.push({
+            message: message,
+            kind: 'error'
+        })
         window.scrollTo({ top: 0, behavior: 'smooth' });
     },
 
@@ -305,10 +307,28 @@ export default {
      * Set the error message's state to not visible.
      * Does not clear the error message.
      * @param state
+     * @param index
      */
-    closeError(state){
-        state.error['message'] = ""
-        state.error['visible'] = false
+    closeMessage(state, index){
+        state.messages.splice(index, 1)
+    },
+
+    /**
+     * Set a message in the state
+     * @param state
+     * @param payload
+     */
+    setMessage(state, payload) {
+        state.messages.push(payload)
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    },
+
+    /**
+     * Clear all messages, including error messages
+     * @param state
+     */
+    clearMessages(state){
+        state.messages = []
     },
 
     /**

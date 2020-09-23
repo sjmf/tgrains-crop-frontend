@@ -146,11 +146,13 @@ export const initial_state = () => ({
 
     tags: [],
 
-    // Error handling:
-    error: {
-        message: "",
-        visible: false
-    },
+    // Error handling: each element contains the following structure:
+    // {
+    //     message: "",
+    //     kind: 'error' | 'warning' | 'info' | 'success'
+    // },
+    messages: [],
+
 
     // User has accepted the usage terms. Persistence means the modal won't be shown again.
     acceptedTerms: false
