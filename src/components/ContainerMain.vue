@@ -16,6 +16,8 @@
               v-bind:key="index"
               v-bind:message="message.message"
               v-bind:kind="message.kind"
+              v-bind:callback="message.callback"
+              v-bind:callbackText="message.callbackText"
               v-bind:index="index"/>
         </transition-group>
       </div>

@@ -2,6 +2,7 @@
   <div class="container">
     <div class="card-panel" v-bind:class="this.colour()" id="message">
       <span><strong>{{ this.heading() }}</strong> {{message}}</span>
+      <span v-if="callback !== undefined"><br/><a href="#" @click="callback(); closeMsg()">{{ callbackText }}</a></span>
       <i id="closeBtn" class="close material-icons right" v-on:click="closeMsg()">close</i>
     </div>
   </div>
@@ -14,6 +15,8 @@
         props: {
           message: String,
           kind: String,
+          callback: Function,
+          callbackText: String,
           index: Number
         },
         methods: {
