@@ -89,6 +89,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import Jdenticon from '@/components/Jdenticon.vue'
 
@@ -134,7 +135,10 @@ export default {
       this.$store.commit("updateLandscape", this.state.inputs)
       this.$store.commit("setDataFromQuery", this.state.outputs)
       this.$store.commit("setTotalArea", this.state.totalArea)
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      this.$store.commit('setMessage', {
+        message: 'Loaded model state from comment by ' + this.author,
+        kind: 'info'
+      }) // Will also scroll viewport to top
     }
   },
   filters: {
@@ -150,6 +154,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 span.tag.badge.new[data-badge-caption] {
   margin: 2px 0 0 14px;
