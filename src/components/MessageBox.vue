@@ -32,10 +32,7 @@
               if(this.kind==='info')    return "Information:"
               if(this.kind==='success') return "Success!"
           }
-        },
-      mounted() {
-          console.info('Mounted', this.kind)
-      }
+        }
     }
 </script>
 <style scoped>
