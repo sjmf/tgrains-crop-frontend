@@ -90,22 +90,8 @@ export default {
         }
     }
 </script>
-<style>
+<style scoped>
 .comment-header {
   font-size: 2rem;
-}
-
-/* https://css-tricks.com/using-css-transitions-auto-dimensions/ */
-.fade-enter-active, .fade-leave-active {
-  transition: all .5s ease;
-  max-height:1000px;
-}
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-  opacity: 0;
-  max-height:0;
-  overflow-y:hidden;
-}
-.fade-enter-to {
-  overflow-y:hidden;
 }
 </style>
