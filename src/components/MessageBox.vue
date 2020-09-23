@@ -21,10 +21,10 @@
                 store.commit("closeMessage", this.index)
             },
             colour() {
-              if(this.kind==='error')   return 'red white-text lighten-1'
-              if(this.kind==='warning') return 'amber white-text darken-2'
-              if(this.kind==='info')    return 'blue white-text darken-1'
-              if(this.kind==='success') return 'green white-text darken-2'
+              if(this.kind==='error')   return 'red   lighten-4'
+              if(this.kind==='warning') return 'amber lighten-4'
+              if(this.kind==='info')    return 'blue  lighten-4'
+              if(this.kind==='success') return 'green lighten-4'
             },
           heading() {
               if(this.kind==='error')   return "Whoops! An error occurred:"
