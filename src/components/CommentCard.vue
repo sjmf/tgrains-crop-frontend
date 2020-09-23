@@ -132,12 +132,20 @@ export default {
       console.log(this.loadedReply)
     },
     set_state(){
+      // Save state before we do anything
+      this.$store.commit("saveState")
+
+      // Overwrite state
       this.$store.commit("updateLandscape", this.state.inputs)
       this.$store.commit("setDataFromQuery", this.state.outputs)
       this.$store.commit("setTotalArea", this.state.totalArea)
+
+      // Tell the user what we've done!
       this.$store.commit('setMessage', {
-        message: 'Loaded model state from comment by ' + this.author,
-        kind: 'info'
+        message: "Loaded model state from comment by " + this.author,
+        kind: "info",
+        callback: () => {this.$store.commit("restoreState")},
+        callbackText: "Click here to restore previous state"
       }) // Will also scroll viewport to top
     }
   },

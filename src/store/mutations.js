@@ -230,6 +230,30 @@ export default {
     },
 
     /**
+     * Save state (e.g. before overwriting with state from comment)
+     * @param state
+     */
+    saveState(state) {
+        state.saved = {
+            "inputs": state.landscapes[state.landscape_id],
+            "outputs": state.data[state.landscape_id],
+            "totalArea": state.totalArea
+        }
+    },
+
+    /**
+     * Restore state from saved
+     * @param state
+     */
+    restoreState(state) {
+        if(state.saved === undefined)
+            return
+        state.landscapes[state.landscape_id] = state.saved.inputs
+        state.data[state.landscape_id] = state.saved.outputs
+        state.totalArea = state.saved.totalArea
+    },
+
+    /**
      * Set comments retrieved from the API on the state
      * @param state
      * @param comments
