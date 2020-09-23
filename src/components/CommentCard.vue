@@ -161,19 +161,40 @@ span.tag.badge.new[data-badge-caption] {
   margin: 2px 0 0 14px;
   float: left;
 }
-span.reply {
+span.reply, .compare-buttons a {
   padding: 0 0 0 10px;
   cursor: pointer;
 }
 p.small {
   font-size: 0.85rem;
 }
-span.reply a:hover {
+span.reply a:hover, .compare-buttons a:hover {
   filter: brightness(75%);
 }
+
 a i.material-icons {
   height: 18px;
   width: 18px;
   font-size: 18px;
+  line-height: 14px;
+  vertical-align: middle;
+}
+
+.compare-buttons div {
+  text-align: right;
+}
+
+.comment-card a.btn {
+  display: inline-block;
+  min-width: 40px;
+  min-height: 40px;
+}
+
+.comment-card,
+.comment-card div.row:last-child,
+.comment-form,
+.comment-form div.col:last-child p,
+.comment-main:not(:last-child){
+  margin-bottom: 0;
 }
 </style>

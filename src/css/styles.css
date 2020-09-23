@@ -97,32 +97,6 @@ main, footer {
     }
 }
 
-.compare-buttons div {
-    text-align: right;
-    line-height: 45px;
-}
-
-.comment-card a.btn {
-    display: inline-block;
-    min-width: 40px;
-    min-height: 40px;
-}
-
-.comment-card,
-.comment-card div.row:last-child,
-.comment-form,
-.comment-form div.col:last-child p {
-    margin-bottom: 0;
-}
-
-.comment-header {
-    font-size: 2.4rem;
-}
-
-#modal-add-comment .btn {
-    width:100%;
-}
-
-.card .card-title {
+.card span.card-title {
     font-weight: 400;
 }
