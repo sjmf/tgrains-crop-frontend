@@ -21,9 +21,6 @@ export default {
                 bau = await http.loadBAUState(this.state.landscape_id)
                 this.commit("setBAUState", bau)
 
-                let tags = await http.loadTags()
-                this.commit("setTags", tags)
-
                 // Populate Landscapes in Vuex using strings and cropAreas from BAU state
                 this.commit("populate")
                 this.dispatch("sumArea")
@@ -129,6 +126,15 @@ export default {
         catch (err) {
             this.commit("raiseError", err)
         }
+    },
+
+    /**
+     * Retrieve tags from server and load into vuex
+     * @returns {Promise<void>}
+     */
+    async loadTags() {
+        let tags = await http.loadTags()
+        this.commit("setTags", tags)
     },
 
     /***

@@ -60,8 +60,12 @@ import Pagination from "@/components/Pagination";
 export default {
         name: 'ContainerComments',
         components: {Pagination, CommentCard, CommentAdd},
-        mounted() {
-            this.$store.dispatch('loadComments')
+        async mounted() {
+          // Load tags if not already loaded
+          if (this.$store.state.tags.length === 0)
+            await this.$store.dispatch("loadTags")
+
+          await this.$store.dispatch("loadComments")
         },
         data() {
           return {
