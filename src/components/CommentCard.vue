@@ -134,7 +134,7 @@ export default {
       this.$store.commit("updateLandscape", this.state.inputs)
       this.$store.commit("setDataFromQuery", this.state.outputs)
       this.$store.commit("setTotalArea", this.state.totalArea)
-      location.hash = "#area-header"
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   },
   filters: {
