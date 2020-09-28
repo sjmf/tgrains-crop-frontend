@@ -27,7 +27,7 @@
     </transition>
 
     <!-- Pagination -->
-    <pagination/>
+    <pagination v-if="comments.length"/>
 
     <!-- Comment cards -->
     <div class="col s12 m10 l8 offset-m1 offset-l2">
@@ -49,7 +49,13 @@
     </div>
 
     <!-- Pagination -->
-    <pagination/>
+    <pagination v-if="comments.length"/>
+
+    <div class="col s8 offset-s2 card" v-if="!comments.length">
+      <div class="card-content">
+        <p>There are no comments yet to show! <a href="#" @click="toggleAddComment">Leave a comment for us?</a></p>
+      </div>
+    </div>
   </div>
 </template>
 <script>
