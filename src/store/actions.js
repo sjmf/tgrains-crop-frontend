@@ -166,6 +166,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
+            return err
         }
     },
 

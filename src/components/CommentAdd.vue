@@ -139,7 +139,7 @@
       </button>
       <button class="waves-effect green darken-2 white-text waves-green btn-flat"
               @click="postComment"
-              v-bind:disabled="formValid===undefined || formValid === false">
+              v-bind:disabled="formValid===undefined || formValid === false || loading">
         Post
       </button>
     </div>
@@ -151,14 +151,17 @@
 
     export default {
         name: 'CommentAdd',
-        components: {CommentCard, TagSelect},
+        components: {
+          CommentCard,
+          TagSelect
+        },
         props: {
           reply_id: Number
         },
         data() {
           return {
             comment_string_max_length: 10000,
-            submitDisabled: true,
+            loading: false,
             name:  {value: '', valid: undefined, error: ''},
             email: {value: '', valid: undefined, error: ''},
             text:  {value: '', valid: undefined, error: ''},
@@ -191,13 +194,20 @@
           async postComment() {
             // Validate first
             if( this.validateForm() ) {
+              this.loading = true
               let payload = {
                 'text': this.text.value,
                 'author': this.name.value,
                 'email': this.email.value,
                 'reply_id': this.reply_id
               }
-              this.$store.dispatch('postComment', payload).then(()=>this.resetForm())
+              this.$store.dispatch('postComment', payload).then((err)=> {
+                // Check server status return
+                if(err === undefined)
+                  this.resetForm()
+
+                this.loading = false
+              })
             }
           },
           resetForm() {
