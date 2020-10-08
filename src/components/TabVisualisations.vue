@@ -219,15 +219,15 @@
             },
             people_fed() {
                 return this.calc_people_fed(
-                    this.$store.state.data.raw[this.$store.state.landscape_id].production,
-                    this.$store.state.data[this.$store.state.landscape_id].nutritionaldelivery,
-                    this.$store.state.data[this.$store.state.landscape_id].eatLancetPlate)
+                    this.rawdata.production,            // Total calories
+                    this.basedata.nutritionaldelivery,  // Food Groups
+                    this.basedata.eatLancetPlate)       // Eat Lancet food groups
             },
             people_fed_bau() {
               return this.calc_people_fed(
-                  this.$store.state.bau[this.$store.state.landscape_id].production,
-                  this.$store.state.bau[this.$store.state.landscape_id].nutritionaldelivery,
-                  this.$store.state.data[this.$store.state.landscape_id].eatLancetPlate)
+                  this.bau.production,
+                  this.bau.nutritionaldelivery,
+                  this.basedata.eatLancetPlate)
             }
         },
         methods: {

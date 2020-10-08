@@ -227,6 +227,8 @@ export default {
             state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
         for (let i=0; i < livestock.length; i++)
             state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockAreas[i]
+
+        state.data.raw[state.landscape_id] = state.bau[state.landscape_id]
     },
 
     /**
