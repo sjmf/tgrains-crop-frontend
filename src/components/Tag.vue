@@ -1,7 +1,7 @@
 <template>
   <label>
     <input
-        type="checkbox" class="lozenge"
+        type="checkbox" class="tag"
         v-model="innerValue"
         @change="$emit('change', $event)"/>
     <span v-bind:class="this.colour">{{ name }}</span>
@@ -33,8 +33,8 @@
 <style scoped>
 /* A custom styled checkbox which imitates materialize's badge */
 
-/* Lozenge styling */
-[type="checkbox"].lozenge + span:not(.lever) {
+/* Tag styling */
+[type="checkbox"].tag + span:not(.lever) {
   font-weight: 300;
   font-size: 0.8rem;
   color: #fff;
@@ -53,12 +53,12 @@
 }
 
 /* On mouse-over, dim brightness */
-[type="checkbox"].lozenge + span:hover {
+[type="checkbox"].tag + span:hover {
   filter: brightness(90%);
 }
 
-[type="checkbox"].lozenge + span:not(.lever):before,
-[type="checkbox"].lozenge:not(.filled-in) + span:not(.lever):after {
+[type="checkbox"].tag + span:not(.lever):before,
+[type="checkbox"].tag:not(.filled-in) + span:not(.lever):after {
   content: '';
   position: absolute;
 
@@ -76,7 +76,7 @@
   transition: .1s;
 }
 
-[type="checkbox"].lozenge:checked + span:not(.lever):before {
+[type="checkbox"].tag:checked + span:not(.lever):before {
 
   /* These need to stay here to override the style in materialize.css */
   top: 7px;
@@ -88,7 +88,7 @@
   border-radius: 10px;
 
   background-color: #fff;
-  opacity: 90%;
+  /*opacity: 90% !important;*/
 
   -webkit-transform: none;
   transform: none;
