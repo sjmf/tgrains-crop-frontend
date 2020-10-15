@@ -44,7 +44,8 @@ export default {
 
         try {
             // ... and send to API!
-            await this.cache.dispatch("doCachedModelQuery", payload)
+            // to cache: await this.cache.dispatch("doCachedModelQuery", payload)
+            await this.dispatch("doModelQuery", payload)
                 .then((result)=>{
                     return this.commit("setDataFromQuery", result)
                 })
@@ -53,7 +54,7 @@ export default {
             this.commit("raiseError", err)
         }
 
-        console.info("Cached?", this.cache.has("doCachedModelQuery", payload))
+        //console.info("Cached?", this.cache.has("doCachedModelQuery", payload))
     },
 
     /**
@@ -103,6 +104,20 @@ export default {
                 commit("raiseError", err)
             }
     }),
+
+    /***
+     * Query the model without caching
+     * @returns {Promise<void>}
+     */
+    doModelQuery (state, payload) {
+        try {
+            console.log(payload)
+            return http.queryModel(payload)
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+        }
+    },
 
     /***
      * Check the vuex state against the version hash and replace if changed

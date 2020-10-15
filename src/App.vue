@@ -49,6 +49,8 @@
         },
         methods: {
             async doAJAX() {
+                if (this.loading) return
+
                 // Timeout prevents flash of loader in case of fast response
                 this.timer = setTimeout(()=>{ this.loading = true }, 200);
 
