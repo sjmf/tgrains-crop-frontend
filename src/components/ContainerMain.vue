@@ -52,11 +52,11 @@
 <script>
     import LandscapeJumbotron from "@/components/LandscapeJumbotron";
     import ModalWelcome from "@/components/ModalWelcome";
-    import TabBar from "@/components/TabBar";
-    import TabVisualisations from "@/components/TabVisualisations";
+    import TabBar from "@/components/tabs/TabBar";
+    import TabVisualisations from "@/components/tabs/TabVisualisations";
     import LoadingOverlay from "@/components/LoadingOverlay";
-    import VizDebug from "@/components/VizDebug";
-    import ContainerComments from "@/components/ContainerComments";
+    import VizDebug from "@/components/visualisations/VizDebug";
+    import ContainerComments from "@/components/comments/ContainerComments";
     import MessageBox from "@/components/MessageBox";
 
     export default {

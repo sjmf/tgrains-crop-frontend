@@ -146,8 +146,8 @@
   </div>
 </template>
 <script>
-    import TagSelect from "@/components/TagSelect";
-    import CommentCard from "@/components/CommentCard";
+    import TagSelect from "@/components/comments/TagSelect";
+    import CommentCard from "@/components/comments/CommentCard";
 
     export default {
         name: 'CommentAdd',

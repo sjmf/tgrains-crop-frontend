@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import VizNutrition from "@/components/VizNutrition"
+import VizNutrition from "@/components/visualisations/VizNutrition"
 
 export default {
     name: 'TabNutrition',

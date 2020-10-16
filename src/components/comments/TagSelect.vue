@@ -53,7 +53,7 @@
   </ul>
 </template>
 <script>
-import Tag from "@/components/Tag";
+import Tag from "@/components/comments/Tag";
 
 export default {
   name: 'TagSelect',

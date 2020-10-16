@@ -13,18 +13,20 @@
     </div>
 
     <div id="history-tab" class="col s12">
-
+      <TabHistory/>
     </div>
   </div>
 </template>
 <script>
-import TabNutrition from "@/components/TabNutrition";
-import TabProduction from "@/components/TabProduction";
-import TabEnvironment from "@/components/TabEnvironment";
+import TabNutrition from "@/components/tabs/TabNutrition";
+import TabProduction from "@/components/tabs/TabProduction";
+import TabEnvironment from "@/components/tabs/TabEnvironment";
+import TabHistory from "@/components/tabs/TabHistory";
 
 export default {
         name: 'TabVisualisations',
         components: {
+            TabHistory,
             TabEnvironment,
             TabProduction,
             TabNutrition

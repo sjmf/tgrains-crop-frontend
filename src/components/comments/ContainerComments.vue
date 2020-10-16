@@ -59,9 +59,9 @@
   </div>
 </template>
 <script>
-import CommentAdd from "@/components/CommentAdd"
-import CommentCard from "@/components/CommentCard";
-import Pagination from "@/components/Pagination";
+import CommentAdd from "@/components/comments/CommentAdd"
+import CommentCard from "@/components/comments/CommentCard";
+import Pagination from "@/components/comments/Pagination";
 
 export default {
         name: 'ContainerComments',

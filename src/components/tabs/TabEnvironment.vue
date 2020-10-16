@@ -12,7 +12,7 @@
   </div>
 </template>
 <script>
-import VizPests from "@/components/VizPesticides"
+import VizPests from "@/components/visualisations/VizPesticides"
 
 export default {
     name: 'TabEnvironment',

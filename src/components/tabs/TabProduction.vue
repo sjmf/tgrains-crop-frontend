@@ -27,8 +27,8 @@
   </div>
 </template>
 <script>
-import DataTable from "@/components/DataTable"
-import VizProduction from "@/components/VizProduction"
+import DataTable from "@/components/visualisations/DataTable"
+import VizProduction from "@/components/visualisations/VizProduction"
 
 export default {
     name: 'TabProduction',

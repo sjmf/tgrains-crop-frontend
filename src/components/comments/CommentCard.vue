@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import Jdenticon from '@/components/Jdenticon.vue'
+import Jdenticon from '@/components/comments/Jdenticon.vue'
 
 export default {
   name: 'comment-card',
