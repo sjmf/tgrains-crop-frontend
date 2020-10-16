@@ -24,6 +24,9 @@ export default {
                 // Populate Landscapes in Vuex using strings and cropAreas from BAU state
                 this.commit("populate")
                 this.dispatch("sumArea")
+
+                // Push initial state onto history stack
+                this.commit("pushHistory")
             } catch (err) {
                 console.error(err)
                 this.commit("raiseError", err)
@@ -47,7 +50,9 @@ export default {
             // to cache: await this.cache.dispatch("doCachedModelQuery", payload)
             await this.dispatch("doModelQuery", payload)
                 .then((result)=>{
-                    return this.commit("setDataFromQuery", result)
+                    this.commit("setDataFromQuery", result)
+                    // Push new state onto history stack
+                    this.commit("pushHistory")
                 })
         } catch (err) {
             console.error(err)

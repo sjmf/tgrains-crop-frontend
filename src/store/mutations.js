@@ -235,24 +235,57 @@ export default {
      * Save state (e.g. before overwriting with state from comment)
      * @param state
      */
-    saveState(state) {
-        state.saved = {
+    pushHistory(state) {
+        state.history.unshift({
             "inputs": state.landscapes[state.landscape_id],
             "outputs": state.data[state.landscape_id],
-            "totalArea": state.totalArea
-        }
+            "raw": state.data.raw[state.landscape_id],
+            "totalArea": state.totalArea,
+            "time": Date.now()
+        })
+        state.historyIndex = 0
     },
 
     /**
      * Restore state from saved
      * @param state
      */
-    restoreState(state) {
-        if(state.saved === undefined)
-            return
-        state.landscapes[state.landscape_id] = state.saved.inputs
-        state.data[state.landscape_id] = state.saved.outputs
-        state.totalArea = state.saved.totalArea
+    rollbackHistory(state) {
+        let load = state.history.shift()
+        state.landscapes[state.landscape_id] = load.inputs
+        state.data[state.landscape_id] = load.outputs
+        state.data.raw[state.landscape_id] = load.raw
+        state.totalArea = load.totalArea
+    },
+
+    /**
+     * Load state from history
+     * @param index
+     */
+    loadFromHistory(state, index) {
+        let load = state.history[index]
+        state.landscapes[state.landscape_id] = load.inputs
+        state.data[state.landscape_id] = load.outputs
+        state.data.raw[state.landscape_id] = load.raw
+        state.totalArea = load.totalArea
+    },
+
+    /**
+     * Wipe History except for current state
+     * @param state
+     */
+    clearHistory(state) {
+        state.history = [state.history[state.historyIndex]]
+        state.historyIndex = 0
+    },
+
+    /**
+     * Set history index
+     * @param state
+     * @param index
+     */
+    setHistoryIndex(state, index) {
+      state.historyIndex = index
     },
 
     /**

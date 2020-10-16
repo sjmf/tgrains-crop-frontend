@@ -102,6 +102,7 @@
                     this.$store.commit("clearMessages")
                     this.$store.commit("resetToBAU")
                     this.$store.dispatch("sumArea")
+                    this.$store.commit("pushHistory")
                     this.$nextTick(() => this.validateForm())
                     this.changes = false
                 }
@@ -114,6 +115,7 @@
              * Emit an event requesting submission of the form via AJAX.
              */
             submitForm() {
+                this.changes=true
                 this.$emit('submitForm', [this.crops,this.livestock])
             },
 
