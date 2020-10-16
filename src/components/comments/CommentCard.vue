@@ -45,11 +45,12 @@
                 <span class="grey-text">Tags:</span>
               </div>
               <div class="col s10">
-            <span v-for="t in tags"
-                  v-bind:key="t"
-                  v-bind:class="tag_group(tag_meta(t).group).colour"
-                  v-bind:data-badge-caption="tag_meta(t).name"
-                  class="new badge tag"></span>
+                <tag v-for="t in tags"
+                      v-bind:key="t"
+                      v-bind:colour="tag_group(tag_meta(t).group).colour"
+                      v-bind:name="tag_meta(t).name"
+                      v-bind:value="null">
+                </tag>
               </div>
             </div>
           </div>
@@ -92,11 +93,13 @@
 
 <script>
 import Jdenticon from '@/components/comments/Jdenticon.vue'
+import Tag from "@/components/comments/Tag";
 
 export default {
   name: 'comment-card',
   components: {
-    Jdenticon
+    Jdenticon,
+    Tag
   },
   props: {
       id: Number,
@@ -164,10 +167,6 @@ export default {
 </script>
 
 <style scoped>
-span.tag.badge.new[data-badge-caption] {
-  margin: 2px 0 0 14px;
-  float: left;
-}
 span.reply, .compare-buttons a {
   padding: 0 0 0 10px;
   cursor: pointer;
@@ -189,12 +188,6 @@ a i.material-icons {
 
 .compare-buttons div {
   text-align: right;
-}
-
-.comment-card a.btn {
-  display: inline-block;
-  min-width: 40px;
-  min-height: 40px;
 }
 
 .comment-card,

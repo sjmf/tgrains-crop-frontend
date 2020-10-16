@@ -1,11 +1,16 @@
 <template>
-  <label>
+  <label v-if="value!==null">
     <input
         type="checkbox" class="tag"
         v-model="innerValue"
         @change="$emit('change', $event)"/>
     <span v-bind:class="this.colour">{{ name }}</span>
   </label>
+  <span v-else
+        class="new badge tag"
+        v-bind:data-badge-caption="name"
+        v-bind:class="this.colour">
+  </span>
 </template>
 
 <script>
@@ -41,7 +46,7 @@
 
   min-width: 3rem;
   padding: 0 6px 0 22px;
-  margin-left: 14px;
+  margin: 2px;
   text-align: center;
   line-height: 22px;
   height: 22px;
@@ -96,6 +101,12 @@
   backface-visibility: hidden;
   -webkit-transform-origin: unset;
   transform-origin: unset;
+}
+
+span.badge {
+  display: inline-block;
+  float: none;
+  margin: 2px;
 }
 
 </style>
