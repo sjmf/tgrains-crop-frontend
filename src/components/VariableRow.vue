@@ -11,7 +11,8 @@
         :max="innerValue + remainingArea"
         :min="0"
         :interval="1"
-        :tooltip="'none'">
+        :tooltip="'none'"
+        @change="$emit('change', $event)">
       </vue-slider>
     </label>
 

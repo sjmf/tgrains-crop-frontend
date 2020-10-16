@@ -49,7 +49,7 @@
           v-bind:error-message="errors[index]"
           v-bind:remaining-area="remainingArea"
           @input="updateValue('livestock', item.name, $event)"
-          @change="validateForm()"/>
+          @change="changes=true; validateForm()"/>
 
       <li>
         <div class="divider"></div>
@@ -59,7 +59,8 @@
         <div class="row">
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
-               v-on:click="resetToBAU">Reset</button>
+                    v-bind:class="{'disabled': !this.changes}"
+                    v-on:click="resetToBAU">Reset</button>
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
@@ -87,6 +88,7 @@
         data() {
             return {
                 submitDisabled: false,
+                changes: false,
                 errors: {}
             }
         },
@@ -96,10 +98,12 @@
              */
             resetToBAU() {
                 try {
+                    if(!this.changes) return
                     this.$store.commit("clearMessages")
                     this.$store.commit("resetToBAU")
                     this.$store.dispatch("sumArea")
                     this.$nextTick(() => this.validateForm())
+                    this.changes = false
                 }
                 catch(err) {
                     this.$store.commit("raiseError", err)
