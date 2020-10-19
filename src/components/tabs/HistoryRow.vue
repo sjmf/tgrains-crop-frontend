@@ -4,8 +4,8 @@
     <div class="card-content">
       <div class="row">
         <div class="col s8">
-          {{index+1}}. <span class="datetime"><i class="tiny material-icons">timer</i> {{ new Date(time).toUTCString() }}</span>
-          <span v-if="index === historyIndex"><strong>– Current State </strong></span>
+          <strong>{{length - index}}.</strong> <span class="datetime"><i class="tiny material-icons">timer</i> {{ new Date(time).toUTCString() }}</span>
+          <span v-if="index === historyIndex"><strong> Current State </strong></span>
 
           <tag v-for="t in tags"
                v-bind:key="t"
@@ -47,6 +47,7 @@ export default {
   },
   props: {
     index: Number,
+    length: Number,
     time: Number,
     tags: Array
   },
@@ -91,5 +92,9 @@ a.btn {
 }
 .btn-flat {
   color: #fff;
+}
+.datetime {
+  font-style: italic;
+  margin-right:1rem;
 }
 </style>

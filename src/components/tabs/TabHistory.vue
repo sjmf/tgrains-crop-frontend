@@ -22,13 +22,13 @@
       <history-row v-for="(row, index) in history"
                    v-bind:key="index"
                    :index="index"
+                   :length="history.length"
                    :time="row.time"
                    :tags="row.tags"/>
     </div>
   </div>
 </template>
 <script>
-
 import HistoryRow from "@/components/tabs/HistoryRow";
 
 export default {
