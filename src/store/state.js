@@ -140,6 +140,7 @@ export const initial_state = () => ({
 
     // Tag group colours
     tag_groups: {
+        '-1':{ colour: "deep-purple"    },
         0: { colour: "blue lighten-1"   },
         1: { colour: "brown lighten-1"  },
         2: { colour: "green lighten-1"  },

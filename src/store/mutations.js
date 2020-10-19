@@ -234,14 +234,16 @@ export default {
     /**
      * Save state (e.g. before overwriting with state from comment)
      * @param state
+     * @param tags
      */
-    pushHistory(state) {
+    pushHistory(state, tags = []) {
         state.history.unshift({
             "inputs": state.landscapes[state.landscape_id],
             "outputs": state.data[state.landscape_id],
             "raw": state.data.raw[state.landscape_id],
             "totalArea": state.totalArea,
-            "time": Date.now()
+            "time": Date.now(),
+            "tags": tags
         })
         state.historyIndex = 0
     },

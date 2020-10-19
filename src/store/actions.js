@@ -25,8 +25,8 @@ export default {
                 this.commit("populate")
                 this.dispatch("sumArea")
 
-                // Push initial state onto history stack
-                this.commit("pushHistory")
+                // Push initial state onto history stack (including BAU tag [1])
+                this.commit("pushHistory", [1])
             } catch (err) {
                 console.error(err)
                 this.commit("raiseError", err)
