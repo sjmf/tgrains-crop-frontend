@@ -25,23 +25,24 @@
 
         <div class="card-content">
           <div class="row">
-            <div class="col s6">
+            <div class="col s8">
               {{index+1}}. <span class="datetime"><i class="tiny material-icons">timer</i> {{ new Date(state.time).toUTCString() }}</span>
               <span v-if="index === historyIndex"><strong>– Current State </strong></span>
             </div>
 
-            <div class="col s6" v-if="index !== historyIndex">
+            <div class="col s4" v-if="index !== historyIndex">
               <a class="btn right btn-small"
                  @click="loadState(index)">
                 <i class="material-icons right">forward</i>Load
               </a>
 
-              <a class="btn red right btn-small">
+              <a class="btn red right btn-small"
+                 @click="deleteState(index)">
                 <i class="material-icons">delete</i>
               </a>
             </div>
 
-            <div class="col s6" v-if="index === historyIndex">
+            <div class="col s4" v-if="index === historyIndex">
               <a class="btn green right btn-small btn-flat white-text">
                 <i class="material-icons right">comment</i>Comment
               </a>
@@ -69,9 +70,11 @@ export default {
             return this.$store.commit("clearHistory")
         },
         loadState(index) {
-          console.log("loading+ "+ index)
-          this.$store.commit("setHistoryIndex", index)
-          this.$store.commit("loadFromHistory", index)
+            this.$store.commit("setHistoryIndex", index)
+            this.$store.commit("loadFromHistory", index)
+        },
+        deleteState(index) {
+            this.$store.commit('deleteFromHistory', index)
         }
     }
 }

@@ -260,14 +260,26 @@ export default {
 
     /**
      * Load state from history
+     * @param state
      * @param index
      */
-    loadFromHistory(state, index) {
+    loadFromHistory(state, index= 0) {
         let load = state.history[index]
         state.landscapes[state.landscape_id] = load.inputs
         state.data[state.landscape_id] = load.outputs
         state.data.raw[state.landscape_id] = load.raw
         state.totalArea = load.totalArea
+    },
+
+    /**
+     * Delete state from history
+     * @param state
+     * @param index
+     */
+    deleteFromHistory(state, index) {
+        state.history.splice(index, 1)
+        if(index < state.historyIndex)
+            state.historyIndex--
     },
 
     /**
