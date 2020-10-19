@@ -13,7 +13,7 @@
         <transition-group name="fade" tag="div">
           <message-box
               v-for="(message, index) in this.$store.state.messages"
-              v-bind:key="index"
+              v-bind:key="index+0"
               v-bind:message="message.message"
               v-bind:kind="message.kind"
               v-bind:callback="message.callback"
@@ -29,15 +29,11 @@
       <tab-visualisations/>
 
       <div class="container col s12">
-        <br><br>
+        <br/>
       </div>
 
       <!-- COMMENTS CONTAINER -->
       <container-comments/>
-
-      <div class="container col s12">
-        <br><br>
-      </div>
 
       <!-- DEBUG INFORMATION -->
       <viz-debug/>
