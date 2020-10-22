@@ -149,12 +149,12 @@ export default {
     },
 
     /**
-     * Retrieve tags from server and load into vuex
+     * Retrieve tags (and groups) from server and load into vuex
      * @returns {Promise<void>}
      */
     async loadTags() {
-        let tags = await http.loadTags()
-        this.commit("setTags", tags)
+        let tagData = await http.loadTags()
+        this.commit("setTags", tagData)
     },
 
     /***
