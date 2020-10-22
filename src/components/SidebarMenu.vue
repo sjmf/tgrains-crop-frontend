@@ -20,15 +20,15 @@
 
       <variable-row
         v-for="(item, index) in crops"
+          v-bind:key="index"
           v-bind:name="item.name"
           v-bind:label="item.label"
-          v-bind:key="index"
           v-bind:value="item.value"
           v-bind:description="item.description"
           v-bind:error-message="errors[index]"
           v-bind:remaining-area="remainingArea"
           @input="updateValue('crops', item.name, $event)"
-          @change="validateForm($event)"/>
+          @change="valueChanged($event)"/>
 
       <li>
         <div class="divider"></div>
@@ -49,7 +49,7 @@
           v-bind:error-message="errors[index]"
           v-bind:remaining-area="remainingArea"
           @input="updateValue('livestock', item.name, $event)"
-          @change="changes=true; validateForm()"/>
+          @change="valueChanged($event)"/>
 
       <li>
         <div class="divider"></div>
@@ -129,6 +129,14 @@
             updateValue(cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
                 this.$store.commit('setFormValue', {cropOrLivestock, name, value})
                 this.$store.dispatch('sumArea')
+            },
+
+            /***
+             * Slider change handler
+             */
+            valueChanged(event) {
+                this.changes=true
+                this.validateForm(event)
             },
 
             /**
