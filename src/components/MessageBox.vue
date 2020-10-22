@@ -13,7 +13,7 @@
     export default {
         name: 'MessageBox',
         props: {
-          message: String,
+          message: [String, Error, Object],
           kind: String,
           callback: Function,
           callbackText: String,
