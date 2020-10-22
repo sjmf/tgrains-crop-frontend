@@ -12,7 +12,7 @@
         :min="0"
         :interval="1"
         :tooltip="'none'"
-        @change="$emit('change', $event)">
+        @change="$emit('change', [name, $event])">
       </vue-slider>
     </label>
 
@@ -23,7 +23,7 @@
            step="500"
            min="0"
            v-bind:class="{ invalid: errorMessage }"
-           @change="$emit('change', $event)">
+           @change="$emit('change', [name, $event.target.valueAsNumber])">
 
     <div v-if="errorMessage" class="error label">
         <span>{{ errorMessage }}</span>
