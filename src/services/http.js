@@ -27,7 +27,7 @@ export default {
             console.log("Awake! Checking state again...")
 
             response = await axios.get(pathname)
-            console.log(response)
+            // console.log(response)
         }
 
         if(response.data.state === 'SUCCESS') {
@@ -47,7 +47,7 @@ export default {
         try {
             // Query the model and kick off celery task
             let response = await axios.post('/model', data)
-            console.log(response)
+            // console.log(response)
 
             response = await this.checkCeleryStatus(response)
             return response.data.result

@@ -116,7 +116,6 @@ export default {
      */
     doModelQuery (state, payload) {
         try {
-            console.log(payload)
             return http.queryModel(payload)
         }
         catch (err) {
