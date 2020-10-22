@@ -10,7 +10,7 @@
           <tag v-for="t in tags"
                v-bind:key="t"
                :name="tag_meta(t).name"
-               :colour="tag_group(tag_meta(t).group).colour"
+               :colour="tag_colour(t)"
                :value="null"></tag>
 
         </div>
@@ -70,6 +70,9 @@ export default {
     tag_group(id) {
       return this.$store.state.tag_groups[id]
     },
+    tag_colour(id) {
+      return this.tag_group(this.tag_meta(id).group).colour
+    }
   }
 }
 </script>
