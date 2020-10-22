@@ -78,7 +78,6 @@ export const initial_state = () => ({
         sugarbeet:      "Sugar Beet",
         osr_winter:     "Oilseed Rape",
         all_vegetables: "Vegetables",
-        livestock:      "Livestock",
         maize:          "Maize",
         all_peas_beans: "Peas & Beans",
         all_potato:     "Potatoes",
@@ -88,7 +87,6 @@ export const initial_state = () => ({
         // Livestock
         dairy:          "Dairy Cattle",
         beef:           "Beef Cattle",
-        cow:            "Beef Cattle",
         chicken:        "Chicken",
         pork:           "Pork",
         eggs:           "Egg Production",
