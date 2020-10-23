@@ -18,12 +18,14 @@ export default {
     name: 'TabEnvironment',
     components: {VizPests},
     props: {
-        chartHeight: Number,
-        chartColors: Object
+        chartHeight: Number
     },
     computed: {
         baseData() {
             return this.$store.state.data[this.$store.state.landscape_id]
+        },
+        chartColors() {
+            return this.$store.state.chartColors
         },
         pestData() {
             return {

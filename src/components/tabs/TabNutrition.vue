@@ -39,12 +39,14 @@ export default {
     name: 'TabNutrition',
     components: {VizNutrition},
     props: {
-        chartHeight: Number,
-        chartColors: Object
+        chartHeight: Number
     },
     computed: {
         baseData() {
             return this.$store.state.data[this.$store.state.landscape_id]
+        },
+        chartColors() {
+            return this.$store.state.chartColors
         },
         nutriData() {
             return {

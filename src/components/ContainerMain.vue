@@ -26,7 +26,23 @@
       <tab-bar/>
 
       <!-- VISUALISATION CONTAINERS (TABBED) -->
-      <tab-visualisations/>
+      <div class="container">
+        <div id="production-tab" class="col s12">
+          <TabProduction :chart-height="chartHeight"/>
+        </div>
+
+        <div id="environment-tab" class="col s12">
+          <TabEnvironment :chart-height="chartHeight*1.25"/>
+        </div>
+
+        <div id="nutrition-tab" class="col s12">
+          <TabNutrition :chart-height="chartHeight"/>
+        </div>
+
+        <div id="history-tab" class="col s12">
+          <TabHistory/>
+        </div>
+      </div>
 
       <div class="container col s12">
         <br/>
@@ -49,17 +65,23 @@
     import LandscapeJumbotron from "@/components/LandscapeJumbotron";
     import ModalWelcome from "@/components/ModalWelcome";
     import TabBar from "@/components/tabs/TabBar";
-    import TabVisualisations from "@/components/tabs/TabVisualisations";
     import LoadingOverlay from "@/components/LoadingOverlay";
     import VizDebug from "@/components/visualisations/VizDebug";
     import ContainerComments from "@/components/comments/ContainerComments";
     import MessageBox from "@/components/MessageBox";
+    import TabHistory from "@/components/tabs/TabHistory";
+    import TabEnvironment from "@/components/tabs/TabEnvironment";
+    import TabProduction from "@/components/tabs/TabProduction";
+    import TabNutrition from "@/components/tabs/TabNutrition";
 
     export default {
         name: "ContainerMain",
         components: {
             LoadingOverlay,
-            TabVisualisations,
+            TabHistory,
+            TabEnvironment,
+            TabProduction,
+            TabNutrition,
             TabBar,
             ModalWelcome,
             LandscapeJumbotron,
@@ -69,6 +91,11 @@
         },
         props: {
             loading: Boolean
+        },
+        data (){
+            return {
+                chartHeight: 125,
+            }
         }
     }
 </script>

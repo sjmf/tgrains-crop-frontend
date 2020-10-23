@@ -37,8 +37,7 @@ export default {
         VizProduction
     },
     props: {
-        chartHeight: Number,
-        chartColors: Object
+        chartHeight: Number
     },
     computed: {
         baseData() {
@@ -49,6 +48,9 @@ export default {
         },
         bau() {
             return this.$store.state.bau[this.$store.state.landscape_id]
+        },
+        chartColors() {
+            return this.$store.state.chartColors
         },
         prodTitles() {
             return ['Factor', 'Value', 'Change', 'Description']
