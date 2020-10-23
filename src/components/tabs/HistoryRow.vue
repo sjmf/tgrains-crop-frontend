@@ -3,20 +3,30 @@
       v-bind:class="[index === historyIndex ? 'green lighten-4' : 'grey lighten-3']">
     <div class="card-content">
       <div class="row">
-        <div class="col s8">
-          <strong>{{length - index}}.</strong> <span class="datetime"><i class="tiny material-icons">timer</i> {{ new Date(time).toUTCString() }}</span>
-          <span v-if="index === historyIndex"><strong> Current State </strong></span>
+        <div class="col s4">
+          <strong>{{length - index}}.</strong>&nbsp;
+          <i v-if="index === historyIndex" class="tiny material-icons">live_tv</i>
+          <i v-else class="tiny material-icons">timer</i>
+          <span class="datetime"> {{ new Date(time).toUTCString() }}</span>
+        </div>
 
+        <div class="col s5">
           <tag v-for="t in tags"
                v-bind:key="t"
                :name="tag_meta(t).name"
                :colour="tag_colour(t)"
                :value="null"></tag>
-
         </div>
 
-        <div class="col s4" v-if="index !== historyIndex">
-          <a class="btn right btn-small btn-flat deep-purple waves-purple"
+
+        <div class="col s3" v-if="index === historyIndex">
+          <a class="btn green right btn-small btn-flat nobr">
+            <i class="material-icons right">comment</i>Comment
+          </a>
+        </div>
+
+        <div class="col s3" v-else>
+          <a class="btn right btn-small btn-flat deep-purple waves-purple nobr"
              @click="loadState()">
             <i class="material-icons right">forward</i>Load
           </a>
@@ -27,11 +37,6 @@
           </a>
         </div>
 
-        <div class="col s4" v-if="index === historyIndex">
-          <a class="btn green right btn-small btn-flat">
-            <i class="material-icons right">comment</i>Comment
-          </a>
-        </div>
       </div>
     </div>
   </div>
@@ -97,6 +102,7 @@ a.btn {
 }
 .datetime {
   font-style: italic;
-  margin-right:1rem;
+  margin-left:.5rem;
 }
+.nobr { white-space: nowrap }
 </style>

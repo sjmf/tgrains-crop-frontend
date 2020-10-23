@@ -5,7 +5,7 @@
       v-bind:data-tooltip="description">
 
     <label v-bind:for="name" class="variable">
-      {{label}}
+      <span>{{label}}</span>
       <vue-slider
         v-model="innerValue"
         :max="innerValue + remainingArea"
@@ -67,13 +67,24 @@
     white-space: nowrap;
   }
 
+  li.variable-row input {
+    height: 2.5rem;
+  }
+
   label.variable {
     display:inline-block;
     width: 66.66%;
     color: rgba(0,0,0, 0.87);
     padding:0;
     margin:0;
-    line-height:3rem;
+    height:2rem;
+  }
+
+  label.variable span {
+    width:100%;
+    display:inline-block;
+    vertical-align: top;
+    margin: -5px 0 1px 0;
   }
 
   label.variable + input[type="number"]:not(.browser-default) {
@@ -98,7 +109,7 @@
 <style>
   .vue-slider {
     padding:0 !important;
-    margin: -7.5px 15px 10px 5px;
+    margin: 5px 15px 10px 5px;
   }
 
   .vue-slider-process {
