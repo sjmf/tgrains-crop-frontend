@@ -52,6 +52,45 @@ function formatData(state, new_data){
     return data
 }
 
+/**
+ * Return a score for the distance of the state from BAU, plus an array of the changed values
+ * sorted in descending order with the most different value first
+ * @param state
+ * @returns {{distance: number, changes: []}}
+ */
+function distanceFromBAU(state) {
+    const bauCrops = state.bau[state.landscape_id]['cropAreas']
+    const bauLives = state.bau[state.landscape_id]['livestockAreas']
+    const newCrops = state.landscapes[state.landscape_id].crops
+    const newLives = state.landscapes[state.landscape_id].livestock
+
+    let sum = 0
+    let changes = []
+
+    const process = function(name,neu,bau) {
+        let dist = Math.abs(bau[neu[name].index] - neu[name].value)
+        sum += dist
+        if(dist > 0) changes.push({name, dist})
+    }
+
+    for (let name in newCrops)
+        process(name, newCrops, bauCrops)
+    for (let name in newLives)
+        process(name, newLives, bauLives)
+
+    // Reverse sort
+    changes.sort((a,b) => {
+        if(a.dist > b.dist) return -1
+        if(b.dist > a.dist) return 1
+        return 0
+    })
+
+    return {
+        distance: sum,
+        changes: changes
+    }
+}
+
 export default {
     /**
      * Update the store with the new landscape ID, which controls area selection
@@ -170,6 +209,7 @@ export default {
             let c = crops[i]
             landscape['crops'][c] = {
                 'name':  c,
+                'index': i,
                 'label': state.dictionary[c],
                 'value': cropAreas[i],
                 'description': (c in state.descriptions ? state.descriptions[c] : "")
@@ -181,6 +221,7 @@ export default {
             let l = livestock[i]
             landscape['livestock'][l] = {
                 'name':  l,
+                'index': i,
                 'label': state.dictionary[l],
                 'value': livestockAreas[i],
                 'description': (l in state.descriptions ? state.descriptions[l] : "")
@@ -237,6 +278,20 @@ export default {
      * @param tags
      */
     pushHistory(state, tags = []) {
+        // Don't push a BAU state onto the top of the stack when there's already a BAU state there!
+        if(state.history.length > 0) /// Don't hit this on first load (where no history exists before first BAU)
+            if(state.history[0].tags[0] === 1 && tags[0] === 1)
+                return
+
+        // Get automatic tags for non-bau states
+        if(tags !== [1]) {
+            let result = distanceFromBAU(state)
+            //let distance = result.distance
+            for(let c of result.changes)
+                tags.push(state.tags.mapping[c.name])
+        }
+
+        // Push state onto history (a stack in reverse)
         state.history.unshift({
             "inputs": cloneDeep(state.landscapes[state.landscape_id]),
             "outputs": cloneDeep(state.data[state.landscape_id]),
@@ -245,6 +300,8 @@ export default {
             "time": Date.now(),
             "tags": tags
         })
+
+        // Set index
         state.historyIndex = 0
     },
 
@@ -319,7 +376,9 @@ export default {
      * @param tags
      */
     setTags(state, tags) {
-        state['tags'] = tags
+        // copy these separately, so as not to overwrite tags.mapping
+        state.tags.tags = tags.tags
+        state.tags.groups = tags.groups
     },
 
     /**

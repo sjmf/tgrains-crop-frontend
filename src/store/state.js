@@ -147,7 +147,39 @@ export const initial_state = () => ({
         5: { colour: "red lighten-2"    },
     },
 
-    tags: [],
+    // Tag data
+    tags: {
+        // Mapping of tag group IDs to tag IDs
+        groups: {},
+
+        // An object list of tags
+        tags: [],
+
+        // Tag mappings from variable name to tag id
+        mapping: {
+            // Crops
+            all_wheat:      26,
+            all_barley:     24,
+            all_oats:       22,
+            sugarbeet:      23,
+            osr_winter:     28,
+            all_vegetables: 27,
+            maize:          25,
+            all_peas_beans: 21,
+            all_potato:     29,
+            fruit_soft:     20,
+            fruit_top:      30,
+
+            // Livestock
+            dairy:          31,
+            beef:           32,
+            chicken:        33,
+            pork:           34,
+            eggs:           35,
+            lamb_lowland:   36,
+            lamb_upland:    37,
+        },
+    },
 
     // Error handling: each element contains the following structure:
     // {
