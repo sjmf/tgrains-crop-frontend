@@ -223,13 +223,13 @@
              */
             loading() {
                 return (Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0
-                        && this.errorchecks)
+                        && this.errorChecks)
             },
 
             /**
              * Check for error messages in messages
              */
-            errorchecks() {
+            errorChecks() {
                 for (let e of this.$store.state.messages)
                     if(e.kind === "error")
                         return false
