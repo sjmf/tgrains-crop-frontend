@@ -2,7 +2,7 @@
   <div id="comments" class="container">
     <div class="row">
       <div class="col s11">
-        <span class="comment-header grey-text text-darken-2">Comments</span>
+        <span id="comment-head" class="comment-header grey-text text-darken-2">Comments</span>
         <div class="divider grey"></div>
       </div>
 
@@ -17,7 +17,7 @@
 
     <!-- Add comment form -->
     <transition name="fade">
-      <div class="col s12" v-show="show_addcomment">
+      <div class="col s12" v-show="show_add_comment">
         <comment-add
             v-bind:reply_id="reply_id"
             v-on="$listeners"
@@ -44,7 +44,7 @@
           v-bind:tags="comment.tags"
           v-bind:state="comment.state"
           v-bind:timestamp="comment.timestamp"
-          v-on:replyToComment="doReply"/>
+          @replyToComment="doReply"/>
 
     </div>
 
@@ -64,40 +64,48 @@ import CommentCard from "@/components/comments/CommentCard";
 import Pagination from "@/components/comments/Pagination";
 
 export default {
-        name: 'ContainerComments',
-        components: {Pagination, CommentCard, CommentAdd},
-        async mounted() {
-          // Keep this on nextTick for edge case re-loading store defaults
-          this.$nextTick(async () => {
+    name: 'ContainerComments',
+    components: {
+        Pagination,
+        CommentCard,
+        CommentAdd
+    },
+    async mounted() {
+        // Keep this on nextTick for edge case re-loading store defaults
+        this.$nextTick(async () => {
             // Load tags if not already loaded
             if (this.$store.state.tags.tags.length === 0)
-              await this.$store.dispatch("loadTags")
+                await this.$store.dispatch("loadTags")
 
             await this.$store.dispatch("loadComments")
-          })
-        },
-        data() {
-          return {
-            show_addcomment: false,
+        })
+    },
+    data() {
+        return {
+            show_add_comment: false,
             reply_id: undefined,
-          }
+            state_id: undefined
+        }
+    },
+    methods: {
+        doReply(event) {
+            this.show_add_comment = true
+            this.reply_id = event.id
         },
-        methods: {
-            doReply (event) {
-              console.log(event)
-              this.show_addcomment = true
-              this.reply_id = event.id
-            },
-            toggleAddComment () {
-              this.show_addcomment = !this.show_addcomment
-            }
+        toggleAddComment() {
+            this.show_add_comment = !this.show_add_comment
         },
-        computed: {
-            comments() {
-                return this.$store.state.comments.comments;
-            }
+        attachState(index) {
+            this.show_add_comment = true
+            this.state_id = index
+        }
+    },
+    computed: {
+        comments() {
+            return this.$store.state.comments.comments;
         }
     }
+}
 </script>
 <style scoped>
 .comment-header {
