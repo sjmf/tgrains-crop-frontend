@@ -84,7 +84,11 @@
 
     export default {
         name: 'SidebarMenu',
-        components: {LandAreaMenu, VariableRow, LoadingOverlay},
+        components: {
+            LandAreaMenu,
+            VariableRow,
+            LoadingOverlay
+        },
         data() {
             return {
                 submitDisabled: false,
