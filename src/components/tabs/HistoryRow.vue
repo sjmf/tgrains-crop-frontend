@@ -18,20 +18,23 @@
                :value="null"></tag>
         </div>
 
-
-        <div class="col s3" v-if="index === historyIndex">
-          <a class="btn green right btn-small btn-flat nobr">
+        <!-- NB: using v-show here as v-if seems to replace the component too soon,
+                 triggering the anchor for #comment-head when load clicked... :/ -->
+        <div class="col s3" v-show="index === historyIndex">
+          <a href="#comment-head" v-smooth-scroll
+             class="btn green right btn-small btn-flat waves-effect waves-green nobr"
+             @click="$emit('comment', index)">
             <i class="material-icons right">comment</i>Comment
           </a>
         </div>
 
-        <div class="col s3" v-else>
-          <a class="btn right btn-small btn-flat deep-purple waves-purple nobr"
+        <div class="col s3" v-show="index !== historyIndex">
+          <a class="btn right btn-small btn-flat deep-purple waves-effect waves-purple nobr"
              @click="loadState()">
             <i class="material-icons right">forward</i>Load
           </a>
 
-          <a class="btn red right btn-small btn-flat waves-red"
+          <a class="btn red right btn-small btn-flat waves-effect waves-red"
              @click="deleteState()">
             <i class="material-icons">delete</i>
           </a>

@@ -40,7 +40,8 @@
         </div>
 
         <div id="history-tab" class="col s12">
-          <TabHistory @load="(index) => $emit('load', index)"/>
+          <TabHistory @load="(index) => $emit('load', index)"
+                      @comment="(index) => $refs.containerComments.attachState(index)"/>
         </div>
       </div>
 
@@ -49,7 +50,7 @@
       </div>
 
       <!-- COMMENTS CONTAINER -->
-      <container-comments/>
+      <container-comments ref="containerComments"/>
 
       <!-- DEBUG INFORMATION -->
       <viz-debug/>

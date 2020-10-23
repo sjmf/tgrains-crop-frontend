@@ -25,7 +25,8 @@
                    :length="history.length"
                    :time="row.time"
                    :tags="row.tags"
-                   @load="$emit('load', index)"/>
+                   @load="$emit('load', index)"
+                   @comment="$emit('comment', index)"/>
     </div>
   </div>
 </template>
