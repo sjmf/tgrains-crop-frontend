@@ -24,6 +24,12 @@ Vue.use(Material);
 
 Vue.config.productionTip = false
 
+import VueSmoothScroll from 'vue2-smooth-scroll'
+
+Vue.use(VueSmoothScroll, {
+  duration: 400,
+  updateHistory: false,
+})
 
 new Vue({
   render: h => h(App),
