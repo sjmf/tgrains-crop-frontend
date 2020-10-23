@@ -7,7 +7,7 @@
           <strong>{{length - index}}.</strong>&nbsp;
           <i v-if="index === historyIndex" class="tiny material-icons">live_tv</i>
           <i v-else class="tiny material-icons">timer</i>
-          <span class="datetime"> {{ new Date(time).toUTCString() }}</span>
+          <span class="datetime"> {{ time | moment }}</span>
         </div>
 
         <div class="col s5">
@@ -44,7 +44,7 @@
 
 <script>
 import Tag from "@/components/comments/Tag";
-
+import moment from 'moment';
 export default {
   name: 'history-row',
   components: {
@@ -55,6 +55,11 @@ export default {
     length: Number,
     time: Number,
     tags: Array
+  },
+  filters: {
+    moment: function (date) {
+      return moment(date).format('HH:mm:ss, Do MMM YYYY');
+    }
   },
   computed: {
     historyIndex() {
