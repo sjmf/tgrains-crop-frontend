@@ -271,6 +271,8 @@ export default {
         state.data[state.landscape_id] = cloneDeep(load.outputs)
         state.data.raw[state.landscape_id] = cloneDeep(load.raw)
         state.totalArea = load.totalArea
+
+        state.historyIndex = index
     },
 
     /**
@@ -291,15 +293,6 @@ export default {
     clearHistory(state) {
         state.history = [state.history[state.historyIndex]]
         state.historyIndex = 0
-    },
-
-    /**
-     * Set history index
-     * @param state
-     * @param index
-     */
-    setHistoryIndex(state, index) {
-      state.historyIndex = index
     },
 
     /**
