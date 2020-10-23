@@ -8,10 +8,15 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu @submitForm="doAJAX($event)" @checkBAULoaded="loadBAUState()"></sidebar-menu>
+    <sidebar-menu @submitForm="doAJAX($event)"
+                  @checkBAULoaded="loadBAUState()"
+                  ref="sidebarMenu">
+    </sidebar-menu>
 
     <!-- MAIN PAGE CONTENT -->
-    <container-main :loading="loading"></container-main>
+    <container-main :loading="loading"
+                    @load="stateLoaded()">
+    </container-main>
 
     <!-- FOOTER -->
     <container-footer></container-footer>
@@ -61,6 +66,9 @@
             },
             async loadBAUState() {
                 await this.$store.dispatch('loadBauState')
+            },
+            stateLoaded() {
+                this.$refs.sidebarMenu.historyLoaded()
             }
         },
         mounted() {

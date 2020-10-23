@@ -169,6 +169,10 @@
                                        || !Object.entries(this.errors).every(x=>x[1]===false)
             },
 
+            historyLoaded() {
+                this.changes = true
+            },
+
             /**
              * Checks if the value is NaN, an empty String, or a negative number. All undesirable things!
              * @param value

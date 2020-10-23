@@ -69,6 +69,7 @@ export default {
   methods: {
     loadState() {
       this.$store.commit("loadFromHistory", this.index)
+      this.$emit('load', this.index);
     },
     deleteState() {
       this.$store.commit('deleteFromHistory', this.index)

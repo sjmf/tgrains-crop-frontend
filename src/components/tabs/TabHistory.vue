@@ -24,7 +24,8 @@
                    :index="index"
                    :length="history.length"
                    :time="row.time"
-                   :tags="row.tags"/>
+                   :tags="row.tags"
+                   @load="$emit('load', index)"/>
     </div>
   </div>
 </template>

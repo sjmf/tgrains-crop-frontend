@@ -40,7 +40,7 @@
         </div>
 
         <div id="history-tab" class="col s12">
-          <TabHistory/>
+          <TabHistory @load="(index) => $emit('load', index)"/>
         </div>
       </div>
 
