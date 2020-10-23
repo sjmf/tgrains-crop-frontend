@@ -13,6 +13,7 @@
     "chartjs-plugin-piechart-outlabels": "^0.1.4",
     "core-js": "^3.6.5",
     "jdenticon": "^3.0.1",
+    "lodash": "^4.17.20",
     "material-icons": "^0.3.1",
     "materialize-css": "^1.0.0",
     "sass": "^1.26.8",

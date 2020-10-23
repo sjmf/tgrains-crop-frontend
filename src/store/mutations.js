@@ -1,5 +1,5 @@
 // mutations.js
-
+const cloneDeep = require('lodash/cloneDeep');
 import {initial_state} from "@/store/state";
 
 /* Helper functions */
@@ -238,9 +238,9 @@ export default {
      */
     pushHistory(state, tags = []) {
         state.history.unshift({
-            "inputs": state.landscapes[state.landscape_id],
-            "outputs": state.data[state.landscape_id],
-            "raw": state.data.raw[state.landscape_id],
+            "inputs": cloneDeep(state.landscapes[state.landscape_id]),
+            "outputs": cloneDeep(state.data[state.landscape_id]),
+            "raw": cloneDeep(state.data.raw[state.landscape_id]),
             "totalArea": state.totalArea,
             "time": Date.now(),
             "tags": tags
@@ -254,9 +254,9 @@ export default {
      */
     rollbackHistory(state) {
         let load = state.history.shift()
-        state.landscapes[state.landscape_id] = load.inputs
-        state.data[state.landscape_id] = load.outputs
-        state.data.raw[state.landscape_id] = load.raw
+        state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
+        state.data[state.landscape_id] = cloneDeep(load.outputs)
+        state.data.raw[state.landscape_id] = cloneDeep(load.raw)
         state.totalArea = load.totalArea
     },
 
@@ -267,9 +267,9 @@ export default {
      */
     loadFromHistory(state, index= 0) {
         let load = state.history[index]
-        state.landscapes[state.landscape_id] = load.inputs
-        state.data[state.landscape_id] = load.outputs
-        state.data.raw[state.landscape_id] = load.raw
+        state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
+        state.data[state.landscape_id] = cloneDeep(load.outputs)
+        state.data.raw[state.landscape_id] = cloneDeep(load.raw)
         state.totalArea = load.totalArea
     },
 
