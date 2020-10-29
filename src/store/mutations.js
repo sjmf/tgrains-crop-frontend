@@ -235,7 +235,7 @@ export default {
         state.totalArea = load.totalArea
 
         // Add 'restored' tag and overwrite old time
-        load.tags.push(3)
+        load.tags = [...new Set(load.tags.concat([3]))]
         load.time = Date.now()
 
         // Push to history queue
