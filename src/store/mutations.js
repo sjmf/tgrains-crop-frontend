@@ -204,6 +204,8 @@ export default {
             for(let c of result.changes)
                 tags.push(state.tags.mapping[c.name])
         }
+        // Keep unique tags only
+        tags = [...new Set(tags)]
 
         // Push state onto history (a stack in reverse)
         state.history.unshift({
@@ -223,13 +225,22 @@ export default {
     /**
      * Restore state from saved
      * @param state
+     * @param load
      */
-    rollbackHistory(state) {
-        let load = state.history.shift()
+    rollbackHistory(state, load) {
+        // Overwrite local state
         state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
         state.data[state.landscape_id] = cloneDeep(load.outputs)
         state.data.raw[state.landscape_id] = cloneDeep(load.raw)
         state.totalArea = load.totalArea
+
+        // Add 'restored' tag and overwrite old time
+        load.tags.push(3)
+        load.time = Date.now()
+
+        // Push to history queue
+        state.history.unshift(load)
+        state.historyIndex = 0
     },
 
     /**
