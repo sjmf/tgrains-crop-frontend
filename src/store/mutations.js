@@ -59,24 +59,22 @@ function formatData(state, new_data){
  * @returns {{distance: number, changes: []}}
  */
 function distanceFromBAU(state) {
-    const bauCrops = state.bau[state.landscape_id]['cropAreas']
-    const bauLives = state.bau[state.landscape_id]['livestockAreas']
-    const newCrops = state.landscapes[state.landscape_id].crops
-    const newLives = state.landscapes[state.landscape_id].livestock
+    const crops = state.landscapes[state.landscape_id].crops
+    const lives = state.landscapes[state.landscape_id].livestock
 
     let sum = 0
     let changes = []
 
-    const process = function(name,neu,bau) {
-        let dist = Math.abs(bau[neu[name].index] - neu[name].value)
+    const process = function(name,factor) {
+        let dist = Math.abs(factor[name].bau - factor[name].value)
         sum += dist
         if(dist > 0) changes.push({name, dist})
     }
 
-    for (let name in newCrops)
-        process(name, newCrops, bauCrops)
-    for (let name in newLives)
-        process(name, newLives, bauLives)
+    for (let name in crops)
+        process(name, crops)
+    for (let name in lives)
+        process(name, lives)
 
     // Reverse sort
     changes.sort((a,b) => {
@@ -211,7 +209,8 @@ export default {
                 'name':  c,
                 'index': i,
                 'label': state.dictionary[c],
-                'value': cropAreas[i],
+                'value': Math.floor(cropAreas[i]),
+                'bau': Math.floor(cropAreas[i]),
                 'description': (c in state.descriptions ? state.descriptions[c] : "")
             }
         }
@@ -223,7 +222,8 @@ export default {
                 'name':  l,
                 'index': i,
                 'label': state.dictionary[l],
-                'value': livestockAreas[i],
+                'value': Math.floor(livestockAreas[i]),
+                'bau': Math.floor(livestockAreas[i]),
                 'description': (l in state.descriptions ? state.descriptions[l] : "")
             }
         }
@@ -259,15 +259,13 @@ export default {
         state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
 
         // Reset landscape values (sidebar data values)
-        const crops = state.strings[state.landscape_id].crops
-        const livestock = state.strings[state.landscape_id].livestock
-        const cropAreas = state.bau[state.landscape_id]["cropAreas"]
-        const livestockAreas = state.bau[state.landscape_id]["livestockAreas"]
+        const crops = state.landscapes[state.landscape_id].crops
+        const livestock = state.landscapes[state.landscape_id].livestock
 
-        for (let i=0; i < crops.length; i++)
-            state.landscapes[state.landscape_id]['crops'][crops[i]]['value'] = cropAreas[i]
-        for (let i=0; i < livestock.length; i++)
-            state.landscapes[state.landscape_id]['livestock'][livestock[i]]['value'] = livestockAreas[i]
+        for (let c in crops)
+            crops[c].value = crops[c].bau
+        for (let l in livestock)
+            livestock[l].value = livestock[l].bau
 
         state.data.raw[state.landscape_id] = state.bau[state.landscape_id]
     },

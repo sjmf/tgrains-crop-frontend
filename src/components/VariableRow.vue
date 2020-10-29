@@ -12,6 +12,7 @@
         :min="0"
         :interval="1"
         :tooltip="'none'"
+        :processStyle="processStyle"
         @change="$emit('change', [name, $event])">
       </vue-slider>
     </label>
@@ -42,6 +43,7 @@
             name: String,
             label: String,
             value: [String, Number], // Blank inputs return String. Validation should catch this
+            bauValue: [String, Number],
             description: String,
             errorMessage: [String, Boolean],
             remainingArea: Number,
@@ -55,6 +57,11 @@
                 set (_val) {
                     this.$emit('input', _val, this.name);
                 }
+            },
+            processStyle() {
+              if(this.innerValue === this.bauValue)
+                  return { backgroundColor: '#43A047'}
+              return { backgroundColor: '#673ab7'}
             }
         }
     }
@@ -110,10 +117,6 @@
   .vue-slider {
     padding:0 !important;
     margin: 5px 15px 10px 5px;
-  }
-
-  .vue-slider-process {
-    background-color: #43A047;
   }
 
   .vue-slider-dot-handle-focus {

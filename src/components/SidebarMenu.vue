@@ -20,13 +20,14 @@
 
       <variable-row
         v-for="(item, index) in crops"
-          v-bind:key="index"
-          v-bind:name="item.name"
-          v-bind:label="item.label"
-          v-bind:value="item.value"
-          v-bind:description="item.description"
-          v-bind:error-message="errors[index]"
-          v-bind:remaining-area="remainingArea"
+          :key="index"
+          :name="item.name"
+          :label="item.label"
+          :value="item.value"
+          :bau-value="item.bau"
+          :description="item.description"
+          :error-message="errors[index]"
+          :remaining-area="remainingArea"
           @input="updateValue('crops', item.name, $event)"
           @change="valueChanged($event)"/>
 
@@ -41,13 +42,14 @@
 
       <variable-row
           v-for="(item, index) in livestock"
-          v-bind:name="item.name"
-          v-bind:label="item.label"
-          v-bind:key="crops.length+index"
-          v-bind:value="item.value"
-          v-bind:description="item.description"
-          v-bind:error-message="errors[index]"
-          v-bind:remaining-area="remainingArea"
+          :key="crops.length+index"
+          :name="item.name"
+          :label="item.label"
+          :value="item.value"
+          :bau-value="item.bau"
+          :description="item.description"
+          :error-message="errors[index]"
+          :remaining-area="remainingArea"
           @input="updateValue('livestock', item.name, $event)"
           @change="valueChanged($event)"/>
 
