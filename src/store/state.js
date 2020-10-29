@@ -166,6 +166,7 @@ export const initial_state = () => ({
 
     // Tag group colours
     tag_groups: {
+        '-2':{ colour: "green darken-2" },
         '-1':{ colour: "deep-purple"    },
         0: { colour: "blue lighten-1"   },
         1: { colour: "brown lighten-1"  },
@@ -186,26 +187,26 @@ export const initial_state = () => ({
         // Tag mappings from variable name to tag id
         mapping: {
             // Crops
-            all_wheat:      26,
-            all_barley:     24,
-            all_oats:       22,
-            sugarbeet:      23,
-            osr_winter:     28,
-            all_vegetables: 27,
-            maize:          25,
-            all_peas_beans: 21,
-            all_potato:     29,
-            fruit_soft:     20,
-            fruit_top:      30,
+            all_wheat:      34,
+            all_barley:     32,
+            all_oats:       30,
+            sugarbeet:      31,
+            osr_winter:     36,
+            all_vegetables: 35,
+            maize:          33,
+            all_peas_beans: 29,
+            all_potato:     37,
+            fruit_soft:     28,
+            fruit_top:      38,
 
             // Livestock
-            dairy:          31,
-            beef:           32,
-            chicken:        33,
-            pork:           34,
-            eggs:           35,
-            lamb_lowland:   36,
-            lamb_upland:    37,
+            dairy:          39,
+            beef:           40,
+            chicken:        41,
+            pork:           42,
+            eggs:           43,
+            lamb_lowland:   44,
+            lamb_upland:    45,
         },
     },
 
