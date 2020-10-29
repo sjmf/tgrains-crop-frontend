@@ -205,9 +205,8 @@
                 // Check server status return
                 if(err === undefined)
                   this.resetForm()
-
-                this.loading = false
               })
+              this.loading = false
             }
           },
           resetForm() {
