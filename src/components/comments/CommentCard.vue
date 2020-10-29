@@ -149,6 +149,8 @@ export default {
         callback: () => {this.$store.commit("rollbackHistory")},
         callbackText: "Click here to restore previous state"
       }) // Will also scroll viewport to top
+
+      this.$emit('load')
     }
   },
   filters: {

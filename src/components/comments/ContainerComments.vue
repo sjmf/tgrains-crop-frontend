@@ -44,7 +44,8 @@
           v-bind:tags="comment.tags"
           v-bind:state="comment.state"
           v-bind:timestamp="comment.timestamp"
-          @replyToComment="doReply"/>
+          @replyToComment="doReply"
+          @load="$emit('load')"/>
 
     </div>
 

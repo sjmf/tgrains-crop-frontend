@@ -50,7 +50,8 @@
       </div>
 
       <!-- COMMENTS CONTAINER -->
-      <container-comments ref="containerComments"/>
+      <container-comments ref="containerComments"
+                          @load="$emit('load')"/>
 
       <!-- DEBUG INFORMATION -->
       <viz-debug/>
