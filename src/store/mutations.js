@@ -387,8 +387,7 @@ export default {
     setTagSelected(state, payload) {
         let [id, value] = Object.values(payload)
 
-        // id-1 because JS indexes from 0 while MySQL indexes from 1
-        state['tags']['tags'][id-1].selected = value
+        state.tags.tags[id].selected = value
     },
 
     /**
@@ -396,8 +395,8 @@ export default {
      * @param state
      */
     resetAllTagSelected(state) {
-        for (let tag of state['tags']['tags']) {
-            tag.selected = false;
+        for (let id in state.tags.tags) {
+            state.tags.tags[id].selected = false;
         }
     },
 

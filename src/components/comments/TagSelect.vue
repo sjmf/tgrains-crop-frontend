@@ -8,12 +8,12 @@
       <div class="collapsible-body">
         <!-- +1 here as MySQL indexes from 1! -->
         <!--- i == tags.tags[i+1].id -->
-        <Tag v-for="i in tags.groups[0]"
+        <Tag v-for="i of tags.groups[0]"
              v-bind:key="i"
-             v-bind:name="tags.tags[i-1].name"
-             v-bind:value="tags.tags[i-1].selected"
+             v-bind:name="tags.tags[i].name"
+             v-bind:value="tags.tags[i].selected"
              v-bind:colour="tag_groups[0]['colour']"
-             @input="updateValue(i, $event)"/>
+             @input="updateValue(i, $event);"/>
       </div>
     </li>
 
@@ -23,10 +23,10 @@
       </div>
       <div class="collapsible-body">
 
-        <Tag v-for="i in tags.groups[1]"
+        <Tag v-for="i of tags.groups[1]"
              v-bind:key="i"
-             v-bind:name="tags.tags[i-1].name"
-             v-bind:value="tags.tags[i-1].selected"
+             v-bind:name="tags.tags[i].name"
+             v-bind:value="tags.tags[i].selected"
              v-bind:colour="tag_groups[1]['colour']"
              @input="updateValue(i, $event)"/>
 
@@ -40,10 +40,10 @@
       <div class="collapsible-body">
 
         <span v-for="n in 3" v-bind:key="n">
-          <Tag v-for="i in tags.groups[n+1]"
+          <Tag v-for="i of tags.groups[n+1]"
                v-bind:key="i"
-               v-bind:name="tags.tags[i-1].name"
-               v-bind:value="tags.tags[i-1].selected"
+               v-bind:name="tags.tags[i].name"
+               v-bind:value="tags.tags[i].selected"
                v-bind:colour="tag_groups[n+1]['colour']"
                @input="updateValue(i, $event)"/>
         </span>

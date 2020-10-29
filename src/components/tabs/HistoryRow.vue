@@ -11,7 +11,7 @@
         </div>
 
         <div class="col s5">
-          <tag v-for="t in tags"
+          <tag v-for="t of tags"
                v-bind:key="t"
                :name="tag_meta(t).name"
                :colour="tag_colour(t)"
@@ -78,7 +78,7 @@ export default {
       this.$store.commit('deleteFromHistory', this.index)
     },
     tag_meta(id) {
-      return this.$store.state.tags.tags[id-1]
+      return this.$store.state.tags.tags[id]
     },
     tag_group(id) {
       return this.$store.state.tag_groups[id]

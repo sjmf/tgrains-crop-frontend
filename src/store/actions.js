@@ -163,12 +163,16 @@ export default {
      * @returns {Promise<void>}
      */
     async postComment(_, payload) {
+        this.commit("saveNameAndEmail", {name: payload['author'], email: payload['email']})
         try {
             payload['page'] = this.state.comments.page
             payload['size'] = this.state.comments.size
 
             // Add selected tags to payload
-            payload['tags'] = this.state.tags.tags.map(x => x.selected ? x.id : null).filter(x => x!==null)
+            // Tags is an array of IDs [10,11,12]
+            payload['tags'] = Object.keys(this.state.tags.tags)
+                .map(x => this.state.tags.tags[x].selected ? parseInt(x) : null)
+                .filter(x => x!==null)
 
             // Add model state to payload
             payload['state'] = {
@@ -177,16 +181,16 @@ export default {
                 "totalArea": this.state.totalArea
             }
 
-            console.log(payload)
+            // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
             this.commit("setComments", newComments)
-            this.commit("resetAllTagSelected")
-            this.commit("saveNameAndEmail", {name: payload['author'], email: payload['email']})
         }
         catch (err) {
             this.commit("raiseError", err)
             return err
         }
+
+        this.commit("resetAllTagSelected")
     },
 
     /***

@@ -125,14 +125,13 @@ export default {
   },
   methods: {
     tag_meta(id) {
-      return this.$store.state.tags.tags[id-1]
+      return this.$store.state.tags.tags[id]
     },
     tag_group(id) {
       return this.$store.state.tag_groups[id]
     },
     async load_reply(reply_id) {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
-      console.log(this.loadedReply)
     },
     set_state(){
       // Overwrite state
