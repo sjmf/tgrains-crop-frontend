@@ -329,9 +329,11 @@ export default {
             state.tags.tags[id].selected = false
         }
 
+        // Load tags from group 1 only (input areas)
         let history = state.history[index]
         for(let id of history.tags) {
-            state.tags.tags[id].selected = true
+            if(state.tags.tags[id].group === 1)
+                state.tags.tags[id].selected = true
         }
     },
 
