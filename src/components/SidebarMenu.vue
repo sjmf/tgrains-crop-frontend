@@ -257,6 +257,10 @@
             // so don't validate the form unless there's data in the store!
             if(Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length > 0)
                 this.validateForm()
+
+            // On page reload, check the history to see if we need to enable the 'reset' button
+            if(this.$store.state.history[this.$store.state.historyIndex].changes.distance !== 0)
+              this.changes = true
         }
     }
 </script>
