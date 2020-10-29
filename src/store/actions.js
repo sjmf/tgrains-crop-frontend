@@ -53,6 +53,8 @@ export default {
                     this.commit("setDataFromQuery", result)
                     // Push new state onto history stack
                     this.commit("pushHistory")
+                    // Activate tags for this query (must run after history push as uses state)
+                    this.commit("activateTags", 0)
                 })
         } catch (err) {
             console.error(err)
@@ -191,6 +193,7 @@ export default {
         }
 
         this.commit("resetAllTagSelected")
+        this.commit("activateTags", this.state.historyIndex)
     },
 
     /***

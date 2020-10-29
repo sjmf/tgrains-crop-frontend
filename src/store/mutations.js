@@ -282,9 +282,10 @@ export default {
                 return
 
         // Get automatic tags for non-bau states
+        let result;
         if(tags !== [1]) {
-            let result = distanceFromBAU(state)
-            //let distance = result.distance
+            result = distanceFromBAU(state)
+
             for(let c of result.changes)
                 tags.push(state.tags.mapping[c.name])
         }
@@ -296,7 +297,8 @@ export default {
             "raw": cloneDeep(state.data.raw[state.landscape_id]),
             "totalArea": state.totalArea,
             "time": Date.now(),
-            "tags": tags
+            "tags": tags,
+            "changes": result
         })
 
         // Set index
@@ -391,12 +393,29 @@ export default {
     },
 
     /**
+     * Set tags from a history state 'selected'
+     * @param state
+     * @param index
+     */
+    activateTags(state, index) {
+        // First, deactivate crop/livestock area tags
+        for (let id of state.tags.groups[1]) {
+            state.tags.tags[id].selected = false
+        }
+
+        let history = state.history[index]
+        for(let id of history.tags) {
+            state.tags.tags[id].selected = true
+        }
+    },
+
+    /**
      * Reset all tags to non-selected state
      * @param state
      */
     resetAllTagSelected(state) {
         for (let id in state.tags.tags) {
-            state.tags.tags[id].selected = false;
+            state.tags.tags[id].selected = false
         }
     },
 
