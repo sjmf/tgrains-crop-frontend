@@ -6,22 +6,23 @@
 
 pipelines:
   default:
+#    - step:
+#        name: "Build dist tarball"
+#        image: node:10.15.3
+#        caches:
+#          - node
+#        script: # Modify the commands below to build your repository.
+#          - npm install
+#          - npm run build
+#          - tar -czvf dist.tgz dist/
+#          - pipe: atlassian/bitbucket-upload-file:0.1.8
+#            variables:
+#              BITBUCKET_USERNAME: ${BITBUCKET_USERNAME}
+#              BITBUCKET_APP_PASSWORD: ${BITBUCKET_APP_PASSWORD}
+#              FILENAME: 'dist.tgz'
+#              REPOSITORY: ${BITBUCKET_REPO_SLUG}
     - step:
-        name: "Build dist tarball"
-        image: node:10.15.3
-        caches:
-          - node
-        script: # Modify the commands below to build your repository.
-          - npm install
-          - npm run build
-          - tar -czvf dist.tgz dist/
-          - pipe: atlassian/bitbucket-upload-file:0.1.8
-            variables:
-              BITBUCKET_USERNAME: ${BITBUCKET_USERNAME}
-              BITBUCKET_APP_PASSWORD: ${BITBUCKET_APP_PASSWORD}
-              FILENAME: 'dist.tgz'
-              REPOSITORY: ${BITBUCKET_REPO_SLUG}
-    - step:
+        size: 2x
         name: "Build docker image"
         image: atlassian/default-image:2
         services:
