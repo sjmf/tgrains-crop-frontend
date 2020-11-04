@@ -120,6 +120,9 @@ export default {
          * @param eatLancetFoodGroups are the proportions of each group recommended by EatLancet
          */
         calc_people_fed(totalCalories, foodGroups, eatLancetFoodGroups) {
+          if(foodGroups === undefined)
+            return 0;
+
           // First find the limiting group
           let myMin = foodGroups[0] / eatLancetFoodGroups[0]
           //console.log(totalCalories, myMin, foodGroups, eatLancetFoodGroups)
