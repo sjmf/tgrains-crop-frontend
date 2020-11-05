@@ -9,7 +9,6 @@
 
     <!-- VALUE SELECT SIDEBAR -->
     <sidebar-menu @submitForm="doAJAX($event)"
-                  @loaded="initialiseTooltips()"
                   @checkBAULoaded="loadBAUState()"
                   ref="sidebarMenu">
     </sidebar-menu>
@@ -83,24 +82,6 @@
             stateLoaded() {
                 this.$refs.sidebarMenu.historyLoaded()
             },
-
-            /**
-             * Initialize Materialize Tooltips
-             *
-             * Called from two places: firstly, on page load (for when BAU is already in Vuex). Secondly,
-             *   in response to the @loaded event from SidebarMenu when sidebar BAU first-load is ready.
-             */
-            initialiseTooltips() {
-                // Initialise tooltips (if landscape is loaded)
-                if (Object.keys(this.$store.state.landscapes[this.$store.state.landscape_id]).length) {
-                    // Wait for next tick to run init (it doesn't work without this)
-                    this.$nextTick(() => {
-                        this.$_M.Tooltip.init(
-                            document.querySelectorAll(".sidenav li.variable-row[data-tooltip]:not([data-tooltip=''])")
-                        )
-                    })
-                }
-            }
         },
         mounted() {
             // Check if Vuex state was updated due to new code version:
@@ -109,15 +90,6 @@
             this.$store.commit('clearMessages')
             // Load the BAU state from the server
             this.loadBAUState()
-
-            // Materialize actions
-            this.$nextTick(()=> {
-                // Open Welcome modal if terms not accepted
-                if (this.$store.state.acceptedTerms === false) {
-                    this.$_M.Modal.getInstance(document.querySelector("#modal-welcome")).open();
-                }
-                this.initialiseTooltips()
-            })
         }
     }
 </script>
