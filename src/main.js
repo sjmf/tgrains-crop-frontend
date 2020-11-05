@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import App from './App.vue'
-import store from './store'
 
 // Import fragment plugin for multi-root components
 import Fragment from 'vue-fragment'
@@ -47,21 +46,13 @@ new Vue({
       // swipeable: true
     });
 
+    // Initialise Materialize components
+    // One day, this should all be re-written with Vuetify...
     this.$_M.Modal.init(document.querySelectorAll(".modal"))
-
     this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
-
-    // Tooltips do not work because sidebar data is loaded later, via an ajax request.
-    //M.Tooltip.init(document.querySelectorAll('.sidenav li.variable-row[data-tooltip]:not([data-tooltip=""]'))
-
     this.$_M.Collapsible.init(document.querySelectorAll(".collapsible"))
-
-    // Open modal if terms not accepted.
-    // This lives here because we can't re-import Materialize in components
-    if(store.state.acceptedTerms === false) {
-      const elem = document.querySelector("#modal-welcome")
-      this.$_M.Modal.getInstance(elem).open();
-    }
+    // NB: Tooltips are not initialised here because sidebar data is loaded later, via an ajax request.
+    // Check App.vue:93 initialiseTooltips() for tooltip initialisation
 
     this.$nextTick(()=> {
         // We need to initialise the dropdown on $nextTick because
@@ -71,8 +62,6 @@ new Vue({
         )
     })
   },
-
-  store,
 
   data: function() {
     return {

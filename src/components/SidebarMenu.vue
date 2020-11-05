@@ -224,6 +224,14 @@
             },
 
             /**
+             * Return Landscape (used by watcher)
+             * @returns {Object, undefined}
+             */
+            landscapes() {
+                return this.$store.state.landscapes[this.$store.state.landscape_id]
+            },
+
+            /**
              * Whether to display the LoadingOverlay (i.e. if BAU state not yet loaded)
              * @returns {boolean}
              */
@@ -250,6 +258,9 @@
             },
             livestock() {
                 this.$nextTick(() => this.validateForm())
+            },
+            landscapes(){
+                this.$emit('loaded')
             }
         },
         mounted() {
