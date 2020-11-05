@@ -12,31 +12,45 @@
       <p>This web interface was developed as part of the <a href="https://tgrains.com">TGRAINS project</a>
         by researchers at Northumbria University. The mathematical model was developed by researchers
         at Rothamstead Research.</p>
-      <p>For more information on how your data will be used and stored, please view our <a href="#">
+      <p>For more information on how your data will be used and stored, please view our <a href="ethics.htm">
         ethics statement</a>. By using this website further, you indicate your agreement to our use and
         processing of this data within the laws of the UK and European Union. As part of this, we will
         need to store data called a 'cookie' in your web browser. If you don't consent to this, you can
-        leave using the 'Go Back' button below.</p>
+        leave using the 'Back' button in your browser, or exit button below.</p>
     </div>
     <div class="modal-footer">
-      <a href="javascript:history.back()" class="waves-effect waves-red btn-flat">Go Back</a>
-      <a href="#!" @click="acceptTerms" class="modal-close green darken-2 white-text waves-effect waves-green btn-flat">Agree and
-        Continue</a>
+      <a href="https://tgrains.com" @click="declineTerms" class="waves-effect waves-red btn-flat">
+        Exit to tgrains.com
+      </a>
+      <a @click="acceptTerms" class="modal-close green darken-2 white-text waves-effect waves-green btn-flat">
+        Agree and Continue
+      </a>
     </div>
   </div>
 </template>
 <script>
-    import store from '../store';
-
     export default {
         name: 'ModalWelcome',
         methods: {
           acceptTerms() {
-              store.commit('acceptTerms')
+              this.$store.commit('acceptTerms')
+          },
+          declineTerms() {
+            localStorage.clear()
+          },
+          open() {
+              this.$_M.Modal.getInstance(document.querySelector("#modal-welcome")).open()
           }
         },
         mounted() {
-            console.info("Welcome modal mounted, acceptedTerms is:", store.state.acceptedTerms)
+            console.info("Welcome modal mounted, acceptedTerms is:", this.$store.state.acceptedTerms)
+
+            // Run on nextTick for edge-case when Vuex store invalidated due to new version hash
+            this.$nextTick(()=> {
+                // Open Welcome modal if terms not accepted
+                if (this.$store.state.acceptedTerms === false)
+                    this.open()
+            })
         }
     }
 </script>
