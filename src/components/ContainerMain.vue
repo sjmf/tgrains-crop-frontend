@@ -55,17 +55,12 @@
 
       <!-- DEBUG INFORMATION -->
       <viz-debug/>
-
-      <!-- Modal for welcome message -->
-      <modal-welcome/>
-
     </div>
   </main>
 </template>
 
 <script>
     import LandscapeJumbotron from "@/components/LandscapeJumbotron";
-    import ModalWelcome from "@/components/ModalWelcome";
     import TabBar from "@/components/tabs/TabBar";
     import LoadingOverlay from "@/components/LoadingOverlay";
     import VizDebug from "@/components/visualisations/VizDebug";
@@ -85,7 +80,6 @@
             TabProduction,
             TabNutrition,
             TabBar,
-            ModalWelcome,
             LandscapeJumbotron,
             VizDebug,
             ContainerComments,

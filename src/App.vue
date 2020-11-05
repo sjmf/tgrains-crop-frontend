@@ -18,6 +18,9 @@
                     @load="stateLoaded()">
     </container-main>
 
+    <!-- Modal for welcome message -->
+    <modal-welcome/>
+
     <!-- FOOTER -->
     <container-footer></container-footer>
   </fragment>
@@ -28,7 +31,7 @@
     import SidebarMenu from '@/components/SidebarMenu';
     import ContainerMain from '@/components/ContainerMain';
     import ContainerFooter from '@/components/ContainerFooter';
-
+    import ModalWelcome from '@/components/modals/ModalWelcome';
     import store from "@/store";
 
     export default {
@@ -38,7 +41,8 @@
             ContainerFooter,
             SidebarMenu,
             NavbarHeader,
-            ContainerMain
+            ContainerMain,
+            ModalWelcome
         },
         data: () => {
             return {
