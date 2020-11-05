@@ -11,10 +11,17 @@
             To add a state, use the sidebar to submit a query to the model.
           </p>
           <span>There are currently {{history.length}} states in history.</span>
-          <a class="clear-history btn btn-small btn-flat white-text red right waves-effect waves-red"
+
+          <a class="right overrun btn btn-small btn-flat white-text blue darken-2 right waves-effect waves-red"
              v-bind:class="{'disabled': history.length === 1}"
-             @click="clearHistory">
-            <i class="material-icons right">delete_forever</i>Clear History
+             @click="showNewSessionConfirm">
+            <i class="material-icons right">note_add</i>New Session
+          </a>
+
+          <a class="right pad btn btn-small btn-flat white-text blue darken-2 right waves-effect waves-red"
+             v-bind:class="{'disabled': history.length === 1}"
+             @click="showNewSessionConfirm">
+            <i class="material-icons right">note_add</i>Show Sessions
           </a>
         </div>
       </div>
@@ -28,15 +35,28 @@
                    @load="$emit('load', index)"
                    @comment="$emit('comment', index)"/>
     </div>
+
+    <modal-confirm
+        id="modal-session"
+        heading="Start new session?"
+        :text="confirmText"
+        :confirm-callback="newSession"/>
   </div>
 </template>
 <script>
 import HistoryRow from "@/components/tabs/HistoryRow";
+import ModalConfirm from "@/components/modals/ModalConfirm";
 
 export default {
     name: 'TabHistory',
     components: {
+        ModalConfirm,
         HistoryRow
+    },
+    data() {
+      return {
+        confirmText:"<p>Starting a new session will archive the current history</p>"
+      }
     },
     computed: {
         history() {
@@ -46,12 +66,22 @@ export default {
     methods: {
         clearHistory() {
             return this.$store.commit("clearHistory")
+        },
+        showNewSessionConfirm() {
+          this.$_M.Modal.getInstance(document.querySelector("#modal-session")).open();
+        },
+        newSession() {
+          console.log("Creating new session")
+          this.clearHistory() // TODO: Remove
         }
     }
 }
 </script>
 <style>
-a.clear-history.btn {
+a.overrun.btn {
   margin-right: -12px;
+}
+a.pad.btn {
+  margin: 0 5px;
 }
 </style>
