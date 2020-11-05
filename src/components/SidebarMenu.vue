@@ -171,6 +171,9 @@
                                        || !Object.entries(this.errors).every(x=>x[1]===false)
             },
 
+            /**
+             * Set changes to true when history loaded
+             */
             historyLoaded() {
                 this.changes = true
             },
@@ -188,6 +191,25 @@
 
                 return false
             },
+
+
+            /**
+             * Initialize Materialize Tooltips
+             *
+             * Called from two places: firstly, on page load (for when BAU is already in Vuex). Secondly,
+             *   in response to the @loaded event from SidebarMenu when sidebar BAU first-load is ready.
+             */
+            initialiseTooltips() {
+                // Initialise tooltips (if landscape is loaded)
+                if (Object.keys(this.$store.state.landscapes[this.$store.state.landscape_id]).length) {
+                    // Wait for next tick to run init (it doesn't work without this)
+                    this.$nextTick(() => {
+                        this.$_M.Tooltip.init(
+                            document.querySelectorAll(".sidenav li.variable-row[data-tooltip]:not([data-tooltip=''])")
+                        )
+                    })
+                }
+            }
         },
         computed: {
             /**
@@ -260,7 +282,8 @@
                 this.$nextTick(() => this.validateForm())
             },
             landscapes(){
-                this.$emit('loaded')
+                // Materialize tooltips when landscapes loaded after BAU
+                this.initialiseTooltips()
             }
         },
         mounted() {
@@ -270,8 +293,12 @@
                 this.validateForm()
 
             // On page reload, check the history to see if we need to enable the 'reset' button
-            if(this.$store.state.history[this.$store.state.historyIndex].changes.distance !== 0)
-              this.changes = true
+            if(this.$store.state.history.length > 0)
+                if(this.$store.state.history[this.$store.state.historyIndex].changes.distance !== 0)
+                    this.changes = true
+
+            // Materialize tooltips when landscapes loaded from Vuex on reload
+            this.initialiseTooltips()
         }
     }
 </script>
