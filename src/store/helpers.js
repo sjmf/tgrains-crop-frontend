@@ -64,13 +64,15 @@ export function distanceFromBAU(state) {
     const process = function (name, factor) {
         let dist = Math.abs(factor[name].bau - factor[name].value)
         sum += dist
-        if (dist > 0) changes.push({name, dist})
+        if (dist >= 1) changes.push({name, dist})
     }
 
     for (let name in crops)
-        process(name, crops)
+        if(Object.hasOwnProperty.call(crops, name))
+            process(name, crops)
     for (let name in lives)
-        process(name, lives)
+        if(Object.hasOwnProperty.call(lives, name))
+            process(name, lives)
 
     // Reverse sort
     changes.sort((a, b) => {
