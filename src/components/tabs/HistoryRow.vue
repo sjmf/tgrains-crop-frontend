@@ -34,7 +34,7 @@
             <i class="material-icons right">forward</i>Load
           </a>
 
-          <a class="btn red right btn-small btn-flat waves-effect waves-red"
+          <a class="btn red right btn-small btn-flat waves-effect waves-red" :class="{'disabled': readonly}"
              @click="deleteState()">
             <i class="material-icons">delete</i>
           </a>
@@ -67,6 +67,9 @@ export default {
   computed: {
     historyIndex() {
       return this.$store.state.historyIndex
+    },
+    readonly() {
+      return this.$store.state.readonly
     }
   },
   methods: {

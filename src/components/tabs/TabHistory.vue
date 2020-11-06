@@ -13,7 +13,7 @@
           <span>There are currently {{history.length}} states in history.</span>
 
           <a class="right pad overrun btn btn-small btn-flat white-text blue darken-2 right waves-effect waves-blue"
-             v-bind:class="{'disabled': history.length === 1}"
+             v-bind:class="{'disabled': history.length === 1 || readonly}"
              @click="showNewSessionConfirm">
             <i class="material-icons right">save</i>New Session
           </a>
@@ -70,6 +70,10 @@ export default {
         history() {
             return this.$store.state.history
         },
+
+        readonly() {
+            return this.$store.state.readonly
+        }
     },
     methods: {
         showSessionsDialog() {

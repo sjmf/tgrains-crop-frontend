@@ -59,10 +59,8 @@
         <!-- Compare buttons -->
         <div class="row compare-buttons" v-if="state">
           <div class="col s12">
-            <a>
-              <i class="material-icons">insert_chart</i> Compare
-            </a>
-            <a @click="set_state">
+<!--            <a><i class="material-icons">insert_chart</i> Compare </a>-->
+            <a @click="set_state" :class="{'disabled': readonly}">
               <i class="material-icons">play_arrow</i> Load
             </a>
           </div>
@@ -123,6 +121,9 @@ export default {
   computed: {
     replyCard() {
       return this.reply || this.loadedReply
+    },
+    readonly() {
+      return this.$store.state.readonly
     }
   },
   methods: {
@@ -136,6 +137,10 @@ export default {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
     },
     set_state(){
+      // If readonly, don't apply the state
+      if(this.readonly)
+          return
+
       // Save existing state in local variable
       let history = cloneDeep(this.$store.state.history[this.$store.state.historyIndex])
 
@@ -203,5 +208,9 @@ a i.material-icons {
 .comment-form div.col:last-child p,
 .comment-main:not(:last-child){
   margin-bottom: 0;
+}
+
+a.disabled {
+  color: rgba(0, 0, 0, 0.42);
 }
 </style>

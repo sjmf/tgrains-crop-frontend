@@ -28,6 +28,7 @@
           :description="item.description"
           :error-message="errors[index]"
           :remaining-area="remainingArea"
+          :readonly="readonly"
           @input="updateValue('crops', item.name, $event)"
           @change="valueChanged($event)"/>
 
@@ -50,6 +51,7 @@
           :description="item.description"
           :error-message="errors[index]"
           :remaining-area="remainingArea"
+          :readonly="readonly"
           @input="updateValue('livestock', item.name, $event)"
           @change="valueChanged($event)"/>
 
@@ -61,13 +63,17 @@
         <div class="row">
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
-                    v-bind:class="{'disabled': !this.changes}"
+                    v-bind:class="{'disabled': (!this.changes) || this.readonly}"
                     v-on:click="resetToBAU">Reset</button>
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
-                    v-bind:disabled="submitDisabled"
+                    v-bind:disabled="submitDisabled  || this.readonly"
                     v-on:click="submitForm">Submit</button>
+          </div>
+
+          <div class="col s12" v-if="readonly">
+            <p class="red-text">You are viewing an older session!<br/>Model queries are currently disabled.</p>
           </div>
         </div>
       </li>
@@ -257,6 +263,13 @@
             loading() {
                 return (Object.keys(this.$store.state.bau[this.$store.state.landscape_id]).length === 0
                         && this.errorChecks)
+            },
+
+            /**
+             * Is the Global read-only flag set?
+             */
+            readonly() {
+                return this.$store.state.readonly
             },
 
             /**

@@ -13,17 +13,19 @@
         :interval="1"
         :tooltip="'none'"
         :processStyle="processStyle"
+        :disabled="readonly"
         @change="$emit('change', [name, $event])">
       </vue-slider>
     </label>
 
-    <input v-bind:id="name"
-           v-bind:title="description"
+    <input :id="name"
+           :title="description"
            v-model.number="innerValue"
            type="number"
            step="500"
            min="0"
-           v-bind:class="{ invalid: errorMessage }"
+           :disabled="readonly"
+           :class="{ invalid: errorMessage }"
            @change="$emit('change', [name, $event.target.valueAsNumber])">
 
     <div v-if="errorMessage" class="error label">
@@ -47,6 +49,7 @@
             description: String,
             errorMessage: [String, Boolean],
             remainingArea: Number,
+            readonly: Boolean
         },
         computed: {
             innerValue: {

@@ -214,6 +214,9 @@ export const initial_state = () => ({
         },
     },
 
+    // Global read-only flag
+    readonly: false,
+
     // Error handling: each element contains the following structure:
     // {
     //     message: "",
