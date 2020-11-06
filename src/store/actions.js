@@ -244,7 +244,21 @@ export default {
      * @param index
      */
     viewSession(_, index) {
-        console.info(`Loading session at ${index} with id ${this.state.sessions[index].id}`)
+        console.info(`Viewing session at ${index} with id ${this.state.sessions[index].id} `+
+            `and a history of ${this.state.sessions[index].history.length} states ` +
+            `(recorded ${this.state.sessions[index].count})`)
+        this.commit('deepCopyHistoryFromSession', index)
+        this.commit('setGlobalReadOnly', true)
+        this.commit('loadFromHistory', 0)
+    },
+
+    /**
+     * Cancel viewing a session and return to the usual view
+     */
+    cancelViewSession() {
+        this.commit('shallowCopyHistoryFromSession', this.state.sessions.length -1)
+        this.commit('setGlobalReadOnly', false)
+        this.commit('loadFromHistory', 0)
     },
 
     /**
@@ -257,6 +271,7 @@ export default {
         console.info(`Forking session at ${index} with id ${sid}`)
         this.commit('deepCopyHistoryFromSession', index)
         this.commit('pushSession', this.state.history.length, sid)
+        this.commit('setGlobalReadOnly', false)
         this.commit('loadFromHistory', 0)
     }
 }

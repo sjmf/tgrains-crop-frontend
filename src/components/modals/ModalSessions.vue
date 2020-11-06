@@ -27,13 +27,13 @@
 
           <div class="col s7" v-if="i>0">
             <a class="btn pad btn-small btn-flat waves-effect waves-purple deep-purple white-text right"
-               @click="viewSession(sessions.length -1 - i)"> <!-- INDEXES ARE REVERSED!! -->
+               @click="close(); $emit('view', {index: sessions.length -1 -i, time: $options.filters.moment(s.opened)})"> <!-- INDEXES ARE REVERSED!! -->
               <i class="material-icons right">live_tv</i>
               View
             </a>
 
             <a class="btn btn-small btn-flat waves-effect waves-blue blue darken-2 white-text right"
-               @click="forkSession(sessions.length -1 - i)">
+               @click="close(); $emit('fork', sessions.length -1 -i)">
               <i class="material-icons right">call_split</i>
               Fork
             </a>
@@ -47,6 +47,7 @@
       </div>
 
     </div>
+
     <div class="modal-footer">
       <a class="modal-close waves-effect waves-green btn-flat green darken-2 white-text">
         Close
@@ -68,7 +69,8 @@ export default {
   data() {
     return {
       id: 'modal-sessions',
-      index: 0
+      index: 0,
+      sessionToFork: 0,
     }
   },
   computed: {
@@ -77,25 +79,22 @@ export default {
     },
     sessions() {
       return this.$store.state.sessions
-    }
-  },
-  methods: {
+    },
     instance() {
       return this.$_M.Modal.getInstance(this.domNode)
     },
+  },
+  methods: {
     open() {
       // Instantiate if undefined. Helps with hot-reloading, but isn't required in production
-      if (this.instance() === undefined)
+      if (this.instance === undefined)
         this.$_M.Modal.init(this.domNode)
 
-      this.instance().open();
+      this.instance.open();
     },
-    viewSession(index) {
-      this.$store.dispatch('viewSession', index)
+    close() {
+      this.instance.close();
     },
-    forkSession(index) {
-      this.$store.dispatch('forkSession', index)
-    }
   }
 }
 </script>

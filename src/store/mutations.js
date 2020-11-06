@@ -207,7 +207,7 @@ export default {
     },
 
     /**
-     * Copy a history from a Session into the current history stack
+     * Deep Copy a history from a Session into the current history stack
      * @param state
      * @param index
      */
@@ -216,6 +216,25 @@ export default {
         //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
         state.history = undefined
         state.history = cloneDeep(state.sessions[index].history)
+    },
+
+    /**
+     * Shallow copy a history from a session into the current history stack
+     * (used for setting history pointer back to same object)
+     * @param state
+     * @param index
+     */
+    shallowCopyHistoryFromSession(state, index) {
+        state.history = state.sessions[index].history
+    },
+
+    /**
+     * Set the global read-only flag
+     * @param state
+     * @param ro
+     */
+    setGlobalReadOnly(state, ro) {
+        state.readonly = ro
     },
 
     /**
@@ -309,7 +328,7 @@ export default {
         if(index < state.historyIndex)
             state.historyIndex--
 
-        state.session[state.sessions.length -1].count--
+        state.sessions[state.sessions.length -1].count--
     },
 
     /**

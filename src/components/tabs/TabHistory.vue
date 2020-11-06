@@ -35,15 +35,43 @@
                    @comment="$emit('comment', index)"/>
     </div>
 
+
+    <!-- MODALS -->
+
     <modal-confirm
-        id="modal-confirm"
+        id="modal-new-session"
         ref="modalConfirm"
         heading="Start new session?"
-        :text="confirmText"
-        :confirm-callback="newSession"/>
+        :confirm-callback="newSession">
+
+      <p>
+        Starting a new session will archive the current history and reset the
+        state to defaults. You will be able to view it through the 'show sessions'
+        dialog, but will need to copy it to a new session to alter it.
+      </p>
+      <p>Are you sure?</p>
+
+    </modal-confirm>
+
+    <modal-confirm
+        id="modal-fork-session"
+        ref="modalFork"
+        heading="Fork session?"
+        :confirm-callback="forkSession">
+
+      <p>
+        Forking a session will archive the current history and populate the state with
+        the newly forked history. You will be able to view your current state through
+        the 'show sessions' dialog, but will need to fork it again to alter it further.
+      </p>
+      <p>Are you sure?</p>
+
+    </modal-confirm>
 
     <modal-sessions
-        ref="modalSessions"/>
+        ref="modalSessions"
+        @fork="$refs.modalFork.open($event)"
+        @view="viewSession($event)"/>
   </div>
 </template>
 <script>
@@ -57,14 +85,6 @@ export default {
         ModalConfirm,
         ModalSessions,
         HistoryRow
-    },
-    data() {
-      return {
-        confirmText:"<p>Starting a new session will archive the current history " +
-            "and reset the state to defaults. You will be able to view it through the " +
-            "'show sessions' dialog, but will need to copy it to a new session to alter it.</p>" +
-            "<p>Are you sure?</p>"
-      }
     },
     computed: {
         history() {
@@ -84,12 +104,30 @@ export default {
             this.$refs.modalConfirm.open()
         },
 
-        /**
-         * Create new session
-         * USED AS A CALLBACK- passed to modalConfirm
-         **/
+        // Create new session– Used as a callback by modalConfirm
         newSession() {
             this.$store.dispatch('newSession')
+        },
+
+        forkSession(index) {
+            this.$store.dispatch('forkSession', index)
+        },
+
+        // View session. Called on event `view` from modalSessions
+        viewSession(event) {
+            let index = event.index
+            let time = event.time
+            this.$store.dispatch('viewSession', index)
+            this.$store.commit('setMessage', {
+                title: 'Viewing historic session',
+                message: `The current view shows a historic session created at ${time}.`,
+                kind: 'info',
+                callback: () => {
+                    this.$store.dispatch('cancelViewSession')
+                },
+                callbackText: 'Click here to close this banner and return',
+                dismissible: false
+            })
         }
     }
 }
