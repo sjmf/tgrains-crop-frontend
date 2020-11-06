@@ -6,6 +6,7 @@
       <div class="row">
         <div class="col s4"><strong>Time / Date</strong></div>
         <div class="col s4"><strong>Number of States</strong></div>
+        <div class="col s4 align-right"><strong>Actions</strong></div>
       </div>
 
       <div v-for="(s, i) in sessions.slice().reverse()"
@@ -15,20 +16,31 @@
           <div class="divider col s12"></div>
         </div>
 
-        <div class="row pad" :class="{'green lighten-4': i===0}">
+        <div class="row pad" :class="{'green lighten-4': i===index}">
           <div class="col s4">
             <em>{{s.opened | moment}}</em>
           </div>
-          <div class="col s4">
+
+          <div class="col s1">
             <span>{{s.count}}</span>
           </div>
-          <div class="col s4">
-            <a v-if="i>0"
-                class="btn btn-small btn-flat waves-effect waves-purple deep-purple white-text right">
-              <i class="material-icons right">forward</i>
-              Load
+
+          <div class="col s7" v-if="i>0">
+            <a class="btn pad btn-small btn-flat waves-effect waves-purple deep-purple white-text right"
+               @click="viewSession(sessions.length -1 - i)"> <!-- INDEXES ARE REVERSED!! -->
+              <i class="material-icons right">live_tv</i>
+              View
             </a>
-            <span v-else>Current Session</span>
+
+            <a class="btn btn-small btn-flat waves-effect waves-blue blue darken-2 white-text right"
+               @click="forkSession(sessions.length -1 - i)">
+              <i class="material-icons right">call_split</i>
+              Fork
+            </a>
+          </div>
+
+          <div class="col s7 align-right" v-else>
+            <span>Current Session</span>
           </div>
         </div>
 
@@ -55,7 +67,8 @@ export default {
   },
   data() {
     return {
-      id: 'modal-sessions'
+      id: 'modal-sessions',
+      index: 0
     }
   },
   computed: {
@@ -76,6 +89,12 @@ export default {
         this.$_M.Modal.init(this.domNode)
 
       this.instance().open();
+    },
+    viewSession(index) {
+      this.$store.dispatch('viewSession', index)
+    },
+    forkSession(index) {
+      this.$store.dispatch('forkSession', index)
     }
   }
 }
@@ -91,5 +110,9 @@ div.row.no-margin {
 div.row.pad {
   padding: 10px 5px;
   line-height: 32.4px;
+  margin-bottom: 0;
+}
+div.align-right {
+  text-align: right;
 }
 </style>

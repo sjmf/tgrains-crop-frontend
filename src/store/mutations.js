@@ -186,23 +186,36 @@ export default {
     },
 
     /**
-     * Commit a new session with the sid provided (called from ACTIONS)
+     * Push a new session onto the session stack.
+     * Commit clearHistory() first for a clean state, or pass its length in to fork a session
      * @param state
-     * @param sid
+     * @param count
+     * @param forkSID - SID for the session this was forked from (Default undefined)
      */
-    newSessionCommit(state, sid) {
-        state.history = []
-
+    pushSession(state, count = 0, forkSID= undefined) {
         // Session has a REFERENCE to history.
-        // This works for objects, but not primitives, i.e. `count` must be manually updated
+        // This must be updated with a cloneDeep when new session started
         state.sessions.push({
             id: createSessionID(),
-            count: count || 0,
+            count: count,
             opened: Date.now(),
-            history: state.history
+            history: state.history,
+            fork: forkSID
         })
 
         console.log("Created session " + state.sessions[state.sessions.length -1].id)
+    },
+
+    /**
+     * Copy a history from a Session into the current history stack
+     * @param state
+     * @param index
+     */
+    deepCopyHistoryFromSession(state, index) {
+        // Set history to undefined so that state.history no longer points to the same object
+        //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
+        state.history = undefined
+        state.history = cloneDeep(state.sessions[index].history)
     },
 
     /**
@@ -297,6 +310,15 @@ export default {
             state.historyIndex--
 
         state.session[state.sessions.length -1].count--
+    },
+
+    /**
+     * Wipe History except for current state
+     * @param state
+     */
+    clearHistory(state) {
+        state.history = []
+        state.historyIndex = 0
     },
 
     /**

@@ -229,18 +229,34 @@ export default {
      */
     async newSession() {
         try {
-            // Generate a unique random UUID in the form "4602:8395:63da:d6a7:19ef:ab20:cd56"
-            const sid = [...(new Array(8)).keys()]
-                .reduce((a)=>{
-                    return (a!==0 ? a + ':' : '') + Math.random().toString(16).substring(2, 6)
-                })
-            // Perhaps in future replace with server's session IDs? Like `const sid = await http.getSessionID()`
-
-            this.commit('newSessionCommit', sid)
+            this.commit('clearHistory')
+            this.commit('pushSession')
             this.dispatch('resetState')
         }
         catch (err) {
             this.commit("raiseError", err)
         }
+    },
+
+    /**
+     * Load a session into history for viewing (read-only)
+     * @param _
+     * @param index
+     */
+    viewSession(_, index) {
+        console.info(`Loading session at ${index} with id ${this.state.sessions[index].id}`)
+    },
+
+    /**
+     * Load a session into history to edit (copy)
+     * @param _
+     * @param index
+     */
+    forkSession(_, index) {
+        const sid = this.state.sessions[index].id
+        console.info(`Forking session at ${index} with id ${sid}`)
+        this.commit('deepCopyHistoryFromSession', index)
+        this.commit('pushSession', this.state.history.length, sid)
+        this.commit('loadFromHistory', 0)
     }
 }
