@@ -62,7 +62,7 @@ export default {
       return {
         confirmText:"<p>Starting a new session will archive the current history " +
             "and reset the state to defaults. You will be able to view it through the " +
-            "'show sessions' dialog, but not alter it.</p>" +
+            "'show sessions' dialog, but will need to copy it to a new session to alter it.</p>" +
             "<p>Are you sure?</p>"
       }
     },
