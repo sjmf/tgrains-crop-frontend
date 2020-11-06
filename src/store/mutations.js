@@ -1,5 +1,5 @@
 // mutations.js
-import {difference, distanceFromBAU, formatData} from "@/store/helpers";
+import {difference, distanceFromBAU, formatData, createSessionID} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
 const cloneDeep = require('lodash/cloneDeep');
@@ -196,13 +196,13 @@ export default {
         // Session has a REFERENCE to history.
         // This works for objects, but not primitives, i.e. `count` must be manually updated
         state.sessions.push({
-            id: sid,
-            count: 0,
+            id: createSessionID(),
+            count: count || 0,
             opened: Date.now(),
             history: state.history
         })
 
-        console.log("Created new session " + state.sessions[state.sessions.length -1].id)
+        console.log("Created session " + state.sessions[state.sessions.length -1].id)
     },
 
     /**
