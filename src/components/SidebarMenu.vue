@@ -105,10 +105,7 @@
             resetToBAU() {
                 try {
                     if(!this.changes) return
-                    this.$store.commit("clearMessages")
-                    this.$store.commit("resetToBAU")
-                    this.$store.dispatch("sumArea")
-                    this.$store.commit("pushHistory", [1]) // Include 'business-as-usual' tag
+                    this.$store.dispatch('resetState')
                     this.$nextTick(() => this.validateForm())
                     this.changes = false
                 }

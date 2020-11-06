@@ -25,7 +25,8 @@ export default {
                 this.commit("populate")
                 this.dispatch("sumArea")
 
-                // Push initial state onto history stack (including BAU tag [1])
+                // Create new session and push initial state onto history stack (including BAU tag [1])
+                await this.dispatch('newSession')
                 this.commit("pushHistory", [1])
             } catch (err) {
                 console.error(err)
@@ -209,5 +210,16 @@ export default {
         catch (err) {
             this.commit("raiseError", err)
         }
-    }
+    },
+
+    /***
+     * Reset application state
+     * @returns {Promise<void>}
+     */
+    async resetState() {
+        this.commit("clearMessages")
+        this.commit("resetToBAU")
+        await this.dispatch("sumArea")
+        this.commit("pushHistory", [1]) // Include 'business-as-usual' tag
+    },
 }
