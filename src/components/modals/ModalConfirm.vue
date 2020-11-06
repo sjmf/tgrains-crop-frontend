@@ -2,7 +2,7 @@
   <div v-bind:id="id" class="modal">
     <div class="modal-content">
       <h4>{{ heading }}</h4>
-      <div v-html="text"></div>
+      <slot></slot>
     </div>
     <div class="modal-footer">
       <a @click="callback(cancelCallback)" class="modal-close waves-effect waves-red btn-flat">
@@ -21,9 +21,13 @@ export default {
   props: {
     id: String,
     heading: String,
-    text: String,
     cancelCallback: Function,
     confirmCallback: Function,
+  },
+  data() {
+    return {
+      params: undefined
+    }
   },
   computed: {
     domNode() {
@@ -33,7 +37,7 @@ export default {
   methods: {
     callback(callbackFn) {
       if(typeof(callbackFn) === "function") {
-        callbackFn()
+        callbackFn(this.params)
       } else {
         console.warn("No callback function defined!")
       }
@@ -41,12 +45,18 @@ export default {
     instance() {
       return this.$_M.Modal.getInstance(this.domNode)
     },
-    open() {
+    open(params) {
+      // Open params are treated as the argument for the callback function. Store them for later use.
+      this.params = params
+
       // Instantiate if undefined. Helps with hot-reloading, but isn't required in production
       if (this.instance() === undefined)
         this.$_M.Modal.init(this.domNode)
 
-      this.instance().open();
+      this.instance().open()
+    },
+    close() {
+      this.instance().close()
     }
   }
 }
