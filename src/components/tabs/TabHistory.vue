@@ -12,13 +12,13 @@
           </p>
           <span>There are currently {{history.length}} states in history.</span>
 
-          <a class="right overrun btn btn-small btn-flat white-text blue darken-2 right waves-effect waves-blue"
+          <a class="right pad overrun btn btn-small btn-flat white-text blue darken-2 right waves-effect waves-blue"
              v-bind:class="{'disabled': history.length === 1}"
              @click="showNewSessionConfirm">
             <i class="material-icons right">save</i>New Session
           </a>
 
-          <a class="right pad btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
+          <a class="right btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
              @click="showSessionsDialog">
             <i class="material-icons right">storage</i>Show Sessions
           </a>
@@ -93,8 +93,5 @@ export default {
 <style>
 a.overrun.btn {
   margin-right: -12px;
-}
-a.pad.btn {
-  margin: 0 5px;
 }
 </style>

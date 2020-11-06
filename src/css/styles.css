@@ -73,6 +73,10 @@ main, footer {
     margin-bottom: -35px;
 }
 
+a.pad.btn {
+    margin-left: 5px;
+}
+
 
 /* Element tweaks */
 
