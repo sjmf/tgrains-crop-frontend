@@ -15,9 +15,11 @@
               v-for="(message, index) in this.$store.state.messages"
               v-bind:key="index+0"
               v-bind:message="message.message"
+              v-bind:title="message.title"
               v-bind:kind="message.kind"
               v-bind:callback="message.callback"
               v-bind:callbackText="message.callbackText"
+              v-bind:dismissible="message.dismissible"
               v-bind:index="index"/>
         </transition-group>
       </div>

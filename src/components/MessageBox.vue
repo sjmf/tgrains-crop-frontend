@@ -3,7 +3,7 @@
     <div class="card-panel" v-bind:class="this.colour()" id="message">
       <span><strong>{{ this.heading() }}</strong> {{message}}</span>
       <span v-if="callback !== undefined"><br/><a href="#" @click="callback(); closeMsg()">{{ callbackText }}</a></span>
-      <i id="closeBtn" class="close material-icons right" v-on:click="closeMsg()">close</i>
+      <i v-if="dismissible" id="closeBtn" class="close material-icons right" v-on:click="closeMsg()">close</i>
     </div>
   </div>
 </template>
@@ -13,28 +13,31 @@
     export default {
         name: 'MessageBox',
         props: {
-          message: [String, Error, Object],
-          kind: String,
-          callback: Function,
-          callbackText: String,
-          index: Number
+            title: String,
+            message: [String, Error, Object],
+            kind: String,
+            callback: Function,
+            callbackText: String,
+            index: Number,
+            dismissible: {default: true, type: Boolean}
         },
         methods: {
             closeMsg() {
                 store.commit("closeMessage", this.index)
             },
             colour() {
-              if(this.kind==='error')   return 'red   lighten-4'
-              if(this.kind==='warning') return 'amber lighten-4'
-              if(this.kind==='info')    return 'blue  lighten-4'
-              if(this.kind==='success') return 'green lighten-4'
+                if(this.kind==='error')   return 'red   lighten-4'
+                if(this.kind==='warning') return 'amber lighten-4'
+                if(this.kind==='info')    return 'blue  lighten-4'
+                if(this.kind==='success') return 'green lighten-4'
             },
-          heading() {
-              if(this.kind==='error')   return "Whoops! An error occurred:"
-              if(this.kind==='warning') return "Warning:"
-              if(this.kind==='info')    return "Information:"
-              if(this.kind==='success') return "Success!"
-          }
+            heading() {
+                if(this.title!==undefined) return this.title + ':'
+                if(this.kind==='error')    return "Whoops! An error occurred:"
+                if(this.kind==='warning')  return "Warning:"
+                if(this.kind==='info')     return "Information:"
+                if(this.kind==='success')  return "Success!"
+            }
         }
     }
 </script>
