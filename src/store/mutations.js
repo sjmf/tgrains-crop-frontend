@@ -186,11 +186,37 @@ export default {
     },
 
     /**
+     * Commit a new session with the sid provided (called from ACTIONS)
+     * @param state
+     * @param sid
+     */
+    newSessionCommit(state, sid) {
+        state.history = []
+
+        // Session has a REFERENCE to history.
+        // This works for objects, but not primitives, i.e. `count` must be manually updated
+        state.sessions.push({
+            id: sid,
+            count: 0,
+            opened: Date.now(),
+            history: state.history
+        })
+
+        console.log("Created new session " + state.sessions[state.sessions.length -1].id)
+    },
+
+    /**
      * Save state (e.g. before overwriting with state from comment)
      * @param state
      * @param tags
      */
     pushHistory(state, tags = []) {
+        // Do we have a session ID yet?
+        if(state.sessions.length === 0) {
+            console.error('Set up sessions before pushing history!')
+            return
+        }
+
         // Don't push a BAU state onto the top of the stack when there's already a BAU state there!
         if(state.history.length > 0) /// Don't hit this on first load (where no history exists before first BAU)
             if(state.history[0].tags[0] === 1 && tags[0] === 1)
@@ -218,8 +244,9 @@ export default {
             "changes": result
         })
 
-        // Set index
+        // Set indices
         state.historyIndex = 0
+        state.sessions[state.sessions.length -1].count++
     },
 
     /**
@@ -238,9 +265,10 @@ export default {
         load.tags = [...new Set(load.tags.concat([3]))]
         load.time = Date.now()
 
-        // Push to history queue
+        // Push to history queue and set indices
         state.history.unshift(load)
         state.historyIndex = 0
+        state.sessions[state.sessions.length -1].count++
     },
 
     /**
@@ -267,15 +295,8 @@ export default {
         state.history.splice(index, 1)
         if(index < state.historyIndex)
             state.historyIndex--
-    },
 
-    /**
-     * Wipe History except for current state
-     * @param state
-     */
-    clearHistory(state) {
-        state.history = [state.history[state.historyIndex]]
-        state.historyIndex = 0
+        state.session[state.sessions.length -1].count--
     },
 
     /**

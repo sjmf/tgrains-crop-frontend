@@ -8,25 +8,27 @@
         <div class="col s4"><strong>Number of States</strong></div>
       </div>
 
-      <div v-for="s in sessions"
+      <div v-for="(s, i) in sessions.slice().reverse()"
            :key="s.id">
 
-        <div class="row">
+        <div class="row no-margin" v-if="i>0">
           <div class="divider col s12"></div>
         </div>
 
-        <div class="row">
+        <div class="row pad" :class="{'green lighten-4': i===0}">
           <div class="col s4">
-            <em>{{s.opened}}</em>
+            <em>{{s.opened | moment}}</em>
           </div>
           <div class="col s4">
-            <span>{{s.states}}</span>
+            <span>{{s.count}}</span>
           </div>
           <div class="col s4">
-            <a class="btn btn-small btn-flat waves-effect waves-purple deep-purple white-text right">
+            <a v-if="i>0"
+                class="btn btn-small btn-flat waves-effect waves-purple deep-purple white-text right">
               <i class="material-icons right">forward</i>
               Load
             </a>
+            <span v-else>Current Session</span>
           </div>
         </div>
 
@@ -42,22 +44,26 @@
 </template>
 
 <script>
+import moment from "moment";
+
 export default {
   name: "ModalSessions",
+  filters: {
+    moment: function (date) {
+      return moment(date).format('HH:mm:ss, Do MMM YYYY');
+    }
+  },
   data() {
     return {
-      id: 'modal-sessions',
-      sessions: [
-        {id: 'a1fe', states: 10, opened: '17:16:27, 5th Nov 2020'},
-        {id: '2faa', states: 4, opened: '15:50:43, 4th Nov 2020'},
-        {id: '335f', states: 17, opened: '10:32:21, 2nd Nov 2020'},
-        {id: '4a5b', states: 83, opened: '12:00:01, 1st Nov 2020'}
-      ]
+      id: 'modal-sessions'
     }
   },
   computed: {
     domNode() {
       return document.querySelector('#' + this.id)
+    },
+    sessions() {
+      return this.$store.state.sessions
     }
   },
   methods: {
@@ -78,5 +84,12 @@ export default {
 <style scoped>
 div.modal-content {
   overflow-y:scroll;
+}
+div.row.no-margin {
+  margin: 0;
+}
+div.row.pad {
+  padding: 10px 5px;
+  line-height: 32.4px;
 }
 </style>

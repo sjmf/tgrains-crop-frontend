@@ -222,4 +222,25 @@ export default {
         await this.dispatch("sumArea")
         this.commit("pushHistory", [1]) // Include 'business-as-usual' tag
     },
+
+    /***
+     * Get SID and commit new Session mutation in store
+     * @returns {Promise<void>}
+     */
+    async newSession() {
+        try {
+            // Generate a unique random UUID in the form "4602:8395:63da:d6a7:19ef:ab20:cd56"
+            const sid = [...(new Array(8)).keys()]
+                .reduce((a)=>{
+                    return (a!==0 ? a + ':' : '') + Math.random().toString(16).substring(2, 6)
+                })
+            // Perhaps in future replace with server's session IDs? Like `const sid = await http.getSessionID()`
+
+            this.commit('newSessionCommit', sid)
+            this.dispatch('resetState')
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+        }
+    }
 }

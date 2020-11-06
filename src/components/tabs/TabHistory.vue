@@ -19,7 +19,6 @@
           </a>
 
           <a class="right pad btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
-             v-bind:class="{'disabled': history.length === 1}"
              @click="showSessionsDialog">
             <i class="material-icons right">storage</i>Show Sessions
           </a>
@@ -73,18 +72,20 @@ export default {
         },
     },
     methods: {
-        clearHistory() {
-            return this.$store.commit("clearHistory")
-        },
         showSessionsDialog() {
             this.$refs.modalSessions.open()
         },
+
         showNewSessionConfirm() {
             this.$refs.modalConfirm.open()
         },
+
+        /**
+         * Create new session
+         * USED AS A CALLBACK- passed to modalConfirm
+         **/
         newSession() {
-            console.log("Creating new session")
-            this.clearHistory() // TODO: Remove
+            this.$store.dispatch('newSession')
         }
     }
 }

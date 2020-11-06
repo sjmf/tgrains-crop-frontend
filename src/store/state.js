@@ -39,6 +39,10 @@ export const initial_state = () => ({
     history: [],
     historyIndex: 0,
 
+    // Sessions data structure
+    // {id: 'unique ID from server', count: 10, opened: Date.now(), history: []},
+    sessions: [],
+
     /*
      * Each landscape [101],[102] contains a crop and livestock data object {crops: {}, livestock: {}}
      * Within these, we store the string identifier (name), a string label (visually presented to the user),
