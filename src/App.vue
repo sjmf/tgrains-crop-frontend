@@ -87,6 +87,7 @@
                 this.$refs.sidebarMenu.historyLoaded()
             },
         },
+        /** Actions which occur on page-load **/
         mounted() {
             // Check if Vuex state was updated due to new code version:
             this.$store.dispatch('checkVersion')
