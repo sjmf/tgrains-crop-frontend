@@ -2,6 +2,7 @@
 
 import { cacheAction } from "vuex-cache";
 import http from "@/services/http";
+import {cloneDeep} from "lodash";
 
 export default {
     /***
@@ -195,6 +196,32 @@ export default {
 
         this.commit("resetAllTagSelected")
         this.commit("activateTags", this.state.historyIndex)
+    },
+
+    /**
+     * Load a state from a comment into the current session/state
+     */
+    loadStateFromComment(_, comment) {
+        // Save existing state in local variable
+        let history = cloneDeep(this.state.history[this.state.historyIndex])
+
+        // Overwrite state
+        this.commit("updateLandscape", comment.state.inputs)
+        this.commit("setDataFromQuery", comment.state.outputs)
+        this.commit("setTotalArea", comment.state.totalArea)
+
+        // Push this new state onto history stack (and server)
+        this.commit("pushHistory", [...comment.tags, 2])
+
+        // Tell the user what we've done!
+        this.commit('setMessage', {
+            message: "Loaded model state from comment by " + comment.author,
+            kind: "info",
+            callback: () => {
+                this.commit("rollbackHistory", history)
+            },
+            callbackText: "Click here to restore previous state"
+        }) // Will also scroll viewport to top
     },
 
     /***

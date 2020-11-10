@@ -90,8 +90,6 @@
 </template>
 
 <script>
-const cloneDeep = require('lodash/cloneDeep');
-
 import Jdenticon from '@/components/comments/Jdenticon.vue'
 import Tag from "@/components/comments/Tag";
 
@@ -136,32 +134,14 @@ export default {
     async load_reply(reply_id) {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
     },
-    set_state(){
+    async set_state(){
       // If readonly, don't apply the state
       if(this.readonly)
           return
 
-      // Save existing state in local variable
-      let history = cloneDeep(this.$store.state.history[this.$store.state.historyIndex])
-
-      // Overwrite state
-      this.$store.commit("updateLandscape", this.state.inputs)
-      this.$store.commit("setDataFromQuery", this.state.outputs)
-      this.$store.commit("setTotalArea", this.state.totalArea)
-
-      // Push this new state onto history stack
-      this.$store.commit("pushHistory", [...this.tags, 2])
-
-      // Tell the user what we've done!
-      this.$store.commit('setMessage', {
-        message: "Loaded model state from comment by " + this.author,
-        kind: "info",
-        callback: () => {
-          this.$store.commit("rollbackHistory", history)
-        },
-        callbackText: "Click here to restore previous state"
-      }) // Will also scroll viewport to top
-
+      await this.$store.dispatch('loadStateFromComment', {
+        'state': this.state, 'tags': this.tags, 'author': this.author
+      })
       this.$emit('load')
     }
   },
