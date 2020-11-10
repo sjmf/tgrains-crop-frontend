@@ -28,7 +28,7 @@ export default {
 
                 // Create new session and push initial state onto history stack (including BAU tag [1])
                 await this.dispatch('newSession')
-                this.commit("pushHistory", [1])
+
             } catch (err) {
                 console.error(err)
                 this.commit("raiseError", err)
@@ -54,7 +54,7 @@ export default {
                 .then((result)=>{
                     this.commit("setDataFromQuery", result)
                     // Push new state onto history stack
-                    this.commit("pushHistory")
+                    this.dispatch("pushStateAndPOST")
                     // Activate tags for this query (must run after history push as uses state)
                     this.commit("activateTags", 0)
                 })
@@ -211,7 +211,7 @@ export default {
         this.commit("setTotalArea", comment.state.totalArea)
 
         // Push this new state onto history stack (and server)
-        this.commit("pushHistory", [...comment.tags, 2])
+        this.dispatch("pushStateAndPOST", [...comment.tags, 2])
 
         // Tell the user what we've done!
         this.commit('setMessage', {
@@ -247,7 +247,7 @@ export default {
         this.commit("clearMessages")
         this.commit("resetToBAU")
         await this.dispatch("sumArea")
-        this.commit("pushHistory", [1]) // Include 'business-as-usual' tag
+        this.dispatch("pushStateAndPOST", [1]) // Include 'business-as-usual' tag
     },
 
     /***
@@ -300,5 +300,21 @@ export default {
         this.commit('pushSession', this.state.history.length, sid)
         this.commit('setGlobalReadOnly', false)
         this.commit('loadFromHistory', 0)
+    },
+
+    /**
+     * Push history and POST it to server
+     * @param _
+     * @param tags
+     */
+    async pushStateAndPOST(_, tags) {
+        this.commit("pushHistory", tags)
+        http.postState({
+            'session_id': this.state.sessions[0].id,
+            'index': this.state.history.length,
+            'state': this.state.history[0],
+        }).catch((err)=>{
+            this.commit("raiseError", err)
+        })
     }
 }

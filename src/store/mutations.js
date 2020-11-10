@@ -238,7 +238,8 @@ export default {
     },
 
     /**
-     * Save state (e.g. before overwriting with state from comment)
+     * Save state (e.g. before overwriting with state from comment).
+     * You should probably be using the pushStateAndPOST action rather than calling this directly
      * @param state
      * @param tags
      */

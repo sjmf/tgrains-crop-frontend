@@ -14,10 +14,10 @@
           </div>
           <br/>
           <div class="row">
-            <div class="col s6">
+            <div class="col s8">
               <a class="btn red" @click="reload_store">Reload data store from defaults</a>
             </div>
-            <div class="col s6">
+            <div class="col s4">
               <a class="btn red" @click="raiseError()">Raise Error</a>
               <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>
               <a class="btn blue" @click="setMessage('info')">Raise Info</a>

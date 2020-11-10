@@ -22,6 +22,9 @@ module.exports = {
             },
             '/tags': {
                 target:  'http://localhost:8000',
+            },
+            '/state': {
+                target:  'http://localhost:5000',
             }
         }
     }
