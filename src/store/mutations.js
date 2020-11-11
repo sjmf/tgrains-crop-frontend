@@ -247,17 +247,6 @@ export default {
      * @param tags
      */
     pushHistory(state, tags = []) {
-        // Do we have a session ID yet?
-        if(state.sessions.length === 0) {
-            console.error('Set up sessions before pushing history!')
-            return
-        }
-
-        // Don't push a BAU state onto the top of the stack when there's already a BAU state there!
-        if(state.history.length > 0) /// Don't hit this on first load (where no history exists before first BAU)
-            if(state.history[0].tags[0] === 1 && tags[0] === 1)
-                return
-
         // Get automatic tags for non-bau states
         let result;
         if(tags !== [1]) {
@@ -342,6 +331,14 @@ export default {
     clearHistory(state) {
         state.history = []
         state.historyIndex = 0
+    },
+
+    /**
+     * Set the historyIndex pointer to the top of the stack
+     * @param state
+     */
+    resetHistoryIndex(state) {
+        state.historyIndex = state.history.length -1
     },
 
     /**

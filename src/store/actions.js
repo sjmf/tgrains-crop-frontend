@@ -56,7 +56,7 @@ export default {
                     // Push new state onto history stack
                     this.dispatch("pushStateAndPOST")
                     // Activate tags for this query (must run after history push as uses state)
-                    this.commit("activateTags", 0)
+                    this.commit("activateTags", this.state.historyIndex)
                 })
         } catch (err) {
             console.error(err)
@@ -309,8 +309,30 @@ export default {
      * @param _
      * @param tags
      */
-    async pushStateAndPOST(_, tags) {
+    async pushStateAndPOST(_, tags = []) {
+
+        // Do we have a session ID yet?
+        if(this.state.sessions.length === 0) {
+            console.error('Set up sessions before pushing history!')
+            return
+        }
+
+        // Don't enter this `if` on first load (where no history exists before first BAU)
+        if(this.state.history.length > 0) {
+            // Don't push a BAU state onto the top of the stack when there's already a BAU state there!
+            //  (check the tags to see if it's a BAU state- i.e. tags[0] === 1 for both states)
+            if (this.state.history[this.state.history.length -1].tags[0] === 1 && tags[0] === 1) {
+                console.info("History not pushed as there's already a BAU state at the top!")
+                // If there -is- then we should return the index to the top of the stack
+                this.commit('resetHistoryIndex')
+                return
+            }
+        }
+
+        // Okay, push history to the local queue (this also sets the tags if they're un-set)
         this.commit("pushHistory", tags)
+
+        // Now, post it to the server (asynchronously, so we don't have to wait)
         http.postState({
             'session_id': this.state.sessions[this.state.sessions.length -1].id,
             'index': this.state.history.length -1,
