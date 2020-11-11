@@ -141,6 +141,7 @@ export default {
      * JSON.
      *
      * • text: String. The comment body.
+     * • user_id: String. The unique generated uid.
      * • author: String. The author's name.
      * • email: String. The author's email address (may be NULL for social media login)
      *

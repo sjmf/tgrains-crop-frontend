@@ -178,12 +178,14 @@ export default {
                 .map(x => this.state.tags.tags[x].selected ? parseInt(x) : null)
                 .filter(x => x!==null)
 
-            // Add model state to payload
-            payload['state'] = {
-                "inputs": this.state.landscapes[this.state.landscape_id],
-                "outputs": this.state.data.raw[this.state.landscape_id],
-                "totalArea": this.state.totalArea
-            }
+            // Used to add model state to payload. Now we just reference the stored one
+            // payload['state'] = {
+            //     "inputs": this.state.landscapes[this.state.landscape_id],
+            //     "outputs": this.state.data.raw[this.state.landscape_id],
+            //     "totalArea": this.state.totalArea
+            // }
+            payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
+            payload['index'] = this.state.historyIndex // TODO: WARNING! Check this matches up with database
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
@@ -311,7 +313,8 @@ export default {
         this.commit("pushHistory", tags)
         http.postState({
             'session_id': this.state.sessions[0].id,
-            'index': this.state.history.length,
+            'index': this.state.history.length -1,
+            'user_id': this.state.user.id,
             'state': this.state.history[0],
         }).catch((err)=>{
             this.commit("raiseError", err)

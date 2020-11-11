@@ -197,6 +197,7 @@
               this.loading = true
               let payload = {
                 'text': this.text.value,
+                'user_id': this.$store.state.user.id,
                 'author': this.name.value,
                 'email': this.email.value,
                 'reply_id': this.reply_id
