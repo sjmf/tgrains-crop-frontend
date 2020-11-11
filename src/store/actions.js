@@ -278,7 +278,7 @@ export default {
             `(recorded ${this.state.sessions[index].count})`)
         this.commit('deepCopyHistoryFromSession', index)
         this.commit('setGlobalReadOnly', true)
-        this.commit('loadFromHistory', 0)
+        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
@@ -287,7 +287,7 @@ export default {
     cancelViewSession() {
         this.commit('shallowCopyHistoryFromSession', this.state.sessions.length -1)
         this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', 0)
+        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
