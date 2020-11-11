@@ -178,9 +178,12 @@ export default {
         const livestock = state.landscapes[state.landscape_id].livestock
 
         for (let c in crops)
-            crops[c].value = crops[c].bau
+            if(Object.hasOwnProperty.call(crops, c))
+                crops[c].value = crops[c].bau
+
         for (let l in livestock)
-            livestock[l].value = livestock[l].bau
+            if(Object.hasOwnProperty.call(livestock, l))
+                livestock[l].value = livestock[l].bau
 
         state.data.raw[state.landscape_id] = state.bau[state.landscape_id]
     },
@@ -405,9 +408,9 @@ export default {
      * @param state
      */
     resetAllTagSelected(state) {
-        for (let id in state.tags.tags) {
-            state.tags.tags[id].selected = false
-        }
+        for (let id in state.tags.tags)
+            if(Object.hasOwnProperty.call(state.tags.tags, id))
+                state.tags.tags[id].selected = false
     },
 
     /**
