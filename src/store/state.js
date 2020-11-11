@@ -1,3 +1,5 @@
+import {createUniqueID} from "@/store/helpers";
+
 export const initial_state = () => ({
     // Used for cache-busting Vuex state on version update
     versionHash: process.env.VUE_APP_GIT_HASH || 'undefined',
@@ -137,7 +139,8 @@ export const initial_state = () => ({
     // User details
     user: {
         name: '',
-        email: ''
+        email: '',
+        id: createUniqueID(),
     },
 
     // TAB10 colors for charts to aid colorblind use

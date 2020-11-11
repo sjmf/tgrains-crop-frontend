@@ -1,5 +1,5 @@
 // mutations.js
-import {difference, distanceFromBAU, formatData, createSessionID} from "@/store/helpers";
+import {difference, distanceFromBAU, formatData, createUniqueID} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
 const cloneDeep = require('lodash/cloneDeep');
@@ -196,7 +196,7 @@ export default {
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
         state.sessions.push({
-            id: createSessionID(),
+            id: createUniqueID(),
             count: count,
             opened: Date.now(),
             history: state.history,
