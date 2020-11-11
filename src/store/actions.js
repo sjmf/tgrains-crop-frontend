@@ -185,7 +185,7 @@ export default {
             //     "totalArea": this.state.totalArea
             // }
             payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
-            payload['index'] = this.state.historyIndex // TODO: WARNING! Check this matches up with database
+            payload['index'] = this.state.historyIndex
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
@@ -301,7 +301,7 @@ export default {
         this.commit('deepCopyHistoryFromSession', index)
         this.commit('pushSession', this.state.history.length, sid)
         this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', 0)
+        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
@@ -312,10 +312,10 @@ export default {
     async pushStateAndPOST(_, tags) {
         this.commit("pushHistory", tags)
         http.postState({
-            'session_id': this.state.sessions[0].id,
+            'session_id': this.state.sessions[this.state.sessions.length -1].id,
             'index': this.state.history.length -1,
             'user_id': this.state.user.id,
-            'state': this.state.history[0],
+            'state': this.state.history[this.state.history.length -1],
         }).catch((err)=>{
             this.commit("raiseError", err)
         })

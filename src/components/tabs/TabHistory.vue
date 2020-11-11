@@ -25,14 +25,14 @@
         </div>
       </div>
 
-      <history-row v-for="(row, index) in history"
+      <history-row v-for="(row, index) in history.slice().reverse()"
                    v-bind:key="index"
-                   :index="index"
+                   :index="history.length -1 -index"
                    :length="history.length"
                    :time="row.time"
                    :tags="row.tags"
                    @load="$emit('load', index)"
-                   @comment="$emit('comment', index)"/>
+                   @comment="$emit('comment', history.length -1 -index)"/>
     </div>
 
 

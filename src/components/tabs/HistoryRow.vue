@@ -4,7 +4,7 @@
     <div class="card-content">
       <div class="row">
         <div class="col s4">
-          <strong>{{length - index}}.</strong>&nbsp;
+          <strong>{{index +1}}.</strong>&nbsp;
           <i v-if="index === historyIndex" class="tiny material-icons">live_tv</i>
           <i v-else class="tiny material-icons">timer</i>
           <span class="datetime"> {{ time | moment }}</span>
@@ -23,7 +23,7 @@
         <div class="col s3" v-show="index === historyIndex">
           <a href="#comment-head" v-smooth-scroll
              class="btn green right btn-small btn-flat waves-effect waves-green nobr"
-             @click="$emit('comment', index)">
+             @click="$emit('comment')">
             <i class="material-icons right">comment</i>Comment
           </a>
         </div>

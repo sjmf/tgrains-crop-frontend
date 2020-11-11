@@ -267,7 +267,7 @@ export default {
         tags = [...new Set(tags)]
 
         // Push state onto history (a stack in reverse)
-        state.history.unshift({
+        state.history.push({
             "inputs": cloneDeep(state.landscapes[state.landscape_id]),
             "outputs": cloneDeep(state.data[state.landscape_id]),
             "raw": cloneDeep(state.data.raw[state.landscape_id]),
@@ -278,7 +278,7 @@ export default {
         })
 
         // Set indices
-        state.historyIndex = 0
+        state.historyIndex = state.history.length -1
         state.sessions[state.sessions.length -1].count++
     },
 
@@ -299,8 +299,8 @@ export default {
         load.time = Date.now()
 
         // Push to history queue and set indices
-        state.history.unshift(load)
-        state.historyIndex = 0
+        state.history.push(load)
+        state.historyIndex = state.history.length -1
         state.sessions[state.sessions.length -1].count++
     },
 
@@ -326,7 +326,7 @@ export default {
      */
     deleteFromHistory(state, index) {
         state.history.splice(index, 1)
-        if(index < state.historyIndex)
+        if(index > state.historyIndex)
             state.historyIndex--
 
         state.sessions[state.sessions.length -1].count--
