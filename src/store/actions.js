@@ -341,5 +341,23 @@ export default {
         }).catch((err)=>{
             this.commit("raiseError", err)
         })
+    },
+
+    /**
+     * Delete history state and POST changes to server
+     *
+     * @returns {Promise<void>}
+     */
+    async deleteState(_, index) {
+        this.commit('deleteFromHistory', index)
+
+        http.postState({
+            'session_id': this.state.sessions[this.state.sessions.length -1].id,
+            'index': this.state.history.length -1,
+            'user_id': this.state.user.id,
+            'deleted': true,
+        }).catch((err)=>{
+            this.commit("raiseError", err)
+        })
     }
 }

@@ -1,5 +1,6 @@
 <template>
-  <div class="history-card card panel"
+  <div v-if="!deleted"
+      class="history-card card panel"
       v-bind:class="[index === historyIndex ? 'green lighten-4' : 'grey lighten-3']">
     <div class="card-content">
       <div class="row">
@@ -57,7 +58,8 @@ export default {
     index: Number,
     length: Number,
     time: Number,
-    tags: Array
+    tags: Array,
+    deleted: Boolean
   },
   filters: {
     moment: function (date) {
@@ -80,7 +82,7 @@ export default {
       this.$emit('load', this.index);
     },
     deleteState() {
-      this.$store.commit('deleteFromHistory', this.index)
+      this.$store.dispatch('deleteState', this.index)
     },
     tag_meta(id) {
       return this.$store.state.tags.tags[id]

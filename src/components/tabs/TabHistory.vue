@@ -31,6 +31,7 @@
                    :length="history.length"
                    :time="row.time"
                    :tags="row.tags"
+                   :deleted="row.deleted"
                    @load="$emit('load', index)"
                    @comment="$emit('comment', history.length -1 -index)"/>
     </div>

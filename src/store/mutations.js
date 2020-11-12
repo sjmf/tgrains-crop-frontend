@@ -266,7 +266,8 @@ export default {
             "totalArea": state.totalArea,
             "time": Date.now(),
             "tags": tags,
-            "changes": result
+            "changes": result,
+            "deleted": false
         })
 
         // Set indices
@@ -317,10 +318,7 @@ export default {
      * @param index
      */
     deleteFromHistory(state, index) {
-        state.history.splice(index, 1)
-        if(index > state.historyIndex)
-            state.historyIndex--
-
+        state.history[index].deleted = true
         state.sessions[state.sessions.length -1].count--
     },
 
