@@ -209,7 +209,7 @@ export default {
 
         // Overwrite state
         this.commit("updateLandscape", comment.state.inputs)
-        this.commit("setDataFromQuery", comment.state.outputs)
+        this.commit("setDataFromQuery", comment.state.raw) // PASS RAW!
         this.commit("setTotalArea", comment.state.totalArea)
 
         // Push this new state onto history stack (and server)

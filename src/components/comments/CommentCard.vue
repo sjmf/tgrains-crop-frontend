@@ -140,7 +140,9 @@ export default {
           return
 
       await this.$store.dispatch('loadStateFromComment', {
-        'state': this.state, 'tags': this.tags, 'author': this.author
+        'state': this.state,
+        'tags': this.tags,
+        'author': this.author
       })
       this.$emit('load')
     }
