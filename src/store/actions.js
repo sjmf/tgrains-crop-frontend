@@ -250,6 +250,7 @@ export default {
         this.commit("resetToBAU")
         await this.dispatch("sumArea")
         this.dispatch("pushStateAndPOST", [1]) // Include 'business-as-usual' tag
+        this.commit("activateTags", this.state.historyIndex)
     },
 
     /***
