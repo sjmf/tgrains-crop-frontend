@@ -5,7 +5,9 @@
     <span class="subheader">Land Area</span>
 
     <div class="select-wrapper" id="landscape-input">
-      <select id="area" @change="onChange($event)"> <!-- class="browser-default"-->
+      <select id="area"
+              :disabled="readonly"
+              @change="onChange($event)"> <!-- class="browser-default"-->
         <!--<option value="" disabled selected>Choose your area</option>-->
         <option value="101">{{this.strings[101]}}</option>
         <option value="102">{{this.strings[102]}}</option>
@@ -33,6 +35,9 @@
         computed: {
             strings() {
                 return store.state.landscapeNames
+            },
+            readonly() {
+                return this.$store.state.readonly
             }
         },
         mounted() {

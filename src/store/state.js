@@ -1,3 +1,5 @@
+import {createUniqueID} from "@/store/helpers";
+
 export const initial_state = () => ({
     // Used for cache-busting Vuex state on version update
     versionHash: process.env.VUE_APP_GIT_HASH || 'undefined',
@@ -38,6 +40,10 @@ export const initial_state = () => ({
     // History state stack
     history: [],
     historyIndex: 0,
+
+    // Sessions data structure
+    // {id: 'unique ID from server', count: 10, opened: Date.now(), history: []},
+    sessions: [],
 
     /*
      * Each landscape [101],[102] contains a crop and livestock data object {crops: {}, livestock: {}}
@@ -133,7 +139,8 @@ export const initial_state = () => ({
     // User details
     user: {
         name: '',
-        email: ''
+        email: '',
+        id: createUniqueID(),
     },
 
     // TAB10 colors for charts to aid colorblind use
@@ -209,6 +216,9 @@ export const initial_state = () => ({
             lamb_upland:    45,
         },
     },
+
+    // Global read-only flag
+    readonly: false,
 
     // Error handling: each element contains the following structure:
     // {

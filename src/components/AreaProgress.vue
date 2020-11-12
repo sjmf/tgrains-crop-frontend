@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="subheader">Available cropping area</span>
+    <span class="subheader">Available area</span>
     <div class="progress">
       <div class="determinate"
            :class="{red: !valid}"

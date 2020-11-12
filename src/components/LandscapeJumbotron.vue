@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row no-margin flex">
         <div class="col s12 m8 color-text">
-          <p class="h1-label hide-on-small-only">Selected area:</p>
+          <p class="h1-label hide-on-small-only">Selected study region based in:</p>
           <h1 id="area-header">{{landscapeName}}</h1>
         </div>
         <div class="col s12 m4 sub">

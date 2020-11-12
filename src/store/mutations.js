@@ -1,5 +1,7 @@
 // mutations.js
-import {difference, distanceFromBAU, formatData} from "@/store/helpers";
+import Vue from 'vue'
+
+import {difference, distanceFromBAU, formatData, createUniqueID} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
 const cloneDeep = require('lodash/cloneDeep');
@@ -178,24 +180,75 @@ export default {
         const livestock = state.landscapes[state.landscape_id].livestock
 
         for (let c in crops)
-            crops[c].value = crops[c].bau
+            if(Object.hasOwnProperty.call(crops, c))
+                crops[c].value = crops[c].bau
+
         for (let l in livestock)
-            livestock[l].value = livestock[l].bau
+            if(Object.hasOwnProperty.call(livestock, l))
+                livestock[l].value = livestock[l].bau
 
         state.data.raw[state.landscape_id] = state.bau[state.landscape_id]
     },
 
     /**
-     * Save state (e.g. before overwriting with state from comment)
+     * Push a new session onto the session stack.
+     * Commit clearHistory() first for a clean state, or pass its length in to fork a session
+     * @param state
+     * @param count
+     * @param forkSID - SID for the session this was forked from (Default undefined)
+     */
+    pushSession(state, count = 0, forkSID= undefined) {
+        // Session has a REFERENCE to history.
+        // This must be updated with a cloneDeep when new session started
+        state.sessions.push({
+            id: createUniqueID(),
+            count: count,
+            opened: Date.now(),
+            history: state.history,
+            fork: forkSID
+        })
+
+        console.log("Created session " + state.sessions[state.sessions.length -1].id)
+    },
+
+    /**
+     * Deep Copy a history from a Session into the current history stack
+     * @param state
+     * @param index
+     */
+    deepCopyHistoryFromSession(state, index) {
+        // Set history to undefined so that state.history no longer points to the same object
+        //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
+        state.history = undefined
+        state.history = cloneDeep(state.sessions[index].history)
+    },
+
+    /**
+     * Shallow copy a history from a session into the current history stack
+     * (used for setting history pointer back to same object)
+     * @param state
+     * @param index
+     */
+    shallowCopyHistoryFromSession(state, index) {
+        state.history = state.sessions[index].history
+    },
+
+    /**
+     * Set the global read-only flag
+     * @param state
+     * @param ro
+     */
+    setGlobalReadOnly(state, ro) {
+        state.readonly = ro
+    },
+
+    /**
+     * Save state (e.g. before overwriting with state from comment).
+     * You should probably be using the pushStateAndPOST action rather than calling this directly
      * @param state
      * @param tags
      */
     pushHistory(state, tags = []) {
-        // Don't push a BAU state onto the top of the stack when there's already a BAU state there!
-        if(state.history.length > 0) /// Don't hit this on first load (where no history exists before first BAU)
-            if(state.history[0].tags[0] === 1 && tags[0] === 1)
-                return
-
         // Get automatic tags for non-bau states
         let result;
         if(tags !== [1]) {
@@ -208,18 +261,20 @@ export default {
         tags = [...new Set(tags)]
 
         // Push state onto history (a stack in reverse)
-        state.history.unshift({
+        state.history.push({
             "inputs": cloneDeep(state.landscapes[state.landscape_id]),
             "outputs": cloneDeep(state.data[state.landscape_id]),
             "raw": cloneDeep(state.data.raw[state.landscape_id]),
             "totalArea": state.totalArea,
             "time": Date.now(),
             "tags": tags,
-            "changes": result
+            "changes": result,
+            "deleted": false
         })
 
-        // Set index
-        state.historyIndex = 0
+        // Set indices
+        state.historyIndex = state.history.length -1
+        state.sessions[state.sessions.length -1].count++
     },
 
     /**
@@ -238,9 +293,10 @@ export default {
         load.tags = [...new Set(load.tags.concat([3]))]
         load.time = Date.now()
 
-        // Push to history queue
-        state.history.unshift(load)
-        state.historyIndex = 0
+        // Push to history queue and set indices
+        state.history.push(load)
+        state.historyIndex = state.history.length -1
+        state.sessions[state.sessions.length -1].count++
     },
 
     /**
@@ -264,9 +320,8 @@ export default {
      * @param index
      */
     deleteFromHistory(state, index) {
-        state.history.splice(index, 1)
-        if(index < state.historyIndex)
-            state.historyIndex--
+        state.history[index].deleted = true
+        state.sessions[state.sessions.length -1].count--
     },
 
     /**
@@ -274,8 +329,16 @@ export default {
      * @param state
      */
     clearHistory(state) {
-        state.history = [state.history[state.historyIndex]]
+        state.history = []
         state.historyIndex = 0
+    },
+
+    /**
+     * Set the historyIndex pointer to the top of the stack
+     * @param state
+     */
+    resetHistoryIndex(state) {
+        state.historyIndex = state.history.length -1
     },
 
     /**
@@ -297,12 +360,12 @@ export default {
     },
 
     /**
-     * Set tags in state
+     * Set tags in state, with tags.tags and tags.groups set
+     * separately so as not to overwrite tags.mapping
      * @param state
      * @param tags
      */
     setTags(state, tags) {
-        // copy these separately, so as not to overwrite tags.mapping
         state.tags.tags = tags.tags
         state.tags.groups = tags.groups
     },
@@ -315,7 +378,13 @@ export default {
     setTagSelected(state, payload) {
         let [id, value] = Object.values(payload)
 
-        state.tags.tags[id].selected = value
+        /*
+         * Maintain reactivity by using Vue.set as 'tags' is loaded after page via AJAX!
+         * https://medium.com/js-dojo/reactivity-in-vue-js-and-its-pitfalls-de07a29c9407
+         * Basically, don't do this: `state.tags.tags[id].selected = value`
+         *     as the prop `selected` doesn't yet exist and isn't watched by Vue
+         */
+        Vue.set(state.tags.tags[id], 'selected', value)
     },
 
     /**
@@ -326,14 +395,15 @@ export default {
     activateTags(state, index) {
         // First, deactivate crop/livestock area tags
         for (let id of state.tags.groups[1]) {
-            state.tags.tags[id].selected = false
+            Vue.set(state.tags.tags[id], 'selected', false)  // Reactive prop
         }
 
         // Load tags from group 1 only (input areas)
         let history = state.history[index]
         for(let id of history.tags) {
-            if(state.tags.tags[id].group === 1)
-                state.tags.tags[id].selected = true
+            if(state.tags.tags[id].group === 1) {
+                Vue.set(state.tags.tags[id], 'selected', true)  // Reactive prop
+            }
         }
     },
 
@@ -342,9 +412,9 @@ export default {
      * @param state
      */
     resetAllTagSelected(state) {
-        for (let id in state.tags.tags) {
-            state.tags.tags[id].selected = false
-        }
+        for (let id in state.tags.tags)
+            if(Object.hasOwnProperty.call(state.tags.tags, id))
+                state.tags.tags[id].selected = false
     },
 
     /**

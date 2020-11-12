@@ -39,6 +39,7 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
 
+  /** Actions which occur on page-load **/
   mounted: function() {
     // M.AutoInit();
     // Initialise MaterializeCSS elements individually instead:

@@ -86,3 +86,14 @@ export function distanceFromBAU(state) {
         changes: changes
     }
 }
+
+/***
+ * Generate a unique random UUID in the form "4602:8395:63da:d6a7:19ef:ab20:cd56"
+ * @returns {*}
+ */
+export function createUniqueID() {
+    return [...(new Array(8)).keys()]
+        .reduce((a)=>{
+            return (a!==0 ? a + ':' : '') + Math.random().toString(16).substring(2, 6)
+        })
+}

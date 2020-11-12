@@ -141,6 +141,7 @@ export default {
      * JSON.
      *
      * • text: String. The comment body.
+     * • user_id: String. The unique generated uid.
      * • author: String. The author's name.
      * • email: String. The author's email address (may be NULL for social media login)
      *
@@ -196,6 +197,23 @@ export default {
         catch (err) {
             console.error(err);
             throw "Comment load failed. " + err.toString() || ""
+        }
+    },
+
+    /**
+     * Post a history state to the server
+     * @param data
+     * @returns {Promise<void>}
+     */
+    async postState(data) {
+        try {
+            let response = await axios.post('/state', data)
+            console.info('Posted state to server')
+            return response
+        }
+        catch (err) {
+            console.error(err)
+            throw "History POST failed. " + err.toString() || ''
         }
     }
 }
