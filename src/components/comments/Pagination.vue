@@ -1,4 +1,5 @@
 <template>
+<div class="row">
   <div class="col s12 m6 offset-m4">
     <ul class="pagination">
       <li v-bind:class="[current_page <= 1 ? 'disabled' : 'waves-effect']"
@@ -19,6 +20,7 @@
       </li>
     </ul>
   </div>
+</div>
 </template>
 <script>
 export default {
@@ -37,7 +39,7 @@ export default {
     },
     total_pages(){
       return Math.floor((this.$store.state.comments.length-1) / this.$store.state.comments.size) +1
-  }
+    }
   }
 }
 </script>

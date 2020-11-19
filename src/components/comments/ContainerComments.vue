@@ -1,17 +1,20 @@
 <template>
   <div id="comments" class="container">
     <div class="row">
-      <div class="col s11">
+      <div class="col s12">
         <span id="comment-head" class="comment-header grey-text text-darken-2">Comments</span>
-        <div class="divider grey"></div>
-      </div>
-
-      <div class="col s1">
-        <span @click="toggleAddComment"
-              class="btn-floating btn-large tooltipped right waves-effect waves-light green darken-2"
+        <a @click="toggleAddComment"
+              class="btn tooltipped right waves-effect waves-light green darken-2"
               data-position="left" data-tooltip="Add Comment">
-          <i class="material-icons">add</i>
-        </span>
+          <i class="material-icons right">add</i>Add Comment
+        </a>
+        <span> </span>
+        <a @click="toggleFilterComment"
+            class="btn tooltipped right waves-effect waves-light blue darken-2"
+            data-position="left" data-tooltip="Show Filtering Options">
+          <i class="material-icons right">filter_list</i>Sort/Filter
+        </a>
+        <div class="divider grey"></div>
       </div>
     </div>
 
@@ -26,12 +29,21 @@
       </div>
     </transition>
 
-    <!-- Pagination -->
-    <pagination v-if="comments.length"/>
+    <!-- Filtering Options -->
+    <transition name="fade">
+      <div class="col s12 m8 push-m2" v-show="show_filter_comment">
+        <comment-filter
+            v-if="comments.length">
+        </comment-filter>
+      </div>
+    </transition>
 
-    <!-- Comment cards -->
     <div class="col s12 m10 l8 offset-m1 offset-l2">
 
+      <!-- Pagination -->
+      <pagination v-if="comments.length"/>
+
+      <!-- Comment cards -->
       <comment-card
           v-for="(comment, index) in comments"
           v-bind:key="index"
@@ -47,10 +59,9 @@
           @replyToComment="doReply"
           @load="$emit('load')"/>
 
+      <!-- Pagination -->
+      <pagination v-if="comments.length"/>
     </div>
-
-    <!-- Pagination -->
-    <pagination v-if="comments.length"/>
 
     <div class="col s8 offset-s2 card" v-if="!comments.length">
       <div class="card-content">
@@ -62,54 +73,66 @@
 <script>
 import CommentAdd from "@/components/comments/CommentAdd"
 import CommentCard from "@/components/comments/CommentCard";
+import CommentFilter from "@/components/comments/CommentFilter";
 import Pagination from "@/components/comments/Pagination";
 
 export default {
-    name: 'ContainerComments',
-    components: {
-        Pagination,
-        CommentCard,
-        CommentAdd
-    },
-    async mounted() {
-        // Keep this on nextTick for edge case re-loading store defaults
-        this.$nextTick(async () => {
-            // Load tags if not already loaded
-            if (this.$store.state.tags.tags.length === 0)
-                await this.$store.dispatch("loadTags")
-
-            await this.$store.dispatch("loadComments")
-        })
-    },
-    data() {
-        return {
-            show_add_comment: false,
-            reply_id: undefined,
-            state_id: undefined
-        }
-    },
-    methods: {
-        doReply(event) {
-            this.show_add_comment = true
-            this.reply_id = event.id
-        },
-        toggleAddComment() {
-            this.show_add_comment = !this.show_add_comment
-        },
-        attachState(index) {
-            this.show_add_comment = true
-            this.state_id = index
-        }
-    },
-    computed: {
-        comments() {
-            return this.$store.state.comments.comments;
-        }
+  name: 'ContainerComments',
+  components: {
+    Pagination,
+    CommentCard,
+    CommentAdd,
+    CommentFilter
+  },
+  data() {
+    return {
+      show_add_comment: false,
+      show_filter_comment: true,
+      reply_id: undefined,
+      state_id: undefined
     }
+  },
+  computed: {
+    comments() {
+      return this.$store.state.comments.comments;
+    },
+    scrollToFilterComment() {
+      return this.show_add_comment ? '#comment-filter' : ''
+    }
+  },
+  methods: {
+    doReply(event) {
+      this.show_add_comment = true
+      this.reply_id = event.id
+    },
+    toggleAddComment() {
+      this.show_add_comment = !this.show_add_comment
+    },
+    toggleFilterComment() {
+      this.show_filter_comment = !this.show_filter_comment
+    },
+    attachState(index) {
+      this.show_add_comment = true
+      this.state_id = index
+    }
+  },
+  async mounted() {
+    // Keep this on nextTick for edge case re-loading store defaults
+    this.$nextTick(async () => {
+      // Load tags if not already loaded
+      if (this.$store.state.tags.tags.length === 0)
+        await this.$store.dispatch("loadTags")
+
+      await this.$store.dispatch("loadComments")
+    })
+  },
 }
 </script>
 <style scoped>
 .comment-header {
   font-size: 2rem;
+}
+.btn {
+  margin-left: 8px;
 }
 </style>
