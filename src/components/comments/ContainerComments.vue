@@ -31,7 +31,7 @@
 
     <!-- Filtering Options -->
     <transition name="fade">
-      <div class="col s12 m8 push-m2" v-show="show_filter_comment">
+      <div class="col s12 m10 l8 offset-m1 offset-l2" v-show="show_filter_comment">
         <comment-filter
             v-if="comments.length">
         </comment-filter>
