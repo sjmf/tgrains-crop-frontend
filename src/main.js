@@ -43,25 +43,13 @@ new Vue({
   mounted: function() {
     // M.AutoInit();
     // Initialise MaterializeCSS elements individually instead:
-    this.$_M.Tabs.init(document.querySelectorAll(".tabs"), {
-      // swipeable: true
-    });
 
     // Initialise Materialize components
     // One day, this should all be re-written with Vuetify...
     this.$_M.Modal.init(document.querySelectorAll(".modal"))
-    this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
     this.$_M.Collapsible.init(document.querySelectorAll(".collapsible"))
     // NB: Tooltips are not initialised here because sidebar data is loaded later, via an ajax request.
     // Check App.vue:93 initialiseTooltips() for tooltip initialisation
-
-    this.$nextTick(()=> {
-        // We need to initialise the dropdown on $nextTick because
-        //  its value (101/102) is loaded from vuex in LandAreaMenu
-        this.$_M.FormSelect.init(
-            document.querySelector('#landscape-input select')
-        )
-    })
   },
 
   data: function() {

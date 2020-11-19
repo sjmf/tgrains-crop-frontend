@@ -47,6 +47,10 @@
             elem.querySelector("option[value='102']").selected = true
             select.value = store.state.landscape_id
             elem.value = this.strings[store.state.landscape_id];
+
+            this.$_M.FormSelect.init(
+                document.querySelector('#landscape-input select')
+            )
         }
     }
 </script>
