@@ -39,19 +39,6 @@ Vue.config.productionTip = false
 new Vue({
   render: h => h(App),
 
-  /** Actions which occur on page-load **/
-  mounted: function() {
-    // M.AutoInit();
-    // Initialise MaterializeCSS elements individually instead:
-
-    // Initialise Materialize components
-    // One day, this should all be re-written with Vuetify...
-    this.$_M.Modal.init(document.querySelectorAll(".modal"))
-    this.$_M.Collapsible.init(document.querySelectorAll(".collapsible"))
-    // NB: Tooltips are not initialised here because sidebar data is loaded later, via an ajax request.
-    // Check App.vue:93 initialiseTooltips() for tooltip initialisation
-  },
-
   data: function() {
     return {
       title: 'T-GRAINS Crop Model',

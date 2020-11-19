@@ -19,7 +19,7 @@
     </container-main>
 
     <!-- Modal for welcome message -->
-    <modal-welcome id="#modal-welcome"/>
+    <modal-welcome id="modal-welcome"/>
 
     <!-- FOOTER -->
     <container-footer></container-footer>

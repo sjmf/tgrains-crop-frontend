@@ -79,21 +79,19 @@ export default {
     },
     sessions() {
       return this.$store.state.sessions
-    },
-    instance() {
-      return this.$_M.Modal.getInstance(this.domNode)
-    },
+    }
   },
   methods: {
-    open() {
-      // Instantiate if undefined. Helps with hot-reloading, but isn't required in production
-      if (this.instance === undefined)
-        this.$_M.Modal.init(this.domNode)
-
-      this.instance.open();
+    instance() {
+      // NB: This must be a method, NOT a computed property
+      return this.$_M.Modal.getInstance(this.domNode)
     },
-    close() {
-      this.instance.close();
+    open() {
+      // Instantiate if undefined.
+      if (this.instance() === undefined) {
+        this.$_M.Modal.init(this.domNode)
+      }
+      this.instance().open();
     },
   }
 }

@@ -46,14 +46,17 @@
       declineTerms() {
         localStorage.clear()
       },
-      open() {
-        // Instantiate if undefined. Helps with hot-reloading, but isn't required in production
-        if (this.instance === undefined)
-          this.$_M.Modal.init(this.domNode)
-        this.instance.open()
-      },
       instance() {
+        // NB: This must be a method, NOT a computed property
         return this.$_M.Modal.getInstance(this.domNode)
+      },
+      open() {
+        // Instantiate if undefined.
+        if (this.instance() === undefined) {
+          this.$_M.Modal.init(this.domNode)
+        }
+
+        this.instance().open();
       },
     },
     mounted() {

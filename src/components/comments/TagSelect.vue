@@ -72,6 +72,11 @@ export default {
     updateValue(id, value) {
       this.$store.commit('setTagSelected', {id, value})
     }
+  },
+  mounted() {
+    this.$_M.Collapsible.init(
+        document.querySelectorAll(".collapsible")
+    )
   }
 }
 </script>
