@@ -143,7 +143,18 @@ export default {
      */
     async loadComments() {
         try {
-            let comments = await http.loadComments(this.state.comments.page, this.state.comments.size)
+            console.debug( "loadComments(",
+                this.state.comments.page,
+                this.state.comments.size,
+                this.state.comments.sort,
+                this.state.comments.filter, ")"
+            )
+            let comments = await http.loadComments(
+                this.state.comments.page,
+                this.state.comments.size,
+                this.state.comments.sort,
+                this.state.comments.filter
+            )
             this.commit("setComments", comments)
         }
         catch (err) {

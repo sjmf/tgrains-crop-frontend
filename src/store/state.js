@@ -133,6 +133,8 @@ export const initial_state = () => ({
         comments: {},
         page: 1,
         size: 4,
+        filter: 0,
+        sort: 0,
         length: 0,
     },
 
