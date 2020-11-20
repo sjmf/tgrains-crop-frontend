@@ -141,7 +141,7 @@ export default {
     /***
      * Retrieve comments from the server and load them into vuex
      */
-    async loadComments() {
+    async loadComments(_, user_id = this.state.user.id) {
         try {
             let comments = await http.loadComments(
                 this.state.comments.page,
@@ -149,7 +149,7 @@ export default {
                 this.state.comments.sort,
                 this.state.comments.filter,
                 this.state.history[this.state.historyIndex].changes.distance,
-                this.state.user.id
+                user_id
             )
             this.commit("setComments", comments)
         }

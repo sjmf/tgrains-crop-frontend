@@ -32,8 +32,10 @@
     <!-- Filtering Options -->
     <transition name="fade">
       <div class="col s12 m10 l8 offset-m1 offset-l2" v-show="show_filter_comment">
-        <comment-filter
-            v-if="comments.length">
+        <comment-filter :user_name="filter_opts.user_name"
+                        :user_id="filter_opts.user_id"
+                        @filterUser="filterUser"
+                        @clearFilter="filterUser(default_opts)">
         </comment-filter>
       </div>
     </transition>
@@ -52,12 +54,14 @@
           v-bind:reply_id="comment.reply_id"
           v-bind:reply="comment.reply"
           v-bind:author="comment.author"
+          v-bind:user_id="comment.user_id"
           v-bind:text="comment.text"
           v-bind:tags="comment.tags"
           v-bind:state="comment.state"
           v-bind:timestamp="comment.timestamp"
           v-bind:distance="comment.distance"
           @replyToComment="doReply"
+          @filterUser="filterUser"
           @load="$emit('load')"/>
 
       <!-- Pagination -->
@@ -90,7 +94,9 @@ export default {
       show_add_comment: false,
       show_filter_comment: true,
       reply_id: undefined,
-      state_id: undefined
+      state_id: undefined,
+      default_opts: {user_name: undefined, user_id: undefined, comment_id: undefined, tags: undefined},
+      filter_opts:  {user_name: undefined, user_id: undefined, comment_id: undefined, tags: undefined},
     }
   },
   computed: {
@@ -115,6 +121,10 @@ export default {
     attachState(index) {
       this.show_add_comment = true
       this.state_id = index
+    },
+    filterUser(event){
+      this.filter_opts.user_id = event.user_id
+      this.filter_opts.user_name = event.user_name
     }
   },
   async mounted() {
