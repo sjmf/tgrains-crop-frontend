@@ -377,7 +377,8 @@ export default {
      * Set the comments sorting order
      * 1.	?sort=0     By date (ascending)
      * 2.   ?sort=1     By date (descending)
-     * 2.	?sort=2     BONUS: By distance from BAU (read distance calculations for state and sort)
+     * 3.	?sort=2     By distance from BAU (read distance calculations for state and sort)
+     * 4.   ?sort=3     By distance from the current state (also pass distance)
      *
      * @param state
      * @param sort
