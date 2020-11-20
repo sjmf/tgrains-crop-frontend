@@ -143,17 +143,13 @@ export default {
      */
     async loadComments() {
         try {
-            console.debug( "loadComments(",
-                this.state.comments.page,
-                this.state.comments.size,
-                this.state.comments.sort,
-                this.state.comments.filter, ")"
-            )
             let comments = await http.loadComments(
                 this.state.comments.page,
                 this.state.comments.size,
                 this.state.comments.sort,
-                this.state.comments.filter
+                this.state.comments.filter,
+                this.state.history[this.state.historyIndex].changes.distance,
+                this.state.user.id
             )
             this.commit("setComments", comments)
         }
@@ -197,6 +193,8 @@ export default {
             // }
             payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
             payload['index'] = this.state.historyIndex
+
+            payload['distance'] = this.state.history[this.state.historyIndex].changes.distance
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
