@@ -93,6 +93,9 @@ export default {
       }
       this.instance().open();
     },
+    close() {
+      this.instance().close()
+    }
   }
 }
 </script>
