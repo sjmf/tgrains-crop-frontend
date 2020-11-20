@@ -56,6 +56,7 @@
           v-bind:tags="comment.tags"
           v-bind:state="comment.state"
           v-bind:timestamp="comment.timestamp"
+          v-bind:distance="comment.distance"
           @replyToComment="doReply"
           @load="$emit('load')"/>
 

@@ -57,8 +57,11 @@
         </div>
 
         <!-- Compare buttons -->
-        <div class="row compare-buttons" v-if="state">
-          <div class="col s12">
+        <div class="row" v-if="state">
+          <div class="col s8">
+            <span class="grey-text">Distance from {{ distance_text }}: {{ distance }} ha</span>
+          </div>
+          <div class="col s4 right compare-buttons">
 <!--            <a><i class="material-icons">insert_chart</i> Compare </a>-->
             <a @click="set_state" :class="{'disabled': readonly}">
               <i class="material-icons">play_arrow</i> Load
@@ -83,7 +86,7 @@
             v-bind:text="replyCard.text"
             v-bind:tags="replyCard.tags"
             v-bind:timestamp="replyCard.timestamp"
-            v-bind:reply_view="true" />
+            v-bind:reply_view="true"/>
       </div>
     </div>
   </div>
@@ -109,7 +112,8 @@ export default {
       timestamp: Number,
       tags: Array,
       state: [Object, undefined],
-      reply_view: Boolean
+      reply_view: Boolean,
+      distance: Number
   },
   data() {
     return {
@@ -122,6 +126,9 @@ export default {
     },
     readonly() {
       return this.$store.state.readonly
+    },
+    distance_text() {
+      return this.$store.state.comments.sort === 3 ? 'current state' : 'BAU state'
     }
   },
   methods: {
@@ -181,7 +188,7 @@ a i.material-icons {
   vertical-align: middle;
 }
 
-.compare-buttons div {
+div.compare-buttons  {
   text-align: right;
 }
 

@@ -48,7 +48,7 @@
               {{value}}
             </option>
           </select>
-          <label for="size-select">Number to show:</label>
+          <label for="size-select">Comments per page:</label>
         </div>
       </div>
     </div>
@@ -62,7 +62,7 @@ export default {
   name: "CommentFilter",
   data() {
     return {
-      sort:   ["Date Desc", "Date Asc", "Distance"],
+      sort:   ["Date Descending", "Date Ascending", "Distance from BAU state", "Closest to current state"],
       filter: ["All", "Mine", "Someone else's", "Replies", "Tags"],
       show: range(2,12,2),
     }
@@ -82,6 +82,8 @@ export default {
         return this.$store.state.comments.filter
       },
       set (value) {
+        // Reset comments page if changing filter, to prevent 404
+        this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsFilter", parseInt(value))
         this.$store.dispatch("loadComments")
       }
@@ -91,6 +93,8 @@ export default {
         return this.$store.state.comments.size
       },
       set (value) {
+        // Reset comments page if changing page size, to prevent 404
+        this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsSize", parseInt(value))
         this.$store.dispatch("loadComments")
       }
