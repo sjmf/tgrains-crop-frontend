@@ -34,6 +34,8 @@
       <div class="col s12 m10 l8 offset-m1 offset-l2" v-show="show_filter_comment">
         <comment-filter :user_name="filter_opts.user_name"
                         :user_id="filter_opts.user_id"
+                        :reply_card="filter_opts.reply_card"
+                        :tags="filter_opts.tags"
                         @filterUser="filterUser"
                         @clearFilter="filterUser(default_opts)">
         </comment-filter>
@@ -62,6 +64,7 @@
           v-bind:distance="comment.distance"
           @replyToComment="doReply"
           @filterUser="filterUser"
+          @filterReply="filterReply"
           @load="$emit('load')"/>
 
       <!-- Pagination -->
@@ -95,8 +98,8 @@ export default {
       show_filter_comment: true,
       reply_id: undefined,
       state_id: undefined,
-      default_opts: {user_name: undefined, user_id: undefined, comment_id: undefined, tags: undefined},
-      filter_opts:  {user_name: undefined, user_id: undefined, comment_id: undefined, tags: undefined},
+      default_opts: {user_name: undefined, user_id: undefined, reply_card: undefined, tags: undefined},
+      filter_opts:  {user_name: undefined, user_id: undefined, reply_card: undefined, tags: undefined},
     }
   },
   computed: {
@@ -122,9 +125,25 @@ export default {
       this.show_add_comment = true
       this.state_id = index
     },
-    filterUser(event){
+    clearFilter() {
+      this.filter_opts = Object.assign(this.filter_opts, this.default_opts);
+    },
+    filterUser(event) {
+      this.clearFilter()
       this.filter_opts.user_id = event.user_id
       this.filter_opts.user_name = event.user_name
+    },
+    filterReply(event) {
+      this.clearFilter()
+      this.filter_opts.reply_card = event
+    },
+    filterTags(event) {
+      this.clearFilter()
+      if(! Array.isArray(this.filter_opts.tags))
+        this.filter_opts.tags = []
+
+      this.filter_opts.tags.push(event)
+      this.filter_opts.tags = [...new Set(this.filter_opts.tags)]
     }
   },
   async mounted() {

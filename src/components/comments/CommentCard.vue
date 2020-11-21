@@ -2,7 +2,8 @@
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="comment-main row">
       <div class="col s3 m2">
-        <a href="#!" @click="$emit('filterUser', {'user_id': user_id, 'user_name': author})">
+        <a href="#!"
+           @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
           <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
         </a>
       </div>
@@ -13,8 +14,8 @@
             <span class="username">
               <a href="#!"
                  class="green-text text-darken-2"
-                 @click="$emit('filterUser', {'user_id': user_id, 'user_name': author})">
-                {{ author }}
+                 @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
+                {{ author | decode }}
               </a>
             </span>
           </div>
@@ -83,18 +84,20 @@
         <p class="grey-text small">
           This comment is a reply: <a v-if="!replyCard" @click="load_reply(reply_id)">(load reply)</a>
         </p>
-        <comment-card
-            v-if="replyCard"
-            v-bind:id="replyCard.id"
-            v-bind:hash="replyCard.hash"
-            v-bind:reply_id="replyCard.reply_id"
-            v-bind:author="replyCard.author"
-            v-bind:user_id="replyCard.user_id"
-            v-bind:text="replyCard.text"
-            v-bind:tags="replyCard.tags"
-            v-bind:timestamp="replyCard.timestamp"
-            v-bind:reply_view="true"
-            @filterUser="(user) => $emit('filterUser', user)"/>
+        <a href="#!" @click="$emit('filterReply', replyCard)">
+          <comment-card
+              v-if="replyCard"
+              v-bind:id="replyCard.id"
+              v-bind:hash="replyCard.hash"
+              v-bind:reply_id="replyCard.reply_id"
+              v-bind:author="replyCard.author"
+              v-bind:user_id="replyCard.user_id"
+              v-bind:text="replyCard.text"
+              v-bind:tags="replyCard.tags"
+              v-bind:timestamp="replyCard.timestamp"
+              v-bind:reply_view="true"
+              @filterUser="(user) => $emit('filterUser', user)"/>
+        </a>
       </div>
     </div>
   </div>

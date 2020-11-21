@@ -65,8 +65,28 @@
     </div>
 
     <div class="comment-main row" v-show="filter_value === 3">
-      <div class="col s12">
-        <span>Replies</span>
+      <div v-if="reply_card">
+        <div class="col s12">
+          <span class="grey-text">Filtering by replies to this comment:</span>
+          <button class="btn btn-small right" @click="$emit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
+        </div>
+        <div class="col s12">
+          <comment-card
+              v-if="reply_card"
+              v-bind:id="reply_card.id"
+              v-bind:hash="reply_card.hash"
+              v-bind:reply_id="reply_card.reply_id"
+              v-bind:author="reply_card.author"
+              v-bind:user_id="reply_card.user_id"
+              v-bind:text="reply_card.text"
+              v-bind:tags="reply_card.tags"
+              v-bind:timestamp="reply_card.timestamp"
+              v-bind:reply_view="true"
+              @filterUser="(user) => $emit('filterUser', user)"/>
+        </div>
+      </div>
+      <div class="col s12" v-else>
+        <span>To use this filter, click on a comment reply in the comments section below.</span>
       </div>
     </div>
 
@@ -81,8 +101,13 @@
 <script>
 const range = require('lodash/range');
 
+import CommentCard from "@/components/comments/CommentCard";
+
 export default {
   name: "CommentFilter",
+  components: {
+    CommentCard
+  },
   props: {
     user_name: String,  // Contains {id: '', name: ''}
     user_id: String,
