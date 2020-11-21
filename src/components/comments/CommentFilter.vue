@@ -132,6 +132,7 @@ export default {
         'sort' : this.sort_value,
 
         ...(!(this.filter_value === 2 && this.user_id === undefined) &&
+            !(this.filter_value === 3 && this.reply_card === undefined) &&
             {'filter': this.filter_value}),
 
         ...(this.sort_value >= 2 &&
