@@ -115,11 +115,18 @@ export default {
      *
      * @param page
      * @param size
+     * @param ...kwargs
      * @returns {Promise<any>}
      */
-    async loadComments(page, size) {
+    async loadComments(page, size, {...kwargs} = {}) {
         try {
-            const data = {params: {'page': page, 'size': size}}
+            const data = {
+                params: {
+                    'page': page,
+                    'size': size,
+                    ...kwargs
+                }
+            }
 
             let response = await axios.get('/comment', data)
 

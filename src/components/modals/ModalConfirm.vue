@@ -43,16 +43,17 @@ export default {
       }
     },
     instance() {
+      // NB: This must be a method, NOT a computed property
       return this.$_M.Modal.getInstance(this.domNode)
     },
     open(params) {
       // Open params are treated as the argument for the callback function. Store them for later use.
       this.params = params
 
-      // Instantiate if undefined. Helps with hot-reloading, but isn't required in production
-      if (this.instance() === undefined)
+      // Instantiate if undefined.
+      if (this.instance() === undefined) {
         this.$_M.Modal.init(this.domNode)
-
+      }
       this.instance().open()
     },
     close() {

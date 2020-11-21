@@ -4,12 +4,17 @@
         type="checkbox" class="tag"
         v-model="innerValue"
         @change="$emit('change', $event)"/>
-    <span v-bind:class="this.colour">{{ name }}</span>
+    <span v-bind:class="colour">{{ name }}</span>
   </label>
-  <span v-else
-        class="new badge tag"
-        v-bind:data-badge-caption="name"
-        v-bind:class="this.colour">
+  <span v-else>
+    <a v-if="id" href="#!" @click="$emit('filterTag', id)">
+      <span class="new badge tag link"
+          v-bind:data-badge-caption="name"
+          v-bind:class="colour"/>
+    </a>
+    <span v-else class="new badge tag"
+          v-bind:data-badge-caption="name"
+          v-bind:class="colour"/>
   </span>
 </template>
 
@@ -17,6 +22,7 @@
     export default {
       name: 'Tag',
       props: {
+          id: Number,
           name: String,
           colour: String,
           value: Boolean
@@ -58,8 +64,14 @@
 }
 
 /* On mouse-over, dim brightness */
+span.tag.link:hover,
 [type="checkbox"].tag + span:hover {
   filter: brightness(90%);
+}
+
+span.tag.link:active,
+[type="checkbox"].tag + span:active {
+  filter: brightness(105%);
 }
 
 [type="checkbox"].tag + span:not(.lever):before,
