@@ -4,6 +4,12 @@
 # Only use spaces to indent your .yml configuration.
 # -----
 
+# Out-of-memory
+# https://stackoverflow.com/questions/60548011
+options:
+  docker: true
+  size: 2x 
+  
 pipelines:
   default:
 #    - step:
@@ -35,3 +41,8 @@ pipelines:
           - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
           - docker push $FRONTEND_IMAGE_NAME
 
+
+definitions:
+  services:
+    docker:
+      memory: 4096
