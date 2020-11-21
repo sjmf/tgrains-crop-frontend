@@ -115,22 +115,16 @@ export default {
      *
      * @param page
      * @param size
-     * @param sort
-     * @param filter
-     * @param distance
-     * @param uuid
+     * @param ...kwargs
      * @returns {Promise<any>}
      */
-    async loadComments(page, size, sort, filter, distance = undefined, uuid = undefined) {
+    async loadComments(page, size, {...kwargs} = {}) {
         try {
             const data = {
                 params: {
                     'page': page,
                     'size': size,
-                    'sort': sort,
-                    'filter': filter,
-                    'distance': distance,
-                    'uuid': uuid,
+                    ...kwargs
                 }
             }
 

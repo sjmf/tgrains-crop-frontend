@@ -85,7 +85,9 @@ export default {
   name: "CommentFilter",
   props: {
     user_name: String,  // Contains {id: '', name: ''}
-    user_id: String
+    user_id: String,
+    reply_card: Object,
+    tags: Array
   },
   data() {
     return {
@@ -96,6 +98,34 @@ export default {
   },
   computed: {
     /**
+     * Compute the payload for filtering comments
+     */
+    comments_payload() {
+      // Conditionally construct payload for comments. I –love- this ES6 syntax.
+      // https://stackoverflow.com/a/40560953/1681205
+      return {
+        'sort' : this.sort_value,
+
+        ...(!(this.filter_value === 2 && this.user_id === undefined) &&
+            {'filter': this.filter_value}),
+
+        ...(this.sort_value >= 2 &&
+            {'distance': this.$store.state.history[this.$store.state.historyIndex].changes.distance}),
+
+        ...(this.filter_value === 1 &&
+            {'user_id': this.$store.state.user.id}),
+
+        ...(this.filter_value === 2 && this.user_id !== undefined &&
+            {'user_id': this.user_id}),
+
+        ...(this.filter_value === 3 && this.reply_card !== undefined &&
+            {'reply_id': this.reply_card.id}),
+
+        ...(this.filter_value === 4 &&
+            {'tags': this.tags})
+      }
+    },
+    /**
      * v-model bindings for sort/filter/size values
      */
     sort_value: {
@@ -104,7 +134,7 @@ export default {
       },
       set (value) {
         this.$store.commit("setCommentsSort", parseInt(value))
-        this.$store.dispatch("loadComments")
+        this.$store.dispatch("loadComments", this.comments_payload)
       }
     },
     filter_value: {
@@ -115,7 +145,7 @@ export default {
         // Reset comments page if changing filter, to prevent 404
         this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsFilter", parseInt(value))
-        this.$store.dispatch("loadComments", this.query_user_id)
+        this.$store.dispatch("loadComments", this.comments_payload)
       }
     },
     size_value: {
@@ -126,17 +156,9 @@ export default {
         // Reset comments page if changing page size, to prevent 404
         this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsSize", parseInt(value))
-        this.$store.dispatch("loadComments", this.query_user_id)
+        this.$store.dispatch("loadComments", this.comments_payload)
       }
     },
-
-    /**
-     * Get the correct user ID – pass this.$store.state.user.id if filter value is 'Mine'
-     * @returns {String|undefined}
-     */
-    query_user_id() {
-      return this.filter_value === 2 ? this.user_id : this.$store.state.user.id
-    }
   },
   methods: {
     setMaterialFormSelectSelected(id, index) {
@@ -145,18 +167,25 @@ export default {
       const elem = document.querySelector(id)
       elem.parentElement.querySelector('select').value = index
       this.$_M.FormSelect.getInstance(elem)._setValueToInput()
-    }
-  },
-  watch: {
-    user_id: function() {
-      // On change of user object, jump the dropdown to 'Filter comments by: Someone else's'
-      let value = 2
-      if (this.user_id === undefined)
-        value = 0
+    },
+    setFilter() {
+      let value = 0
+      if (this.user_id !== undefined)
+        value = 2
+      else if (this.reply_card !== undefined)
+        value = 3
+      else if (this.tags !== undefined)
+        value = 4
 
       this.$set(this, 'filter_value', value)
       this.setMaterialFormSelectSelected('#filter-select', value)
     }
+  },
+  watch: {
+    // On change of props, jump the dropdown to the appropriate filter
+    user_id    () { this.setFilter() },
+    reply_card () { this.setFilter() },
+    tags       () { this.setFilter() },
   },
   mounted() {
     for (let elem of document.querySelectorAll('div.select-wrapper.comment-controls select')) {
