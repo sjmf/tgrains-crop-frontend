@@ -32,20 +32,21 @@
     <!-- Filtering Options -->
     <transition name="fade">
       <div class="col s12 m10 l8 offset-m1 offset-l2" v-show="show_filter_comment">
-        <comment-filter :user_name="filter_opts.user_name"
+        <comment-filter ref="commentFilter"
+                        :user_name="filter_opts.user_name"
                         :user_id="filter_opts.user_id"
                         :reply_card="filter_opts.reply_card"
                         :tags="filter_opts.tags"
                         @filterUser="filterUser"
-                        @clearFilter="filterUser(default_opts)">
-        </comment-filter>
+                        @clearFilter="filterUser(default_opts)"
+                        @removeTag="removeTag"/>
       </div>
     </transition>
 
     <div class="col s12 m10 l8 offset-m1 offset-l2">
 
       <!-- Pagination -->
-      <pagination v-if="comments.length"/>
+      <pagination v-if="comments.length" @changePage="changePage"/>
 
       <!-- Comment cards -->
       <comment-card
@@ -65,10 +66,11 @@
           @replyToComment="doReply"
           @filterUser="filterUser"
           @filterReply="filterReply"
+          @filterTag="filterTag"
           @load="$emit('load')"/>
 
       <!-- Pagination -->
-      <pagination v-if="comments.length"/>
+      <pagination v-if="comments.length" @changePage="changePage"/>
     </div>
 
     <div class="col s8 offset-s2 card" v-if="!comments.length">
@@ -137,13 +139,22 @@ export default {
       this.clearFilter()
       this.filter_opts.reply_card = event
     },
-    filterTags(event) {
+    filterTag(event) {
+      let tags = (Array.isArray(this.filter_opts.tags)) ? this.filter_opts.tags.slice() : []
       this.clearFilter()
-      if(! Array.isArray(this.filter_opts.tags))
-        this.filter_opts.tags = []
 
-      this.filter_opts.tags.push(event)
-      this.filter_opts.tags = [...new Set(this.filter_opts.tags)]
+      tags.push(event)
+      tags = [...new Set(tags)]
+      this.filter_opts.tags = tags.slice().sort()
+    },
+    removeTag(event) {
+      let index = this.filter_opts.tags.indexOf(event);
+      if (index !== -1) {
+        this.filter_opts.tags.splice(index, 1);
+      }
+    },
+    changePage(page){
+      this.$refs.commentFilter.changePage(page)
     }
   },
   async mounted() {
@@ -153,7 +164,8 @@ export default {
       if (this.$store.state.tags.tags.length === 0)
         await this.$store.dispatch("loadTags")
 
-      await this.$store.dispatch("loadComments")
+      // Has side effect of loading comments, but includes payload for filter
+      this.$refs.commentFilter.changePage(1)
     })
   },
 }

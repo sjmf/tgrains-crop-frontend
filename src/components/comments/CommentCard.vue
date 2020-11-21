@@ -53,10 +53,12 @@
               </div>
               <div class="col s10">
                 <tag v-for="t in tags"
-                      v-bind:key="t"
-                      v-bind:colour="tag_group(tag_meta(t).group).colour"
-                      v-bind:name="tag_meta(t).name"
-                      v-bind:value="null">
+                      :key="t"
+                      :id="t"
+                      :colour="tag_group(tag_meta(t).group).colour"
+                      :name="tag_meta(t).name"
+                      :value="null"
+                      @filterTag="(tag_id) => $emit('filterTag', tag_id)">
                 </tag>
               </div>
             </div>

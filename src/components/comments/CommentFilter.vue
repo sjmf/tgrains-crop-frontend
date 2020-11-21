@@ -85,14 +85,27 @@
               @filterUser="(user) => $emit('filterUser', user)"/>
         </div>
       </div>
-      <div class="col s12" v-else>
+      <div v-else class="col s12">
         <span>To use this filter, click on a comment reply in the comments section below.</span>
       </div>
     </div>
 
-    <div class="comment-main row" v-show="filter_value === 4">
-      <div class="col s12">
-        <span>Tags</span>
+    <div class="comment-main row" v-if="filter_value === 4">
+      <div v-if="tags !== undefined" class="col s12">
+        <span class="grey-text">Filtering by the following tags:</span>
+        <button class="btn btn-small right" @click="$emit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
+      </div>
+      <div v-if="tags !== undefined" class="col s12">
+        <tag v-for="t in tags"
+             :key="t"
+             :id="t"
+             :colour="tag_group(tag_meta(t).group).colour"
+             :name="tag_meta(t).name"
+             :value="null"
+             @filterTag="(tag_id) => $emit('removeTag', tag_id)"/>
+      </div>
+      <div v-else class="col s12">
+        <span>To use this filter, click on a tag in the comments section below</span>
       </div>
     </div>
   </div>
@@ -102,11 +115,13 @@
 const range = require('lodash/range');
 
 import CommentCard from "@/components/comments/CommentCard";
+import Tag from "@/components/comments/Tag";
 
 export default {
   name: "CommentFilter",
   components: {
-    CommentCard
+    CommentCard,
+    Tag
   },
   props: {
     user_name: String,  // Contains {id: '', name: ''}
@@ -133,6 +148,7 @@ export default {
 
         ...(!(this.filter_value === 2 && this.user_id === undefined) &&
             !(this.filter_value === 3 && this.reply_card === undefined) &&
+            !(this.filter_value === 4 && this.tags === undefined) &&
             {'filter': this.filter_value}),
 
         ...(this.sort_value >= 2 &&
@@ -147,8 +163,8 @@ export default {
         ...(this.filter_value === 3 && this.reply_card !== undefined &&
             {'reply_id': this.reply_card.id}),
 
-        ...(this.filter_value === 4 &&
-            {'tags': this.tags})
+        ...((this.filter_value === 4 && this.tags !== undefined) &&
+            {'tags': this.tags.join(',')})
       }
     },
     /**
@@ -160,7 +176,7 @@ export default {
       },
       set (value) {
         this.$store.commit("setCommentsSort", parseInt(value))
-        this.$store.dispatch("loadComments", this.comments_payload)
+        this.loadComments()
       }
     },
     filter_value: {
@@ -171,7 +187,7 @@ export default {
         // Reset comments page if changing filter, to prevent 404
         this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsFilter", parseInt(value))
-        this.$store.dispatch("loadComments", this.comments_payload)
+        this.loadComments()
       }
     },
     size_value: {
@@ -182,7 +198,7 @@ export default {
         // Reset comments page if changing page size, to prevent 404
         this.$store.commit('setCommentsPage', 1)
         this.$store.commit("setCommentsSize", parseInt(value))
-        this.$store.dispatch("loadComments", this.comments_payload)
+        this.loadComments()
       }
     },
   },
@@ -196,7 +212,7 @@ export default {
     },
     setFilter() {
       let value = 0
-      if (this.user_id !== undefined)
+      if (this.user_id !== undefined || this.user_id === this.$store.state.user.id)
         value = 2
       else if (this.reply_card !== undefined)
         value = 3
@@ -205,6 +221,19 @@ export default {
 
       this.$set(this, 'filter_value', value)
       this.setMaterialFormSelectSelected('#filter-select', value)
+    },
+    tag_meta(id) {
+      return this.$store.state.tags.tags[id]
+    },
+    tag_group(id) {
+      return this.$store.state.tag_groups[id]
+    },
+    changePage(page) {
+      this.$store.commit('setCommentsPage', page)
+      this.loadComments()
+    },
+    loadComments() {
+      this.$store.dispatch("loadComments", this.comments_payload)
     }
   },
   watch: {

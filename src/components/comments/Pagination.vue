@@ -28,8 +28,7 @@ export default {
   methods: {
     set_page(page) {
       if (page !== this.current_page && page > 0 && page <= this.total_pages) {
-        this.$store.commit('setCommentsPage', page)
-        this.$store.dispatch('loadComments')
+        this.$emit('changePage', page)
       }
     }
   },
