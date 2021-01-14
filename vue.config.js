@@ -24,7 +24,7 @@ module.exports = {
                 target:  'http://localhost:8000',
             },
             '/state': {
-                target:  'http://localhost:5000',
+                target:  'http://localhost:8000',
             }
         }
     }
