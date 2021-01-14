@@ -50,10 +50,10 @@
                 window.location.reload(false);
             },
             raiseError() {
-              this.$store.commit('raiseError', 'Testing')
+              this.$store.commit('setMessage', {message: 'Testing', kind:'error', timeout: 5000})
             },
             setMessage(kind) {
-              this.$store.commit('setMessage', {message: 'Testing ' + kind, kind:kind})
+              this.$store.commit('setMessage', {message: 'Testing ' + kind, kind:kind, timeout: 5000})
             }
         },
         computed: {

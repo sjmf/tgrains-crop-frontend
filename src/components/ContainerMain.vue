@@ -20,6 +20,7 @@
               v-bind:callback="message.callback"
               v-bind:callbackText="message.callbackText"
               v-bind:dismissible="message.dismissible"
+              v-bind:timeout="message.timeout"
               v-bind:index="index"/>
         </transition-group>
       </div>

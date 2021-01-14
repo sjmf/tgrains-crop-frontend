@@ -8,38 +8,53 @@
   </div>
 </template>
 <script>
-    import store from '../store';
+  import store from '../store';
 
-    export default {
-        name: 'MessageBox',
-        props: {
-            title: String,
-            message: [String, Error, Object],
-            kind: String,
-            callback: Function,
-            callbackText: String,
-            index: Number,
-            dismissible: {default: true, type: Boolean}
-        },
-        methods: {
-            closeMsg() {
-                store.commit("closeMessage", this.index)
-            },
-            colour() {
-                if(this.kind==='error')   return 'red   lighten-4'
-                if(this.kind==='warning') return 'amber lighten-4'
-                if(this.kind==='info')    return 'blue  lighten-4'
-                if(this.kind==='success') return 'green lighten-4'
-            },
-            heading() {
-                if(this.title!==undefined) return this.title + ':'
-                if(this.kind==='error')    return "Whoops! An error occurred:"
-                if(this.kind==='warning')  return "Warning:"
-                if(this.kind==='info')     return "Information:"
-                if(this.kind==='success')  return "Success!"
-            }
-        }
+  export default {
+    name: 'MessageBox',
+    props: {
+      title: String,
+      message: [String, Error, Object],
+      kind: String,
+      callback: Function,
+      callbackText: String,
+      index: Number,
+      dismissible: {default: true, type: Boolean},
+      timeout: {default: 0, type: Number},
+    },
+    data() {
+      return {
+        timer: null
+      }
+    },
+    methods: {
+      closeMsg() {
+        store.commit("closeMessage", this.index)
+      },
+      colour() {
+        if(this.kind==='error')   return 'red   lighten-4'
+        if(this.kind==='warning') return 'amber lighten-4'
+        if(this.kind==='info')    return 'blue  lighten-4'
+        if(this.kind==='success') return 'green lighten-4'
+      },
+      heading() {
+        if(this.title!==undefined) return this.title + ':'
+        if(this.kind==='error')    return "Whoops! An error occurred:"
+        if(this.kind==='warning')  return "Warning:"
+        if(this.kind==='info')     return "Information:"
+        if(this.kind==='success')  return "Success!"
+      }
+    },
+    mounted() {
+      if (this.timeout > 0) {
+        console.info(`Message timeout: ${this.timeout}`)
+        this.timer = setTimeout(()=>{
+          this.closeMsg()
+          clearTimeout(this.timer)
+        }, this.timeout)
+      }
     }
+  }
 </script>
 <style scoped>
     i#closeBtn{
