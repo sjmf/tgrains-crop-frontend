@@ -1,5 +1,5 @@
 <template>
-  <div id="modal-welcome" class="modal">
+  <div :id="this.id" class="modal">
     <div class="modal-content">
       <h4>Welcome to the TGRAINS Crop Model!</h4>
       <p>Thanks for visiting! On this web-page, you can interact with a mathematical model of crop
@@ -29,28 +29,45 @@
   </div>
 </template>
 <script>
-    export default {
-        name: 'ModalWelcome',
-        methods: {
-          acceptTerms() {
-              this.$store.commit('acceptTerms')
-          },
-          declineTerms() {
-            localStorage.clear()
-          },
-          open() {
-              this.$_M.Modal.getInstance(document.querySelector("#modal-welcome")).open()
-          }
-        },
-        mounted() {
-            console.info("Welcome modal mounted, acceptedTerms is:", this.$store.state.acceptedTerms)
-
-            // Run on nextTick for edge-case when Vuex store invalidated due to new version hash
-            this.$nextTick(()=> {
-                // Open Welcome modal if terms not accepted
-                if (this.$store.state.acceptedTerms === false)
-                    this.open()
-            })
+  export default {
+    name: 'ModalWelcome',
+    props: {
+      id: String
+    },
+    computed: {
+      domNode() {
+        return document.querySelector('#' + this.id)
+      },
+    },
+    methods: {
+      acceptTerms() {
+        this.$store.commit('acceptTerms')
+      },
+      declineTerms() {
+        localStorage.clear()
+      },
+      instance() {
+        // NB: This must be a method, NOT a computed property
+        return this.$_M.Modal.getInstance(this.domNode)
+      },
+      open() {
+        // Instantiate if undefined.
+        if (this.instance() === undefined) {
+          this.$_M.Modal.init(this.domNode)
         }
+
+        this.instance().open();
+      },
+    },
+    mounted() {
+      console.info("Welcome modal mounted, acceptedTerms is:", this.$store.state.acceptedTerms)
+
+      // Run on nextTick for edge-case when Vuex store invalidated due to new version hash
+      this.$nextTick(()=> {
+        // Open Welcome modal if terms not accepted
+        if (this.$store.state.acceptedTerms === false)
+          this.open()
+      })
     }
+  }
 </script>

@@ -2,14 +2,21 @@
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="comment-main row">
       <div class="col s3 m2">
-        <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
+        <a href="#!"
+           @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
+          <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
+        </a>
       </div>
 
       <div class="col s9 m10">
         <div class="row">
           <div class="col s12 m6">
-            <span class="username green-text text-darken-2">
-              {{ author }}
+            <span class="username">
+              <a href="#!"
+                 class="green-text text-darken-2"
+                 @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
+                {{ author | decode }}
+              </a>
             </span>
           </div>
 
@@ -46,10 +53,12 @@
               </div>
               <div class="col s10">
                 <tag v-for="t in tags"
-                      v-bind:key="t"
-                      v-bind:colour="tag_group(tag_meta(t).group).colour"
-                      v-bind:name="tag_meta(t).name"
-                      v-bind:value="null">
+                      :key="t"
+                      :id="t"
+                      :colour="tag_group(tag_meta(t).group).colour"
+                      :name="tag_meta(t).name"
+                      :value="null"
+                      @filterTag="(tag_id) => $emit('filterTag', tag_id)">
                 </tag>
               </div>
             </div>
@@ -57,8 +66,11 @@
         </div>
 
         <!-- Compare buttons -->
-        <div class="row compare-buttons" v-if="state">
-          <div class="col s12">
+        <div class="row" v-if="state">
+          <div class="col s8">
+            <span class="grey-text">Distance from {{ distance_text }}: {{ distance }} ha</span>
+          </div>
+          <div class="col s4 right compare-buttons">
 <!--            <a><i class="material-icons">insert_chart</i> Compare </a>-->
             <a @click="set_state" :class="{'disabled': readonly}">
               <i class="material-icons">play_arrow</i> Load
@@ -74,16 +86,20 @@
         <p class="grey-text small">
           This comment is a reply: <a v-if="!replyCard" @click="load_reply(reply_id)">(load reply)</a>
         </p>
-        <comment-card
-            v-if="replyCard"
-            v-bind:id="replyCard.id"
-            v-bind:hash="replyCard.hash"
-            v-bind:reply_id="replyCard.reply_id"
-            v-bind:author="replyCard.author"
-            v-bind:text="replyCard.text"
-            v-bind:tags="replyCard.tags"
-            v-bind:timestamp="replyCard.timestamp"
-            v-bind:reply_view="true" />
+        <a href="#!" @click="$emit('filterReply', replyCard)">
+          <comment-card
+              v-if="replyCard"
+              v-bind:id="replyCard.id"
+              v-bind:hash="replyCard.hash"
+              v-bind:reply_id="replyCard.reply_id"
+              v-bind:author="replyCard.author"
+              v-bind:user_id="replyCard.user_id"
+              v-bind:text="replyCard.text"
+              v-bind:tags="replyCard.tags"
+              v-bind:timestamp="replyCard.timestamp"
+              v-bind:reply_view="true"
+              @filterUser="(user) => $emit('filterUser', user)"/>
+        </a>
       </div>
     </div>
   </div>
@@ -104,12 +120,14 @@ export default {
       reply_id: Number,
       reply: [Object, undefined],
       author: String,
+      user_id: String,
       hash: String,
       text: String,
       timestamp: Number,
       tags: Array,
       state: [Object, undefined],
-      reply_view: Boolean
+      reply_view: Boolean,
+      distance: Number
   },
   data() {
     return {
@@ -122,6 +140,9 @@ export default {
     },
     readonly() {
       return this.$store.state.readonly
+    },
+    distance_text() {
+      return this.$store.state.comments.sort === 3 ? 'current state' : 'BAU state'
     }
   },
   methods: {
@@ -181,7 +202,7 @@ a i.material-icons {
   vertical-align: middle;
 }
 
-.compare-buttons div {
+div.compare-buttons  {
   text-align: right;
 }
 

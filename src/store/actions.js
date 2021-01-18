@@ -175,10 +175,18 @@ export default {
 
     /***
      * Retrieve comments from the server and load them into vuex
+     * @param _
+     * @param ...kwargs
      */
-    async loadComments() {
+    async loadComments(_, {...kwargs} = {}) {
+
         try {
-            let comments = await http.loadComments(this.state.comments.page, this.state.comments.size)
+            let comments = await http.loadComments(
+                this.state.comments.page,
+                this.state.comments.size,
+                kwargs
+            )
+
             this.commit("setComments", comments)
         }
         catch (err) {
@@ -221,6 +229,8 @@ export default {
             // }
             payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
             payload['index'] = this.state.historyIndex
+
+            payload['distance'] = this.state.history[this.state.historyIndex].changes.distance
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)

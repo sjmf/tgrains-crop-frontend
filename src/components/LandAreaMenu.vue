@@ -18,15 +18,13 @@
 </template>
 
 <script>
-    import store from "../store";
-
     export default {
         name: 'LandAreaMenu',
         methods: {
             async onChange(event) {
                 console.log(event.target.value);
-                store.commit("setLandscapeId", parseInt(event.target.value));
-                store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
+                this.$store.commit("setLandscapeId", parseInt(event.target.value));
+                this.$store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
 
                 // Load BAU state
                 await this.$store.dispatch('loadBauState')
@@ -34,7 +32,7 @@
         },
         computed: {
             strings() {
-                return store.state.landscapeNames
+                return this.$store.state.landscapeNames
             },
             readonly() {
                 return this.$store.state.readonly
@@ -45,8 +43,8 @@
             const elem = document.querySelector('#landscape-input')
             const select = elem.querySelector('select')
             elem.querySelector("option[value='102']").selected = true
-            select.value = store.state.landscape_id
-            elem.value = this.strings[store.state.landscape_id];
+            select.value = this.$store.state.landscape_id
+            elem.value = this.strings[this.$store.state.landscape_id];
 
             // Initialise the dropdown with Materialize
             this.$_M.FormSelect.init(

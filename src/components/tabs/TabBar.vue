@@ -12,7 +12,12 @@
   </div>
 </template>
 <script>
-    export default {
-        name: 'TabBar'
+  export default {
+    name: 'TabBar',
+    mounted() {
+      this.$_M.Tabs.init(document.querySelectorAll(".tabs"), {
+        // swipeable: true
+      });
     }
+  }
 </script>

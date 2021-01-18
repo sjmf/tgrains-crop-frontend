@@ -367,6 +367,8 @@
                 if(this.$store.state.history[this.$store.state.historyIndex].changes.distance !== 0)
                     this.changes = true
 
+            // Initialise sidebar
+            this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
             // Materialize tooltips when landscapes loaded from Vuex on reload
             this.initialiseTooltips()
         }

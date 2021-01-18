@@ -350,7 +350,12 @@ export default {
      * @param comments
      */
     setComments(state, comments) {
-        state['comments'] = comments
+        state.comments.comments = comments.comments
+        state.comments.page     = comments.page
+        state.comments.size     = comments.size
+        state.comments.length   = comments.length
+        // state.comments.filter   = comments.filter // TODO: Uncomment when server echoes these values
+        // state.comments.sort     = comments.sort
     },
 
     /**
@@ -359,7 +364,45 @@ export default {
      * @param page
      */
     setCommentsPage(state, page) {
-        state['comments'].page = page
+        state.comments.page = page
+    },
+
+    /**
+     * Set number of comments to load in
+     * @param state
+     * @param size
+     */
+    setCommentsSize(state, size) {
+        state.comments.size = size
+    },
+
+    /**
+     * Set the comments sorting order
+     * 1.	?sort=0     By date (ascending)
+     * 2.   ?sort=1     By date (descending)
+     * 3.	?sort=2     By distance from BAU (read distance calculations for state and sort)
+     * 4.   ?sort=3     By distance from the current state (also pass distance)
+     *
+     * @param state
+     * @param sort
+     */
+    setCommentsSort(state, sort) {
+        state.comments.sort = sort
+    },
+
+    /**
+     * Set the comments filter option
+     * 1.	?filter=0   All Comments (default view – filtering off)
+     * 2.	?filter=1   My Comments (filter by UID)
+     * 3.	?filter=2   Another User’s comments (filter by UID, @click on user icon/name and emit event from CommentCard.vue)
+     * 4.	?filter=3   Replies to a comment (get all replies to a comment ID)
+     * 5.	?filter=4   Comments with the same tags (tag-based filtering)
+     *
+     * @param state
+     * @param filter
+     */
+    setCommentsFilter(state, filter) {
+        state.comments.filter = filter
     },
 
     /**
