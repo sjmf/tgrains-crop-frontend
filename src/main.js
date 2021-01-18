@@ -53,15 +53,7 @@ new Vue({
     this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
     this.$_M.Collapsible.init(document.querySelectorAll(".collapsible"))
     // NB: Tooltips are not initialised here because sidebar data is loaded later, via an ajax request.
-    // Check App.vue:93 initialiseTooltips() for tooltip initialisation
-
-    this.$nextTick(()=> {
-        // We need to initialise the dropdown on $nextTick because
-        //  its value (101/102) is loaded from vuex in LandAreaMenu
-        this.$_M.FormSelect.init(
-            document.querySelector('#landscape-input select')
-        )
-    })
+    // Check SidebarMenu.vue:initialiseTooltips() for tooltip initialisation
   },
 
   data: function() {
