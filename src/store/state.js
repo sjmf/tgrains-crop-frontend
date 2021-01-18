@@ -9,7 +9,11 @@ export const initial_state = () => ({
     landscapeName: 'East Anglia',
 
     // Calculated sum of all crop Areas:
-    totalArea: 0,
+    area: {
+        lowland: 0,
+        upland: 0,
+        total: 0
+    },
 
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
@@ -89,16 +93,23 @@ export const initial_state = () => ({
         all_potato:     "Potatoes",
         fruit_soft:     "Soft fruit",
         fruit_top:      "Top fruit",
+        all_feed:       "Animal feed",
 
         // Livestock
         dairy:          "Dairy Cattle",
-        beef:           "Beef Cattle",
+        beef_lowland:   "Beef Cattle",
+        all_beef:       "Beef Cattle",
         chicken:        "Chicken",
         pork:           "Pork",
         eggs:           "Egg Production",
-        lamb_lowland:   "Lowland Lamb",
-        lamb_upland:    "Upland Lamb",
+        lamb_lowland:   "Lamb",
+        all_lamb:       "Lamb"
     },
+
+    upland_strings: [
+       "all_beef",
+       "all_lamb"
+    ],
 
     // Dictionary used to look up labels for food group pie charts
     food_groups_dictionary: {
@@ -116,10 +127,12 @@ export const initial_state = () => ({
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
     descriptions: {
-        fruit_soft: "Soft fruit is fruit like raspberries and strawberries, which grow on ground plants and bushes",
+        fruit_soft: "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
         fruit_top: "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
         lamb_lowland: "Lowland Lamb are grazing livestock kept in enclosed fields (i.e. not on hills)",
-        lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons.",
+        lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons",
+        all_beef: "Beef cattle will be placed on uplands first, and overflow into lowlands if no uplands remain",
+        all_lamb: "Lamb will be placed on uplands first, and overflow into lowlands if no uplands remain",
     },
 
     // Populations (retrieved from Wikipedia. More accurate ones needed)
@@ -208,12 +221,13 @@ export const initial_state = () => ({
 
             // Livestock
             dairy:          39,
-            beef:           40,
+            all_beef:       40,
+            beef_lowland:   40,
             chicken:        41,
             pork:           42,
             eggs:           43,
             lamb_lowland:   44,
-            lamb_upland:    45,
+            all_lamb:       44,
         },
     },
 

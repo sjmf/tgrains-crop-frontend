@@ -30,12 +30,15 @@ export default {
     },
 
     /***
-     * Mutate the totalArea value used to set cropping area display
+     * Mutate the area values used to set cropping area display
      * @param state
-     * @param value
+     * @param lowlandArea
+     * @param uplandArea
      */
-    setTotalArea (state, value) {
-        state.totalArea = value
+    setAreaUsed (state, {lowlandArea, uplandArea}) {
+        state.area.lowland = lowlandArea
+        state.area.upland = uplandArea
+        state.area.total = lowlandArea + uplandArea
     },
 
     /***
@@ -197,7 +200,7 @@ export default {
      * @param count
      * @param forkSID - SID for the session this was forked from (Default undefined)
      */
-    pushSession(state, count = 0, forkSID= undefined) {
+    pushSession(state, count = 0, forkSID= undefined) { // TODO: Looking at this syntax, it probably doesn't work? https://stackoverflow.com/questions/46097687
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
         state.sessions.push({
@@ -265,7 +268,7 @@ export default {
             "inputs": cloneDeep(state.landscapes[state.landscape_id]),
             "outputs": cloneDeep(state.data[state.landscape_id]),
             "raw": cloneDeep(state.data.raw[state.landscape_id]),
-            "totalArea": state.totalArea,
+            "area": cloneDeep(state.area),
             "time": Date.now(),
             "tags": tags,
             "changes": result,
@@ -287,7 +290,7 @@ export default {
         state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
         state.data[state.landscape_id] = cloneDeep(load.outputs)
         state.data.raw[state.landscape_id] = cloneDeep(load.raw)
-        state.totalArea = load.totalArea
+        state.area = load.area
 
         // Add 'restored' tag and overwrite old time
         load.tags = [...new Set(load.tags.concat([3]))]
@@ -309,7 +312,7 @@ export default {
         state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
         state.data[state.landscape_id] = cloneDeep(load.outputs)
         state.data.raw[state.landscape_id] = cloneDeep(load.raw)
-        state.totalArea = load.totalArea
+        state.area = load.area
 
         state.historyIndex = index
     },

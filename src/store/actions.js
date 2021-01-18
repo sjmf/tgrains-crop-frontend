@@ -77,17 +77,46 @@ export default {
      * @returns {Number}
      */
     sumArea() {
+        // console.warn('call sumArea')
+
         // Handle not-yet-loaded data edge-case
-        if(Object.keys(this.state.landscapes[this.state.landscape_id]).length === 0)
-            this.commit("setTotalArea", 0)
+        if(Object.keys(this.state.landscapes[this.state.landscape_id]).length === 0) {
+            this.commit("setAreaUsed", 0, 0)
+            return
+        }
+
+        // Calculate upland area first
+        // Transform upland strings ['all_beef', 'all_lamb'] into indices of where they occur [1, 5]
+        let indices = this.state.upland_strings.map((x) => {
+            // We only currently need to do upland calcs for livestock as no arable crops can be grown
+            return this.state.strings[this.state.landscape_id].livestock.indexOf(x)
+        }).filter((e) => {
+            // If -1 (returned by indexOf if not found) remove element
+            return e !== -1;
+        });
+
+        // E.g. indices = [1,5] – sum livestock at these indices, get remainder if over max
+        let maxUplandArea = this.state.bau[this.state.landscape_id].maxUplandArea
+        let uplandArea = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
+            .reduce((acc, cur, idx)=> indices.includes(idx) ? acc + Math.abs(cur.value || 0) : acc, 0)
+
+        // If uplandArea exceeds max, get remainder!
+        let remainder = uplandArea - maxUplandArea
+        // Clamp negative values to zero
+        remainder = (remainder < 0) ? 0 : remainder
+        uplandArea = uplandArea - remainder
 
         // Sum crop and livestock areas using .values().reduce()
         let cropArea = Object.values(this.state.landscapes[this.state.landscape_id].crops)
             .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
         let livestockArea = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
-            .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
+            .reduce((acc, cur, idx)=> !indices.includes(idx) ? acc + Math.abs(cur.value || 0) : acc, 0)
 
-        this.commit("setTotalArea", cropArea + livestockArea)
+        // console.log({ maxUplandArea, uplandArea, cropArea, remainder })
+
+        // Set the area utilised by the crops and livestock specified
+        let lowlandArea = (cropArea + livestockArea + remainder)
+        this.commit("setAreaUsed", {lowlandArea, uplandArea})
     },
 
     /**
@@ -219,7 +248,7 @@ export default {
         // Overwrite state
         this.commit("updateLandscape", comment.state.inputs)
         this.commit("setDataFromQuery", comment.state.raw) // PASS RAW!
-        this.commit("setTotalArea", comment.state.totalArea)
+        this.commit("setTotalArea", comment.state.totalArea) // TODO: UPDATE to new area calc
 
         // Push this new state onto history stack (and server)
         this.dispatch("pushStateAndPOST", [...comment.tags, 2])

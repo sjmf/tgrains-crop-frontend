@@ -18,6 +18,7 @@
         <div><span class="label">All areas are measured in hectares (<strong>ha</strong>).</span></div>
       </li>
 
+      <!-- NB: these rows are assumed ALL lowland -->
       <variable-row
         v-for="(item, index) in crops"
           :key="index"
@@ -27,7 +28,7 @@
           :bau-value="item.bau"
           :description="item.description"
           :error-message="errors[index]"
-          :remaining-area="remainingArea"
+          :remaining-area="remainingLowlandArea"
           :readonly="readonly"
           @input="updateValue('crops', item.name, $event)"
           @change="valueChanged($event)"/>
@@ -50,7 +51,7 @@
           :bau-value="item.bau"
           :description="item.description"
           :error-message="errors[index]"
-          :remaining-area="remainingArea"
+          :remaining-area="getRemainingArea(item.name)"
           :readonly="readonly"
           @input="updateValue('livestock', item.name, $event)"
           @change="valueChanged($event)"/>
@@ -64,7 +65,7 @@
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
                     v-bind:class="{'disabled': (!this.changes) || this.readonly}"
-                    v-on:click="resetToBAU">Reset</button>
+                    v-on:click="resetSidebar">Reset</button>
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
@@ -108,7 +109,7 @@
             /***
              * Reset the sidebar to BAU state, which also triggers a change in the backing data store and graphs
              */
-            resetToBAU() {
+            resetSidebar() {
                 try {
                     if(!this.changes) return
                     this.$store.dispatch('resetState')
@@ -135,7 +136,7 @@
              * @param name
              * @param value
              */
-            updateValue(cropOrLivestock, name, value) { // {cropOrLivestock, name, value}
+            updateValue(cropOrLivestock, name, value) {
                 this.$store.commit('setFormValue', {cropOrLivestock, name, value})
                 this.$store.dispatch('sumArea')
             },
@@ -170,7 +171,7 @@
                 // If the crop area exceeds the MaxCropArea, or
                 // if any item in the errors array is NOT false,
                 // then disable the submit button
-                this.submitDisabled =  this.cropAreaExceeded
+                this.submitDisabled =  this.areaExceeded
                                        || !Object.entries(this.errors).every(x=>x[1]===false)
             },
 
@@ -212,25 +213,84 @@
                         )
                     })
                 }
+            },
+
+            /**
+             * Return true if area label is an upland one, false otherwise
+             */
+            isUpland(label) {
+              return this.$store.state.upland_strings.indexOf(label) >= 0
+            },
+
+            /**
+             * Return the remaining area for the given label (upland or lowland sensitive)
+             */
+            getRemainingArea(name) {
+              // console.debug(
+              //     'remainingUplandArea\t', this.remainingUplandArea,
+              //     '\nremainingLowlandArea\t', this.remainingLowlandArea,
+              //     '\n+ equals\t\t', this.remainingUplandArea + this.remainingLowlandArea)
+
+              return this.isUpland(name)
+                  ? this.remainingUplandArea + this.remainingLowlandArea
+                  : this.remainingLowlandArea
             }
         },
         computed: {
-            /**
-             * Check if crop area is exceeded
-             */
-            cropAreaExceeded() {
-                return ! (this.$store.state.totalArea <= (this.$store.state.bau[this.$store.state.landscape_id].maxCropArea || 1))
-            },
+          /**
+           * Check if crop area is exceeded
+           */
+          areaExceeded() {
+            const maxUpland = this.$store.state.bau[this.$store.state.landscape_id].maxUplandArea
+            const maxLowland = this.$store.state.bau[this.$store.state.landscape_id].maxCropArea
+            const upland = this.$store.state.area.upland
+            const lowland = this.$store.state.area.lowland
 
-            /**
-             * Return the remaining area in the landscape
-             */
-            remainingArea() {
-                if(this.$store.state.bau[this.$store.state.landscape_id].maxCropArea === undefined)
-                    return 0
+            // console.debug(
+            //     'upland / lowland\t',         upland, '/', lowland,
+            //     '\nmaxUpland / maxLowland\t', maxUpland, '/', maxLowland,
+            //     '\nArea Exceeded?\t\t',       ! (upland <= maxUpland && lowland <= maxLowland)
+            // )
 
-                return Math.floor((this.$store.state.bau[this.$store.state.landscape_id].maxCropArea) - this.$store.state.totalArea)
-            },
+            return ! (upland <= maxUpland && lowland <= maxLowland)
+          },
+
+          /**
+           * Return the remaining area in the landscape
+           */
+          remainingLowlandArea() {
+            let maxLowland = this.$store.state.bau[this.$store.state.landscape_id].maxCropArea
+
+            // console.debug('lowland ',
+            //     '\nmaxLowland\t', maxLowland,
+            //     '\nsumArea lowland\t', this.$store.state.area.lowland,
+            //     '\n- equals\t', maxLowland - this.$store.state.area.lowland)
+
+            if(maxLowland === undefined)
+              return 0
+
+            return Math.floor(maxLowland - this.$store.state.area.lowland)
+          },
+
+          /**
+           * Return the remaining area in the landscape
+           */
+          remainingUplandArea() {
+            let maxUpland = this.$store.state.bau[this.$store.state.landscape_id].maxUplandArea
+
+            // console.debug('upland',
+            //     '\nmaxUpland\t', maxUpland,
+            //     '\nsumArea upland\t', this.$store.state.area.upland,
+            //     '\n- equals\t', maxUpland - this.$store.state.area.upland)
+
+            if(maxUpland === undefined)
+              return 0
+
+            let remaining = Math.floor(maxUpland - this.$store.state.area.upland)
+
+            // Clamp to zero if exceeded
+            return remaining > 0 ? remaining : 0
+          },
 
             /**
              * Shorthand for Vuex property store.state.landscapes[store.state.landscape_id].crops
