@@ -6,16 +6,21 @@ import {cloneDeep} from "lodash";
 
 export default {
     /***
-     * Load the Business-as-usual state from the server
+     * Load the Business-as-usual state from the server.
+     * Called on App.vue mounting (page load) and by LandAreaMenu when area changes.
+     * Actions: newSession
+     *
      * @returns {Promise<void>}
      */
     async loadBauState() {
-        // If BAU object is empty, go get it
-        let bau = this.state.bau[this.state.landscape_id]
+        try {
+            let bau = this.state.bau[this.state.landscape_id]
 
-        if (Object.keys(bau).length === 0 && bau.constructor === Object) {
-            console.log("Loading Strings and BAU state")
-            try {
+            // If BAU object is empty, go get it
+            if (Object.keys(bau).length === 0 && bau.constructor === Object) {
+
+                console.warn("Loading Strings and BAU state from server")
+
                 const strings = await http.loadStrings(this.state.landscape_id)
                 this.commit("setStrings", strings)
 
@@ -24,20 +29,21 @@ export default {
 
                 // Populate Landscapes in Vuex using strings and cropAreas from BAU state
                 this.commit("populate")
-                this.dispatch("sumArea")
-
-                // Create new session and push initial state onto history stack (including BAU tag [1])
-                await this.dispatch('newSession')
-
-            } catch (err) {
-                console.error(err)
-                this.commit("raiseError", err)
             }
+
+            // Create new session and push initial state onto history stack (including BAU tag [1])
+            await this.dispatch('newSession')
+            this.dispatch('resetState')
+
+        } catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
         }
     },
 
     /***
      * Grab the payload, dispatch the query, store the result.
+     * Actions: getPayload, doModelQuery, pushStateAndPOST
      * @returns {Promise<void>}
      */
     async queryModel() {
@@ -202,6 +208,9 @@ export default {
 
     /**
      * Load a state from a comment into the current session/state
+     * Actions: pushStateAndPOST
+     * @param _ unused state
+     * @param comment
      */
     loadStateFromComment(_, comment) {
         // Save existing state in local variable
@@ -243,11 +252,18 @@ export default {
 
     /***
      * Reset application state
+     *
+     * Called by: SidebarMenu.vue ('Reset' clicked), TabHistory.vue (New session), and actions.js
+     *   method loadBAUState (called on App.vue mount app load, and LandAreaMenu.vue when area changed)
+     *
+     * Actions: sumArea, pushStateAndPOST
+     *
      * @returns {Promise<void>}
      */
     async resetState() {
         this.commit("clearMessages")
         this.commit("resetToBAU")
+
         await this.dispatch("sumArea")
         this.dispatch("pushStateAndPOST", [1]) // Include 'business-as-usual' tag
         this.commit("activateTags", this.state.historyIndex)
@@ -255,13 +271,13 @@ export default {
 
     /***
      * Get SID and commit new Session mutation in store
+     * Actions: resetState
      * @returns {Promise<void>}
      */
     async newSession() {
         try {
             this.commit('clearHistory')
             this.commit('pushSession')
-            this.dispatch('resetState')
         }
         catch (err) {
             this.commit("raiseError", err)

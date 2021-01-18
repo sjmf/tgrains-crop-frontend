@@ -106,8 +106,10 @@ export default {
         },
 
         // Create new session– Used as a callback by modalConfirm
+        // and then reset the state to it
         newSession() {
             this.$store.dispatch('newSession')
+            this.dispatch('resetState')
         },
 
         forkSession(index) {

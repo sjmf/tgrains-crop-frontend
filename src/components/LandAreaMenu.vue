@@ -23,13 +23,13 @@
     export default {
         name: 'LandAreaMenu',
         methods: {
-            onChange(event) {
+            async onChange(event) {
                 console.log(event.target.value);
                 store.commit("setLandscapeId", parseInt(event.target.value));
                 store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
 
-                // Check if BAU for area is loaded
-                this.$emit("checkBAULoaded")
+                // Load BAU state
+                await this.$store.dispatch('loadBauState')
             }
         },
         computed: {

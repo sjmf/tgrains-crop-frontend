@@ -9,7 +9,6 @@
 
     <!-- VALUE SELECT SIDEBAR -->
     <sidebar-menu @submitForm="doAJAX($event)"
-                  @checkBAULoaded="loadBAUState()"
                   ref="sidebarMenu">
     </sidebar-menu>
 
@@ -73,14 +72,6 @@
             },
 
             /**
-             * Load Business-as-usual state, including Strings and Crop/Livestock Areas
-             * (has the side-effect of populating the sidebar)
-             */
-            async loadBAUState() {
-                await this.$store.dispatch('loadBauState')
-            },
-
-            /**
              * Notify SidebarMenu when history is loaded
              */
             stateLoaded() {
@@ -94,7 +85,7 @@
             // Clear messages on clean reload
             this.$store.commit('clearMessages')
             // Load the BAU state from the server
-            this.loadBAUState()
+            this.$store.dispatch('loadBauState')
         }
     }
 </script>
