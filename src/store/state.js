@@ -127,12 +127,12 @@ export const initial_state = () => ({
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
     descriptions: {
-        fruit_soft: "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
-        fruit_top: "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
+        fruit_soft:   "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
+        fruit_top:    "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
         lamb_lowland: "Lowland Lamb are grazing livestock kept in enclosed fields (i.e. not on hills)",
         lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons",
-        all_beef: "Beef cattle will be placed on uplands first, and overflow into lowlands if no uplands remain",
-        all_lamb: "Lamb will be placed on uplands first, and overflow into lowlands if no uplands remain",
+        all_beef:     "Beef cattle will be placed on uplands first, and overflow into lowlands if no uplands remain",
+        all_lamb:     "Lamb will be placed on uplands first, and overflow into lowlands if no uplands remain",
     },
 
     // Populations (retrieved from Wikipedia. More accurate ones needed)
@@ -207,27 +207,28 @@ export const initial_state = () => ({
         // Tag mappings from variable name to tag id
         mapping: {
             // Crops
-            all_wheat:      34,
-            all_barley:     32,
-            all_oats:       30,
-            sugarbeet:      31,
-            osr_winter:     36,
-            all_vegetables: 35,
-            maize:          33,
-            all_peas_beans: 29,
-            all_potato:     37,
-            fruit_soft:     28,
-            fruit_top:      38,
+            all_wheat:      36,
+            all_barley:     34,
+            all_oats:       32,
+            sugarbeet:      33,
+            osr_winter:     38,
+            all_vegetables: 37,
+            maize:          35,
+            all_peas_beans: 31,
+            all_potato:     39,
+            fruit_soft:     30,
+            fruit_top:      40,
+            all_feed:       41,
 
             // Livestock
-            dairy:          39,
-            all_beef:       40,
-            beef_lowland:   40,
-            chicken:        41,
-            pork:           42,
-            eggs:           43,
-            lamb_lowland:   44,
-            all_lamb:       44,
+            dairy:          42,
+            all_beef:       43,
+            beef_lowland:   43,
+            chicken:        44,
+            pork:           45,
+            eggs:           46,
+            lamb_lowland:   47,
+            all_lamb:       47,
         },
     },
 
