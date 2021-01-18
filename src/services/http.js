@@ -33,8 +33,20 @@ export default {
         if(response.data.state === 'SUCCESS') {
             return response
         } else {
+            const regex = /(invalid_argument: )(ERROR: )(.+)$/gm
+            let match = regex.exec(response.data.status)
+            let errormessage = ""
+
+            // Parse error messages from model
+            if(match.length > 0) {
+                match = match[match.length - 1]
+                errormessage = match.charAt(0).toUpperCase() + match.slice(1) // Capitalise first letter
+            } else {
+                errormessage = `Query ${response.data.state} with message: ${response.data.status}`
+            }
+
             console.error(response.data)
-            throw "The crop model state is '" + response.data.state + "'"
+            throw errormessage
         }
     },
 
@@ -54,7 +66,7 @@ export default {
         }
         catch (err) {
             console.error(err);
-            throw "Model query failed. " + err.toString() || ""
+            throw err.toString() || ""
         }
     },
 

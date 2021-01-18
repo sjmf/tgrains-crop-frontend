@@ -39,7 +39,7 @@
       },
       heading() {
         if(this.title!==undefined) return this.title + ':'
-        if(this.kind==='error')    return "Whoops! An error occurred:"
+        if(this.kind==='error')    return "A problem occurred:"
         if(this.kind==='warning')  return "Warning:"
         if(this.kind==='info')     return "Information:"
         if(this.kind==='success')  return "Success!"
