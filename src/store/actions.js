@@ -258,7 +258,7 @@ export default {
         // Overwrite state
         this.commit("updateLandscape", comment.state.inputs)
         this.commit("setDataFromQuery", comment.state.raw) // PASS RAW!
-        this.commit("setTotalArea", comment.state.totalArea) // TODO: UPDATE to new area calc
+        this.commit("setAreaUsed", {"lowlandArea": comment.state.area.lowland, "uplandArea": comment.state.area.upland})
 
         // Push this new state onto history stack (and server)
         this.dispatch("pushStateAndPOST", [...comment.tags, 2])
@@ -316,7 +316,7 @@ export default {
     async newSession() {
         try {
             this.commit('clearHistory')
-            this.commit('pushSession')
+            this.commit('pushSession', {})
         }
         catch (err) {
             this.commit("raiseError", err)
@@ -352,10 +352,12 @@ export default {
      * @param index
      */
     forkSession(_, index) {
-        const sid = this.state.sessions[index].id
-        console.info(`Forking session at ${index} with id ${sid}`)
+        const forkSID = this.state.sessions[index].id
+        const count = this.state.history.length
+
+        console.info(`Forking session at ${index} with id ${forkSID}`)
         this.commit('deepCopyHistoryFromSession', index)
-        this.commit('pushSession', this.state.history.length, sid)
+        this.commit('pushSession', {count, forkSID})
         this.commit('setGlobalReadOnly', false)
         this.commit('loadFromHistory', this.state.history.length -1)
     },

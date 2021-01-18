@@ -200,12 +200,12 @@ export default {
      * @param count
      * @param forkSID - SID for the session this was forked from (Default undefined)
      */
-    pushSession(state, count = 0, forkSID= undefined) { // TODO: Looking at this syntax, it probably doesn't work? https://stackoverflow.com/questions/46097687
+    pushSession(state, {count, forkSID}) {
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
         state.sessions.push({
             id: createUniqueID(),
-            count: count,
+            count: count || 0,
             opened: Date.now(),
             history: state.history,
             fork: forkSID
