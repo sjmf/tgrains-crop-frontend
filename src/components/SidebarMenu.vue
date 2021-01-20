@@ -44,7 +44,7 @@
 
       <variable-row
           v-for="(item, index) in livestock"
-          :key="crops.length+index"
+          :key="index"
           :name="item.name"
           :label="item.label"
           :value="item.value"
