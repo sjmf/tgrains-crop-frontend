@@ -1,5 +1,5 @@
 <template>
-  <ul class="collapsible">
+  <ul id="tag-select" class="collapsible expandable">
     <li class="active">
       <div class="collapsible-header">
         <i class="material-icons">supervisor_account</i>Themes
@@ -77,7 +77,9 @@ export default {
   },
   mounted() {
     this.$_M.Collapsible.init(
-        document.querySelectorAll(".collapsible")
+        document.querySelectorAll("#tag-select.collapsible.expandable"), {
+          accordion: false
+        }
     )
   }
 }
