@@ -131,8 +131,8 @@ export const initial_state = () => ({
         fruit_top:    "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
         lamb_lowland: "Lowland Lamb are grazing livestock kept in enclosed fields (i.e. not on hills)",
         lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons",
-        all_beef:     "Beef cattle will be placed on uplands first, and overflow into lowlands if no uplands remain",
-        all_lamb:     "Lamb will be placed on uplands first, and overflow into lowlands if no uplands remain",
+        all_beef:     "Beef cattle will be split between uplands and lowlands at a pre-defined percentage",
+        all_lamb:     "Lamb will be split between uplands and lowlands at a pre-defined percentage",
     },
 
     // Populations (retrieved from Wikipedia. More accurate ones needed)

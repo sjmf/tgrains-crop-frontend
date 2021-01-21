@@ -19,10 +19,7 @@
             <div class="collapsible-header">
               <div class="subheader">
                 Crop Areas
-
-                <transition name="rotate">
-                  <i class="drop-arrow material-icons right">arrow_drop_up</i>
-                </transition>
+                <i class="drop-arrow material-icons right">arrow_drop_up</i>
               </div>
               <span class="label">All areas are measured in hectares (<strong>ha</strong>).</span>
             </div>
@@ -250,13 +247,24 @@
              */
             getRemainingArea(name) {
               // console.debug(
-              //     'remainingUplandArea\t', this.remainingUplandArea,
+              //     'name\t\t\t', name,
+              //     '\nremainingUplandArea\t', this.remainingUplandArea,
               //     '\nremainingLowlandArea\t', this.remainingLowlandArea,
               //     '\n+ equals\t\t', this.remainingUplandArea + this.remainingLowlandArea)
 
-              return this.isUpland(name)
-                  ? this.remainingUplandArea + this.remainingLowlandArea
-                  : this.remainingLowlandArea
+              // Special cases for all_lamb and all_beef
+              switch(name) {
+                case 'all_lamb':
+                case 'all_beef':
+                  return (this.remainingUplandArea < this.remainingLowlandArea)
+                      ? this.remainingUplandArea
+                      : this.remainingLowlandArea
+
+                default:
+                  return this.isUpland(name)
+                      ? this.remainingUplandArea + this.remainingLowlandArea
+                      : this.remainingLowlandArea;
+              }
             }
         },
         computed: {
@@ -264,18 +272,10 @@
            * Check if crop area is exceeded
            */
           areaExceeded() {
-            const maxUpland = this.$store.state.bau[this.$store.state.landscape_id].maxUplandArea
-            const maxLowland = this.$store.state.bau[this.$store.state.landscape_id].maxCropArea
-            const upland = this.$store.state.area.upland
-            const lowland = this.$store.state.area.lowland
-
-            // console.debug(
-            //     'upland / lowland\t',         upland, '/', lowland,
-            //     '\nmaxUpland / maxLowland\t', maxUpland, '/', maxLowland,
-            //     '\nArea Exceeded?\t\t',       ! (upland <= maxUpland && lowland <= maxLowland)
-            // )
-
-            return ! (upland <= maxUpland && lowland <= maxLowland)
+            return ! (
+                this.$store.state.area.lowland <=
+                (this.$store.state.bau[this.$store.state.landscape_id].maxCropArea || 1)
+            )
           },
 
           /**
@@ -283,15 +283,7 @@
            */
           remainingLowlandArea() {
             let maxLowland = this.$store.state.bau[this.$store.state.landscape_id].maxCropArea
-
-            // console.debug('lowland ',
-            //     '\nmaxLowland\t', maxLowland,
-            //     '\nsumArea lowland\t', this.$store.state.area.lowland,
-            //     '\n- equals\t', maxLowland - this.$store.state.area.lowland)
-
-            if(maxLowland === undefined)
-              return 0
-
+            if(maxLowland === undefined) return 0
             return Math.floor(maxLowland - this.$store.state.area.lowland)
           },
 
@@ -300,19 +292,9 @@
            */
           remainingUplandArea() {
             let maxUpland = this.$store.state.bau[this.$store.state.landscape_id].maxUplandArea
-
-            // console.debug('upland',
-            //     '\nmaxUpland\t', maxUpland,
-            //     '\nsumArea upland\t', this.$store.state.area.upland,
-            //     '\n- equals\t', maxUpland - this.$store.state.area.upland)
-
-            if(maxUpland === undefined)
-              return 0
-
+            if(maxUpland === undefined) return 0
             let remaining = Math.floor(maxUpland - this.$store.state.area.upland)
-
-            // Clamp to zero if exceeded
-            return remaining > 0 ? remaining : 0
+            return remaining > 0 ? remaining : 0 // Clamp to zero if exceeded
           },
 
             /**
@@ -412,14 +394,6 @@
     }
   }
 
-  a.sidenav-trigger {
-    position: absolute;
-    color: white;
-    font-size: 48px;
-    line-height: 1.0;
-    padding-left: 10px;
-  }
-
   .sidenav li {
     line-height: 1rem;
     padding: 0 10px;
@@ -443,16 +417,13 @@
   }
 
   .collapsible li i.drop-arrow {
+    color: rgba(0, 0, 0, 0.87);
     transform: rotate(180deg);
   }
 
   .collapsible li.active i.drop-arrow {
-    color: rgba(0, 0, 0, 0.87);
+    color: rgba(0, 0, 0, 0.54);
     transform: rotate(0deg);
-  }
-
-  .rotate-move {
-    transition: rotate 1s;
   }
 
   .sidenav li:hover {
@@ -480,5 +451,15 @@
   }
   button {
     z-index:0
+  }
+</style>
+
+<style>
+  a.sidenav-trigger {
+    position: absolute;
+    color: white;
+    font-size: 48px;
+    line-height: 1.0;
+    padding-left: 10px;
   }
 </style>

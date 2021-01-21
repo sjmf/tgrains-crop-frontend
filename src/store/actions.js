@@ -74,50 +74,71 @@ export default {
 
     /**
      * Calculate the total area used by crops within the current state
-     * @returns {Number}
      */
-    sumArea() {
-        // console.warn('call sumArea')
-
+    async sumArea() {
         // Handle not-yet-loaded data edge-case
         if(Object.keys(this.state.landscapes[this.state.landscape_id]).length === 0) {
             this.commit("setAreaUsed", 0, 0)
-            return
         }
 
-        // Calculate upland area first
-        // Transform upland strings ['all_beef', 'all_lamb'] into indices of where they occur [1, 5]
-        let indices = this.state.upland_strings.map((x) => {
-            // We only currently need to do upland calcs for livestock as no arable crops can be grown
-            return this.state.strings[this.state.landscape_id].livestock.indexOf(x)
-        }).filter((e) => {
-            // If -1 (returned by indexOf if not found) remove element
-            return e !== -1;
-        });
+        let lowlandArea = await this.dispatch('getLowlandArea')
+        let uplandArea  = await this.dispatch('getUplandArea')
 
-        // E.g. indices = [1,5] – sum livestock at these indices, get remainder if over max
-        let maxUplandArea = this.state.bau[this.state.landscape_id].maxUplandArea
-        let uplandArea = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
-            .reduce((acc, cur, idx)=> indices.includes(idx) ? acc + Math.abs(cur.value || 0) : acc, 0)
-
-        // If uplandArea exceeds max, get remainder!
-        let remainder = uplandArea - maxUplandArea
-        // Clamp negative values to zero
-        remainder = (remainder < 0) ? 0 : remainder
-        uplandArea = uplandArea - remainder
-
-        // Sum crop and livestock areas using .values().reduce()
-        let cropArea = Object.values(this.state.landscapes[this.state.landscape_id].crops)
-            .reduce((acc, cur)=> acc + Math.abs(cur.value || 0), 0)
-        let livestockArea = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
-            .reduce((acc, cur, idx)=> !indices.includes(idx) ? acc + Math.abs(cur.value || 0) : acc, 0)
-
-        // console.log({ maxUplandArea, uplandArea, cropArea, remainder })
-
-        // Set the area utilised by the crops and livestock specified
-        let lowlandArea = (cropArea + livestockArea + remainder)
         this.commit("setAreaUsed", {lowlandArea, uplandArea})
     },
+
+    /**
+     * Get lowland area
+     * @returns {number}
+     */
+    getLowlandArea() {
+        let cropAreas = Object.values(this.state.landscapes[this.state.landscape_id].crops)
+        let livestockAreas = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
+        let lowlandArea = 0
+
+        for(let area of cropAreas) {
+            lowlandArea += area.value
+        }
+
+        //add lowland grazing areas
+        for(let area of livestockAreas) {
+            switch(area.name) {
+                case 'all_beef':
+                    lowlandArea += area.value * (1 - this.state.data.raw[this.state.landscape_id].grazingProps.beef);
+                    break;
+                case 'all_lamb':
+                    lowlandArea += area.value * (1 - this.state.data.raw[this.state.landscape_id].grazingProps.lamb);
+                    break;
+                default:
+                    lowlandArea += area.value
+            }
+        }
+        return lowlandArea;
+    },
+
+    /**
+     * Get upland area
+     * @returns {number}
+     */
+    getUplandArea() {
+        let livestockAreas = Object.values(this.state.landscapes[this.state.landscape_id].livestock)
+        let uplandArea = 0;
+
+        //add upland grazing areas
+        for(let area of livestockAreas) {
+            switch(area.name) {
+                case 'all_beef':
+                    uplandArea += area.value * this.state.data.raw[this.state.landscape_id].grazingProps.beef;
+                    break;
+                case 'all_lamb':
+                    uplandArea += area.value * this.state.data.raw[this.state.landscape_id].grazingProps.lamb;
+                    break;
+            }
+        }
+
+        return uplandArea;
+    },
+
 
     /**
      * Construct and return payload for model queries

@@ -20,13 +20,13 @@
     <div class="label" :class="{invalid: !valid}">
       <span>{{ currentLowlandArea | formatNumber }}/{{ maxLowlandArea | formatNumber }}kha</span>
         (thousand hectares) in lowland
-      <span v-if="!valid" class="label invalid">
-          – Area exceeded!
-      </span>
     </div>
     <div class="label" :class="{invalid: !valid}">
       <span>{{ currentUplandArea | formatNumber }}/{{ maxUplandArea | formatNumber }}kha</span>
         in upland areas
+      <span v-if="!valid" class="label invalid">
+          – Area exceeded!
+      </span>
     </div>
 
     <div v-if="false">
