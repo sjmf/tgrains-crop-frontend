@@ -72,11 +72,6 @@
 
 <style scoped>
   /* Sidenav elements */
-  li.variable-row {
-    padding: 0 20px;
-    white-space: nowrap;
-  }
-
   li.variable-row input {
     height: 2.5rem;
   }
@@ -118,8 +113,8 @@
 
 <style>
   .vue-slider {
-    padding:0 !important;
-    margin: 5px 15px 10px 5px;
+    padding:0 0 10px 0 !important;
+    margin: 2px 15px 10px 5px;
   }
 
   .vue-slider-dot-handle-focus {

@@ -5,56 +5,79 @@
 
     <!-- VALUE SELECT SIDEBAR -->
     <ul>
-
       <land-area-menu v-on="$listeners"/>
 
       <li>
         <div class="divider"></div>
       </li>
 
-      <!-- CROP AREAS -->
-      <li id="crop-area-menu" class="no-hover">
-        <span class="subheader">Crop Areas</span>
-        <div><span class="label">All areas are measured in hectares (<strong>ha</strong>).</span></div>
+      <li class="no-hover no-padding">
+        <ul class="collapsible collapsible-accordion">
+
+          <!-- CROP AREAS -->
+          <li class="active">
+            <div class="collapsible-header">
+              <div class="subheader">
+                Crop Areas
+
+                <transition name="rotate">
+                  <i class="drop-arrow material-icons right">arrow_drop_up</i>
+                </transition>
+              </div>
+              <span class="label">All areas are measured in hectares (<strong>ha</strong>).</span>
+            </div>
+
+            <div class="collapsible-body">
+              <ul>
+                <variable-row
+                    v-for="(item, index) in crops"
+                    :key="index"
+                    :name="item.name"
+                    :label="item.label"
+                    :value="item.value"
+                    :bau-value="item.bau"
+                    :description="item.description"
+                    :error-message="errors[index]"
+                    :remaining-area="remainingLowlandArea"
+                    :readonly="readonly"
+                    @input="updateValue('crops', item.name, $event)"
+                    @change="valueChanged($event)"/>
+              </ul>
+            </div>
+          </li>
+
+          <li class="active">
+
+            <!-- LIVESTOCK AREAS -->
+            <div class="collapsible-header">
+              <div class="no-hover">
+                <div class="subheader">
+                  Livestock Areas
+                  <i class="drop-arrow material-icons right">arrow_drop_up</i>
+                </div>
+              </div>
+            </div>
+
+            <div class="collapsible-body">
+              <ul>
+                <variable-row
+                    v-for="(item, index) in livestock"
+                    :key="index"
+                    :name="item.name"
+                    :label="item.label"
+                    :value="item.value"
+                    :bau-value="item.bau"
+                    :description="item.description"
+                    :error-message="errors[index]"
+                    :remaining-area="getRemainingArea(item.name)"
+                    :readonly="readonly"
+                    @input="updateValue('livestock', item.name, $event)"
+                    @change="valueChanged($event)"/>
+              </ul>
+            </div>
+          </li>
+        </ul>
       </li>
-
-      <!-- NB: these rows are assumed ALL lowland -->
-      <variable-row
-        v-for="(item, index) in crops"
-          :key="index"
-          :name="item.name"
-          :label="item.label"
-          :value="item.value"
-          :bau-value="item.bau"
-          :description="item.description"
-          :error-message="errors[index]"
-          :remaining-area="remainingLowlandArea"
-          :readonly="readonly"
-          @input="updateValue('crops', item.name, $event)"
-          @change="valueChanged($event)"/>
-
-      <li>
-        <div class="divider"></div>
-      </li>
-
-      <!-- LIVESTOCK NUMBERS -->
-      <li id="livestock-areas-menu" class="no-hover">
-        <span class="subheader">Livestock Areas</span>
-      </li>
-
-      <variable-row
-          v-for="(item, index) in livestock"
-          :key="index"
-          :name="item.name"
-          :label="item.label"
-          :value="item.value"
-          :bau-value="item.bau"
-          :description="item.description"
-          :error-message="errors[index]"
-          :remaining-area="getRemainingArea(item.name)"
-          :readonly="readonly"
-          @input="updateValue('livestock', item.name, $event)"
-          @change="valueChanged($event)"/>
 
       <li>
         <div class="divider"></div>
@@ -369,6 +392,10 @@
 
             // Initialise sidebar
             this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
+            this.$_M.Collapsible.init(document.querySelector(".sidenav .collapsible"),{
+              accordion: false
+            })
+
             // Materialize tooltips when landscapes loaded from Vuex on reload
             this.initialiseTooltips()
         }
@@ -395,7 +422,37 @@
 
   .sidenav li {
     line-height: 1rem;
-    padding: 0 10px 0 10px;
+    padding: 0 10px;
+  }
+  .sidenav .collapsible-header, .sidenav.fixed .collapsible-header {
+    padding:  0 10px 10px 10px;
+  }
+
+  .collapsible-header {
+    display: block;
+  }
+
+  .collapsible-header i {
+    text-align: right;
+    margin-right: 0;
+    width: auto;
+  }
+
+  .collapsible-body ul > li {
+    padding: 0 10px;
+  }
+
+  .collapsible li i.drop-arrow {
+    transform: rotate(180deg);
+  }
+
+  .collapsible li.active i.drop-arrow {
+    color: rgba(0, 0, 0, 0.87);
+    transform: rotate(0deg);
+  }
+
+  .rotate-move {
+    transition: rotate 1s;
   }
 
   .sidenav li:hover {
@@ -412,12 +469,12 @@
   }
 
   /* fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
-  .sidenav li:last-child {
+  .sidenav li:last-child.dummy {
     height:65px;
     background-color:#fff;
   }
 
-  span.label {
+  .label {
     font-size: 0.8rem;
     color: #9e9e9e;
   }
