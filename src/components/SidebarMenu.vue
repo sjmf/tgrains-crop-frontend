@@ -15,64 +15,28 @@
         <ul class="collapsible collapsible-accordion">
 
           <!-- CROP AREAS -->
-          <li class="active">
-            <div class="collapsible-header">
-              <div class="subheader">
-                Crop Areas
-                <i class="drop-arrow material-icons right">arrow_drop_up</i>
-              </div>
-              <span class="label">All areas are measured in hectares (<strong>ha</strong>).</span>
-            </div>
+          <variable-group
+              :id="'crops'"
+              :title="'Crop Areas'"
+              :subtitle="'All areas are measured in hectares (<strong>ha</strong>).'"
+              :elements="crops"
+              :errors="errors"
+              :max="getRemainingArea"
+              :readonly="readonly"
+              @input="updateValue($event)"
+              @change="valueChanged($event)"/>
 
-            <div class="collapsible-body">
-              <ul>
-                <variable-row
-                    v-for="(item, index) in crops"
-                    :key="index"
-                    :name="item.name"
-                    :label="item.label"
-                    :value="item.value"
-                    :bau-value="item.bau"
-                    :description="item.description"
-                    :error-message="errors[index]"
-                    :remaining-area="remainingLowlandArea"
-                    :readonly="readonly"
-                    @input="updateValue('crops', item.name, $event)"
-                    @change="valueChanged($event)"/>
-              </ul>
-            </div>
-          </li>
+          <!-- LIVESTOCK AREAS -->
+          <variable-group
+              :id="'livestock'"
+              :title="'Livestock Areas'"
+              :elements="livestock"
+              :errors="errors"
+              :max="getRemainingArea"
+              :readonly="readonly"
+              @input="updateValue($event)"
+              @change="valueChanged($event)"/>
 
-          <li class="active">
-
-            <!-- LIVESTOCK AREAS -->
-            <div class="collapsible-header">
-              <div class="no-hover">
-                <div class="subheader">
-                  Livestock Areas
-                  <i class="drop-arrow material-icons right">arrow_drop_up</i>
-                </div>
-              </div>
-            </div>
-
-            <div class="collapsible-body">
-              <ul>
-                <variable-row
-                    v-for="(item, index) in livestock"
-                    :key="index"
-                    :name="item.name"
-                    :label="item.label"
-                    :value="item.value"
-                    :bau-value="item.bau"
-                    :description="item.description"
-                    :error-message="errors[index]"
-                    :remaining-area="getRemainingArea(item.name)"
-                    :readonly="readonly"
-                    @input="updateValue('livestock', item.name, $event)"
-                    @change="valueChanged($event)"/>
-              </ul>
-            </div>
-          </li>
         </ul>
       </li>
 
@@ -108,14 +72,14 @@
 
 <script>
     import LandAreaMenu from "@/components/LandAreaMenu"
-    import VariableRow from "@/components/VariableRow"
     import LoadingOverlay from "@/components/LoadingOverlay";
+    import VariableGroup from "@/components/VariableGroup";
 
     export default {
         name: 'SidebarMenu',
         components: {
+            VariableGroup,
             LandAreaMenu,
-            VariableRow,
             LoadingOverlay
         },
         data() {
@@ -152,21 +116,23 @@
             /**
              * Commit the changed form value to the backing data store.
              * Because we're using Vuex, we do a $store.commit rather than using v-model.
-             * @param cropOrLivestock
-             * @param name
-             * @param value
+             * @param event {id, name, value}
              */
-            updateValue(cropOrLivestock, name, value) {
-                this.$store.commit('setFormValue', {cropOrLivestock, name, value})
+            updateValue(event) {
+                this.$store.commit('setFormValue', {
+                  'cropOrLivestock': event.id,
+                  'name': event.name,
+                  'value': event.value
+                })
                 this.$store.dispatch('sumArea')
             },
 
             /***
              * Slider change handler
              */
-            valueChanged(event) {
+            valueChanged() {
                 this.changes=true
-                this.validateForm(event)
+                this.validateForm()
             },
 
             /**
@@ -394,42 +360,6 @@
     }
   }
 
-  .sidenav li {
-    line-height: 1rem;
-    padding: 0 10px;
-  }
-  .sidenav .collapsible-header, .sidenav.fixed .collapsible-header {
-    padding:  0 10px 10px 10px;
-  }
-
-  .collapsible-header {
-    display: block;
-  }
-
-  .collapsible-header i {
-    text-align: right;
-    margin-right: 0;
-    width: auto;
-  }
-
-  .collapsible-body ul > li {
-    padding: 0 10px;
-  }
-
-  .collapsible li i.drop-arrow {
-    color: rgba(0, 0, 0, 0.87);
-    transform: rotate(180deg);
-  }
-
-  .collapsible li.active i.drop-arrow {
-    color: rgba(0, 0, 0, 0.54);
-    transform: rotate(0deg);
-  }
-
-  .sidenav li:hover {
-    background-color:#eee;
-  }
-
   .sidenav li.no-hover:hover {
     background-color:#fff;
   }
@@ -439,16 +369,12 @@
     width:  100%;
   }
 
-  /* fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
+  /* Fix https://github.com/Dogfalo/materialize/issues/2112 using dummy element */
   .sidenav li:last-child.dummy {
     height:65px;
     background-color:#fff;
   }
 
-  .label {
-    font-size: 0.8rem;
-    color: #9e9e9e;
-  }
   button {
     z-index:0
   }

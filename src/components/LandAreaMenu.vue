@@ -58,4 +58,9 @@
   .select-wrapper + label {
     top:-10px;
   }
+
+  li#land-area-menu {
+    line-height: 1rem;
+    padding: 0 10px;
+  }
 </style>

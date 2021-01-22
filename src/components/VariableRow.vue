@@ -72,6 +72,15 @@
 
 <style scoped>
   /* Sidenav elements */
+  li.variable-row {
+    line-height: 1rem;
+    padding: 0 10px;
+  }
+
+  .sidenav li.variable-row:hover {
+    background-color:#eee;
+  }
+
   li.variable-row input {
     height: 2.5rem;
   }

@@ -77,6 +77,11 @@ a.pad.btn {
     margin-left: 5px;
 }
 
+.label {
+    font-size: 0.8rem;
+    color: #9e9e9e;
+}
+
 
 /* Element tweaks */
 
