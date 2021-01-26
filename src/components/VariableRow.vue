@@ -4,7 +4,10 @@
       data-position="right"
       v-bind:data-tooltip="description">
 
-    <label v-bind:for="name" class="variable">
+    <label v-bind:for="name"
+           class="variable"
+           :class="{fullwidth:hideInput}">
+
       <span>{{label}}</span>
       <vue-slider
         v-model="innerValue"
@@ -18,7 +21,8 @@
       </vue-slider>
     </label>
 
-    <input :id="name"
+    <input v-if="!hideInput"
+           :id="name"
            :title="description"
            v-model.number="innerValue"
            type="number"
@@ -49,7 +53,8 @@
             description: String,
             errorMessage: [String, Boolean],
             remainingArea: Number,
-            readonly: Boolean
+            readonly: Boolean,
+            hideInput: Boolean
         },
         computed: {
             innerValue: {
@@ -92,6 +97,10 @@
     padding:0;
     margin:0;
     height:2rem;
+  }
+
+  label.variable.fullwidth {
+    width:100%;
   }
 
   label.variable span {
