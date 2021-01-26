@@ -12,7 +12,7 @@ export default {
      *
      * @returns {Promise<void>}
      */
-    async loadBauState() {
+    async loadBauState(_, areaChanged) {
         try {
             let bau = this.state.bau[this.state.landscape_id]
 
@@ -32,7 +32,8 @@ export default {
             }
 
             // Create new session and push initial state onto history stack (including BAU tag [1])
-            await this.dispatch('newSession')
+            if(areaChanged || this.state.sessions.length === 0)
+                await this.dispatch('newSession')
             this.dispatch('resetState')
 
         } catch (err) {
@@ -81,10 +82,10 @@ export default {
             this.commit("setAreaUsed", 0, 0)
         }
 
-        let lowlandArea = await this.dispatch('getLowlandArea')
-        let uplandArea  = await this.dispatch('getUplandArea')
-
-        this.commit("setAreaUsed", {lowlandArea, uplandArea})
+        this.commit("setAreaUsed", {
+            'lowlandArea': await this.dispatch('getLowlandArea'),
+            'uplandArea': await this.dispatch('getUplandArea')
+        })
     },
 
     /**

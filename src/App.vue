@@ -85,7 +85,7 @@
             // Clear messages on clean reload
             this.$store.commit('clearMessages')
             // Load the BAU state from the server
-            this.$store.dispatch('loadBauState')
+            this.$store.dispatch('loadBauState', false)
         }
     }
 </script>

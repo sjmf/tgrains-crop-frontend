@@ -27,7 +27,7 @@
                 this.$store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
 
                 // Load BAU state
-                await this.$store.dispatch('loadBauState')
+                await this.$store.dispatch('loadBauState', true)
             }
         },
         computed: {
