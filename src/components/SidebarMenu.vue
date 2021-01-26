@@ -12,28 +12,32 @@
       </li>
 
       <li class="no-hover no-padding">
-        <ul class="collapsible collapsible-accordion">
+        <ul>
 
           <!-- CROP AREAS -->
           <variable-group
               :id="'crops'"
+              :kind="'crops'"
               :title="'Crop Areas'"
               :subtitle="'All areas are measured in hectares (<strong>ha</strong>).'"
               :elements="crops"
               :errors="errors"
-              :max="getRemainingArea"
+              :remaining="getRemainingArea"
               :readonly="readonly"
+              ref="cropsGroup"
               @input="updateValue($event)"
               @change="valueChanged($event)"/>
 
           <!-- LIVESTOCK AREAS -->
           <variable-group
               :id="'livestock'"
+              :kind="'livestock'"
               :title="'Livestock Areas'"
               :elements="livestock"
               :errors="errors"
-              :max="getRemainingArea"
+              :remaining="getRemainingArea"
               :readonly="readonly"
+              ref="livestockGroup"
               @input="updateValue($event)"
               @change="valueChanged($event)"/>
 
@@ -97,12 +101,18 @@
                 try {
                     if(!this.changes) return
                     this.$store.dispatch('resetState')
+                    this.resetGroups()
                     this.$nextTick(() => this.validateForm())
                     this.changes = false
                 }
                 catch(err) {
                     this.$store.commit("raiseError", err)
                 }
+            },
+
+            resetGroups() {
+              this.$refs.cropsGroup.reset()
+              this.$refs.livestockGroup.reset()
             },
 
             /**
@@ -220,6 +230,9 @@
 
               // Special cases for all_lamb and all_beef
               switch(name) {
+                case 'crops':
+                  return this.remainingLowlandArea
+                case 'livestock':
                 case 'all_lamb':
                 case 'all_beef':
                   return (this.remainingUplandArea < this.remainingLowlandArea)
@@ -319,9 +332,10 @@
             crops() {
                 this.$nextTick(() => this.validateForm())
             },
-            livestock() {
-                this.$nextTick(() => this.validateForm())
-            },
+            // Both crops and livestock change at the same time, so we don't need to re-validate
+            // livestock() {
+                 // this.$nextTick(() => this.validateForm())
+            // },
             landscapes(){
                 // Materialize tooltips when landscapes loaded after BAU
                 this.initialiseTooltips()
@@ -340,9 +354,6 @@
 
             // Initialise sidebar
             this.$_M.Sidenav.init(document.querySelectorAll(".sidenav"))
-            this.$_M.Collapsible.init(document.querySelector(".sidenav .collapsible"),{
-              accordion: false
-            })
 
             // Materialize tooltips when landscapes loaded from Vuex on reload
             this.initialiseTooltips()

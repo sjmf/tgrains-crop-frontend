@@ -1,14 +1,26 @@
 <template>
-  <li class="active" :class="id">
-    <div class="collapsible-header">
-      <div class="subheader">
-        {{ title }}
-        <i class="drop-arrow material-icons right">arrow_drop_up</i>
+  <li :id="'v-group-'+id">
+    <div class="variable-group" :class="{active:active}">
+      <div @click="active=!active">
+        <span class="title">
+          {{ title }}
+          <i class="drop-arrow material-icons right">arrow_drop_up</i>
+        </span>
+        <span class="label" v-if="subtitle !== undefined" v-html="subtitle"></span>
       </div>
-      <span class="label" v-if="subtitle !== undefined" v-html="subtitle"></span>
+
+      <variable-row
+          :name="id"
+          :label="'Total'"
+          v-model="innerSum"
+          :remaining-area="remaining(kind)"
+          :hide-input="false"
+          @change="$emit('change', $event)"/>
+
     </div>
 
-    <ul class="collapsible-body">
+    <transition name="collapse">
+    <ul v-show="active">
       <variable-row
           v-for="(item, index) in elements"
           :key="index"
@@ -18,11 +30,12 @@
           :bau-value="item.bau"
           :description="item.description"
           :error-message="errors[index]"
-          :remaining-area="max(item.name)"
+          :remaining-area="remaining(item.name)"
           :readonly="readonly"
           @input="$emit('input', {'id': id, 'name': item.name, 'value': $event})"
-          @change="$emit('change', {$event})"/>
+          @change="onSliderChange($event)"/>
     </ul>
+    </transition>
   </li>
 </template>
 
@@ -36,55 +49,118 @@ export default {
   },
   props: {
     id: String,
+    kind: String, // 'crops' or 'livestock'
     title: String,
     subtitle: String,
     elements: Object,
     errors: Object,
-    max: Function,
-    readonly: Boolean
+    remaining: Function,
+    readonly: Boolean,
+    groupSlider: Boolean
+  },
+  data() {
+    return {
+      active: true,
+      ratios: undefined,
+      sum: 0,
+    }
+  },
+  computed: {
+    innerSum: {
+      get() {
+        const {sum} = this;
+        return sum
+      },
+      set (_val) {
+        this.sum = _val
+        // Update values for all sub-sliders
+        for(let e in this.elements) {
+          // this.elements[e].value = newAreas[e]
+          // Error: [vuex] do not mutate vuex store state outside mutation handlers
+          this.$emit('input', {'id': this.id, 'name': e, 'value':  _val * this.ratios[e]});
+        }
+      }
+    }
+  },
+  methods: {
+    onSliderChange($event) {
+      // Recalculate ratios
+      if (this.sumElements() > 0)
+        this.ratio()
+
+      // Re-emit event to parent
+      this.$emit('change', {$event})
+    },
+    sumElements() {
+      // Previously (57.72% slower)
+      // this.sum = Object.keys(this.elements).map(x => this.elements[x].value).reduce((x,y) => x+y)
+      this.sum = 0
+      for(let i in this.elements)
+        this.sum += this.elements[i].value
+      return this.sum
+    },
+    ratio() {
+      // Previously (65.28% slower):
+      // this.ratios = Object.fromEntries(Object.keys(this.elements).map(x => [x, this.elements[x].value / this.sum]))
+      for (let i in this.elements)
+        this.ratios[i] = this.elements[i].value / this.sum
+
+      return this.ratios
+    },
+    reset() {
+      this.ratios = Object.fromEntries(Object.keys(this.elements).map(x => [x, 0]))
+      if (this.sumElements() > 0)
+        this.ratio()
+    }
+  },
+  watch: {
+    elements() {
+      this.reset()
+    }
   },
   mounted() {
-    console.log(this.id)
-    this.$_M.Collapsible.init(document.querySelector(".sidenav .collapsible"),{
-      accordion: false
-    })
-  }
+    this.reset()
+  },
 }
 </script>
 
 <style scoped>
+  span.title {
+    cursor: pointer;
+    pointer-events: none;
+    color: rgba(0, 0, 0, 0.54);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 3rem;
+    display: block;
+  }
 
-  div.collapsible-header {
+  div.variable-group > div {
+    display: block;
     line-height: 1rem;
     padding: 0 10px;
   }
 
-  .sidenav .collapsible-header, .sidenav.fixed .collapsible-header {
-    padding:  0 10px 10px 10px;
+  div.variable-group:hover {
+    background-color: #efefef;
   }
 
-  .collapsible-header {
-    display: block;
-  }
-
-  .collapsible-header i {
+  .variable-group i {
     text-align: right;
     margin-right: 0;
+    line-height: 3rem;
     width: auto;
   }
 
-  ul.collapsible-body > li {
-    padding: 0 10px;
-  }
-
-  .collapsible li i.drop-arrow {
+  .variable-group i.drop-arrow {
     color: rgba(0, 0, 0, 0.87);
-    transform: rotate(180deg);
+    transform: scaleY(-1);
+    transition: transform 500ms;
   }
 
-  .collapsible li.active i.drop-arrow {
+  .variable-group.active i.drop-arrow {
     color: rgba(0, 0, 0, 0.54);
-    transform: rotate(0deg);
+    transform: scaleY(1);
   }
 
 </style>
