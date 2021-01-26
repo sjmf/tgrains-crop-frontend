@@ -112,13 +112,14 @@ a.pad.btn {
 
 /* Transitions */
 
+/* Collapse and fade an element */
 /* https://css-tricks.com/using-css-transitions-auto-dimensions/ */
 .fade-enter-active, .fade-leave-active {
      transition: all .5s ease;
      max-height:1000px;
  }
 .fade-move {
-    transition: transform 1s;
+    transition: transform .5s;
 }
 .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
     opacity: 0;
@@ -126,5 +127,21 @@ a.pad.btn {
     overflow-y:hidden;
 }
 .fade-enter-to {
+    overflow-y:hidden;
+}
+
+/* Collapse (without fading) an element */
+.collapse-enter-active, .collapse-leave-active {
+    transition: all .5s ease;
+    max-height: 1000px;
+}
+.collapse-move{
+    transition: transform 1s;
+}
+.collapse-enter, .collapse-leave-to {
+    max-height:0;
+    overflow-y:hidden;
+}
+.collapse-enter-to {
     overflow-y:hidden;
 }
