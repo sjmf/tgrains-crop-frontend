@@ -24,6 +24,9 @@
               :errors="errors"
               :remaining="getRemainingArea"
               :readonly="readonly"
+              :show-header="true"
+              :show-total="true"
+              :show-total-collapsed-only="true"
               ref="cropsGroup"
               @input="updateValue($event)"
               @change="valueChanged($event)"/>
@@ -37,6 +40,9 @@
               :errors="errors"
               :remaining="getRemainingArea"
               :readonly="readonly"
+              :show-header="true"
+              :show-total="true"
+              :show-total-collapsed-only="true"
               ref="livestockGroup"
               @input="updateValue($event)"
               @change="valueChanged($event)"/>

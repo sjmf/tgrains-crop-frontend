@@ -1,7 +1,7 @@
 <template>
   <li :id="'v-group-'+id">
     <div class="variable-group" :class="{active:active}">
-      <div @click="active=!active">
+      <div v-if="showHeader" @click="active=!active">
         <span class="title">
           {{ title }}
           <i class="drop-arrow material-icons right">arrow_drop_up</i>
@@ -9,19 +9,29 @@
         <span class="label" v-if="subtitle !== undefined" v-html="subtitle"></span>
       </div>
 
+      <div
+          v-else-if="showHeader || showTotal"
+          class="float-arrow"
+          @click="active=!active">
+        <i class="drop-arrow material-icons right">arrow_drop_up</i>
+      </div>
+
+      <transition name="fade">
       <variable-row
+          v-if="showTotal && (!showTotalCollapsedOnly || !active)"
           :name="id"
-          :label="'Total'"
+          :label="showHeader ? 'Total' : title"
           v-model="innerSum"
           :remaining-area="remaining(kind)"
           :hide-input="false"
           @change="$emit('change', $event)"/>
-
+      </transition>
     </div>
 
     <transition name="collapse">
-    <ul v-show="active">
-      <variable-row
+    <ul v-if="active">
+      <component
+          v-bind:is="'variable-row'"
           v-for="(item, index) in elements"
           :key="index"
           :name="item.name"
@@ -56,7 +66,10 @@ export default {
     errors: Object,
     remaining: Function,
     readonly: Boolean,
-    groupSlider: Boolean
+    // View Options:
+    showHeader: Boolean,
+    showTotal: Boolean,
+    showTotalCollapsedOnly: Boolean,
   },
   data() {
     return {
@@ -143,6 +156,17 @@ export default {
 
   div.variable-group:hover {
     background-color: #efefef;
+  }
+
+  div.float-arrow {
+    cursor: pointer;
+    position: fixed;
+    margin-left: 145px;
+  }
+
+  div.float-arrow i {
+    line-height: 2rem;
+    margin: 0;
   }
 
   .variable-group i {
