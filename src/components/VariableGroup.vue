@@ -19,11 +19,12 @@
       <transition name="fade">
       <variable-row
           v-if="showTotal && (!showTotalCollapsedOnly || !active)"
+          v-model="innerSum"
           :name="id"
           :label="showHeader ? 'Total' : title"
-          v-model="innerSum"
           :remaining-area="remaining(kind)"
           :hide-input="false"
+          :readonly="readonly"
           @change="$emit('change', $event)"/>
       </transition>
     </div>
