@@ -17,7 +17,7 @@
         :tooltip="'none'"
         :processStyle="processStyle"
         :disabled="readonly"
-        @change="$emit('change', [name, $event])">
+        @change="$emit('change', {'name': name, 'value': $event})">
       </vue-slider>
     </label>
 
@@ -30,7 +30,7 @@
            min="0"
            :disabled="readonly"
            :class="{ invalid: errorMessage }"
-           @change="$emit('change', [name, $event.target.valueAsNumber])">
+           @change="$emit('change', {'name': name, 'value': $event.target.valueAsNumber})">
 
     <div v-if="errorMessage" class="error label">
         <span>{{ errorMessage }}</span>
@@ -54,7 +54,8 @@
             errorMessage: [String, Boolean],
             remainingArea: Number,
             readonly: Boolean,
-            hideInput: Boolean
+            hideInput: Boolean,
+            colourOverride: String,
         },
         computed: {
             innerValue: {
@@ -67,6 +68,8 @@
                 }
             },
             processStyle() {
+              if(this.colourOverride !== undefined)
+                return { backgroundColor: this.colourOverride}
               if(this.innerValue === this.bauValue)
                   return { backgroundColor: '#43A047'}
               return { backgroundColor: '#673ab7'}

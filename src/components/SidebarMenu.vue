@@ -13,40 +13,25 @@
 
       <li class="no-hover no-padding">
         <ul>
-
-          <!-- CROP AREAS -->
           <variable-group
-              :id="'crops'"
-              :kind="'crops'"
-              :title="'Crop Areas'"
-              :subtitle="'All areas are measured in hectares (<strong>ha</strong>).'"
-              :elements="crops"
+              v-for="(elements, index) in orderedElements"
+              :key="groups[index].name"
+              :id="groups[index].name"
+              :kind="groups[index].kind"
+              :title="groups[index].title"
+              :subtitle="groups[index].subtitle"
+              :groups="groups[index].groups"
+              :elements="elements"
               :errors="errors"
               :remaining="getRemainingArea"
+              :crop-or-livestock="groups[index].name"
               :readonly="readonly"
+              :reset-trigger="resetSignal"
               :show-header="true"
               :show-total="true"
               :show-total-collapsed-only="true"
-              ref="cropsGroup"
-              @input="updateValue($event)"
+              :default-collapsed="false"
               @change="valueChanged($event)"/>
-
-          <!-- LIVESTOCK AREAS -->
-          <variable-group
-              :id="'livestock'"
-              :kind="'livestock'"
-              :title="'Livestock Areas'"
-              :elements="livestock"
-              :errors="errors"
-              :remaining="getRemainingArea"
-              :readonly="readonly"
-              :show-header="true"
-              :show-total="true"
-              :show-total-collapsed-only="true"
-              ref="livestockGroup"
-              @input="updateValue($event)"
-              @change="valueChanged($event)"/>
-
         </ul>
       </li>
 
@@ -54,6 +39,7 @@
         <div class="divider"></div>
       </li>
 
+      <!-- RESET / SUBMIT BUTTONS -->
       <li class="no-hover">
         <div class="row">
           <div class="col l6">
@@ -73,8 +59,7 @@
         </div>
       </li>
 
-      <!-- Dummy list element to address
-       https://github.com/Dogfalo/materialize/issues/2112 -->
+      <!-- Dummy list element to address https://github.com/Dogfalo/materialize/issues/2112 -->
       <li class="dummy"></li>
     </ul>
   </aside>
@@ -96,7 +81,8 @@
             return {
                 submitDisabled: false,
                 changes: false,
-                errors: {}
+                errors: {},
+                resetSignal: false
             }
         },
         methods: {
@@ -116,9 +102,11 @@
                 }
             },
 
+            /**
+             * Pass 'reset' signal down VariableGroup.vue instances (cascades)
+             */
             resetGroups() {
-              this.$refs.cropsGroup.reset()
-              this.$refs.livestockGroup.reset()
+              this.resetSignal = !this.resetSignal
             },
 
             /**
@@ -130,25 +118,19 @@
             },
 
             /**
+             * Slider change handler
              * Commit the changed form value to the backing data store.
              * Because we're using Vuex, we do a $store.commit rather than using v-model.
              * @param event {id, name, value}
              */
-            updateValue(event) {
-                this.$store.commit('setFormValue', {
-                  'cropOrLivestock': event.id,
-                  'name': event.name,
-                  'value': event.value
-                })
-                this.$store.dispatch('sumArea')
-            },
-
-            /***
-             * Slider change handler
-             */
-            valueChanged() {
+            valueChanged(event) {
                 this.changes=true
                 this.validateForm()
+
+                if(!isNaN(event['value'])) {
+                  this.$store.commit('setFormValue', event)
+                  this.$store.dispatch('sumArea')
+                }
             },
 
             /**
@@ -198,7 +180,6 @@
                 return false
             },
 
-
             /**
              * Initialize Materialize Tooltips
              *
@@ -228,29 +209,11 @@
              * Return the remaining area for the given label (upland or lowland sensitive)
              */
             getRemainingArea(name) {
-              // console.debug(
-              //     'name\t\t\t', name,
-              //     '\nremainingUplandArea\t', this.remainingUplandArea,
-              //     '\nremainingLowlandArea\t', this.remainingLowlandArea,
-              //     '\n+ equals\t\t', this.remainingUplandArea + this.remainingLowlandArea)
-
-              // Special cases for all_lamb and all_beef
-              switch(name) {
-                case 'crops':
-                  return this.remainingLowlandArea
-                case 'livestock':
-                case 'all_lamb':
-                case 'all_beef':
-                  return (this.remainingUplandArea < this.remainingLowlandArea)
-                      ? this.remainingUplandArea
-                      : this.remainingLowlandArea
-
-                default:
-                  return this.isUpland(name)
-                      ? this.remainingUplandArea + this.remainingLowlandArea
-                      : this.remainingLowlandArea;
-              }
-            }
+              return this.isUpland(name)
+                ? (this.remainingUplandArea < this.remainingLowlandArea)
+                  ? this.remainingUplandArea : this.remainingLowlandArea
+                : this.remainingLowlandArea
+            },
         },
         computed: {
           /**
@@ -322,30 +285,67 @@
                 return this.$store.state.readonly
             },
 
-            /**
-             * Check for error messages in messages
-             */
-            errorChecks() {
-                for (let e of this.$store.state.messages)
-                    if(e.kind === "error")
-                        return false
-                return true
+          /**
+           * Check for error messages in messages
+           */
+          errorChecks() {
+              for (let e of this.$store.state.messages)
+                  if(e.kind === "error")
+                      return false
+              return true
+          },
+
+          /**
+           * Sidebar groups shortcut
+           */
+          groups() {
+            return this.$store.state.sidebar_groups
+          },
+
+          /**
+           * Compute an ordering for the sidebar elements
+           */
+          orderedElements() {
+            const rows = { ...this.crops, ...this.livestock }
+
+            // Define a recursion to tree-walk groups and populate data
+            const mkgrps = function(_groups, data) {
+              for (let i in _groups) {
+                if(data.length < i+1)
+                  data.push([])
+
+                if (_groups[i]['groups'] !== undefined)
+                  data[i] = mkgrps(_groups[i].groups, data[i])
+
+                for (let e of _groups[i].elements)
+                  if(rows[e] !== undefined)
+                    data[i].push(rows[e])
+              }
+
+              return data
             }
+
+            return mkgrps(this.groups, [])
+          }
         },
         watch: {
-            // We want to validate the form again if the backing data changes.
-            // This happens when the Landscape Area is changed.
-            crops() {
-                this.$nextTick(() => this.validateForm())
-            },
-            // Both crops and livestock change at the same time, so we don't need to re-validate
-            // livestock() {
-                 // this.$nextTick(() => this.validateForm())
-            // },
-            landscapes(){
-                // Materialize tooltips when landscapes loaded after BAU
-                this.initialiseTooltips()
-            }
+          /**
+           * Validate the form again if the backing data changes.
+           * This happens when the Landscape Area is changed.
+           */
+          crops() {
+            this.$nextTick(() => this.validateForm())
+          },
+
+          // Both crops and livestock change at the same time, so we don't need to re-validate
+          // livestock() { this.$nextTick(() => this.validateForm()) },
+
+          /**
+           * Init $_Materialize tooltips when landscapes loaded after BAU
+           */
+          landscapes(){
+            this.initialiseTooltips()
+          }
         },
         mounted() {
             // On first load, the Ajax request for form data won't have yet returned,

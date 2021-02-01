@@ -45,13 +45,14 @@ export default {
      * Set a crop or livestock area value in the store for the selected landscape.
      * Triggered from SidebarMenu when a value is changed.
      * @param state
-     * @param cropOrLivestock
+     * @param type ('crops' or 'livestock')
      * @param name
      * @param value
      */
-    setFormValue (state, {cropOrLivestock, name, value}) {
-        //console.debug({cropOrLivestock, name, value})
-        state.landscapes[state.landscape_id][cropOrLivestock][name].value = value;
+    setFormValue (state, {type, name, value}) {
+        // Sense-check type ('crops' or 'livestock') and name (must be in landscape at [id])
+        if(type in state.landscapes[state.landscape_id] && name in state.landscapes[state.landscape_id][type])
+            state.landscapes[state.landscape_id][type][name].value = value;
     },
 
     /***
@@ -541,5 +542,6 @@ export default {
      */
     invalidateStore(state) {
         state.versionHash = 'invalid';
+        localStorage.clear()
     }
 }

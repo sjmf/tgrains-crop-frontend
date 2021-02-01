@@ -135,6 +135,33 @@ export const initial_state = () => ({
         all_lamb:     "Lamb will be split between uplands and lowlands at a pre-defined percentage",
     },
 
+    // Groups (and sub-groups) used in the sidebar
+    sidebar_groups: [
+        {
+            name: 'crops',
+            title: 'Crop Areas',
+            subtitle: "All areas are measured in hectares (<strong>ha</strong>).",
+            groups: [
+                {
+                    name: 'cereals',
+                    title: 'Cereals',
+                    elements: [ 'all_barley', 'all_oats', 'maize', 'all_wheat' ]
+                },
+                {
+                    name: 'fruit',
+                    title: 'Fruit',
+                    elements: [ 'fruit_soft', 'fruit_top' ]
+                }
+            ],
+            elements: [ 'osr_winter', 'all_vegetables', 'all_peas_beans', 'all_potato', 'all_feed', 'sugarbeet' ]
+        },
+        {
+            name: 'livestock',
+            title: 'Livestock Areas',
+            elements: [ 'beef_lowland', 'all_beef', 'lamb_lowland', 'all_lamb', 'dairy', 'chicken', 'pork', 'eggs' ]
+        },
+    ],
+
     // Populations (retrieved from Wikipedia. More accurate ones needed)
     population: {
         101: 6235000,
