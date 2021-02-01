@@ -192,6 +192,7 @@ export default {
             console.warn(this.state.versionHash, '=>', process.env.VUE_APP_GIT_HASH)
             this.commit("resetVuexDefaults")
             console.warn(`Vuex store reloaded from defaults due to new version hash: '${process.env.VUE_APP_GIT_HASH}'`)
+            window.location.reload(false)
         }
     },
 
