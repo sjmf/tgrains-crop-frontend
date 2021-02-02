@@ -57,8 +57,15 @@
             this.$store.dispatch('checkVersion')
             // Clear messages on clean reload
             this.$store.commit('clearMessages')
+            // Set landscapeID from route params
+            this.$store.commit("setLandscapeId", parseInt(this.$route.params.id));
             // Load the BAU state from the server
             this.$store.dispatch('loadBauState', false)
+        },
+        watch: {
+          $route() {
+            this.$store.commit("setLandscapeId", parseInt(this.$route.params.id));
+          }
         }
     }
 </script>

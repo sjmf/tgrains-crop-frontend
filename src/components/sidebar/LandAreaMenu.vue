@@ -21,13 +21,35 @@
     export default {
         name: 'LandAreaMenu',
         methods: {
+            /**
+             * Change handler: change landscape_id in Vuex and Vue Router param,
+             * then load the BAU state for the new landscape
+             */
             async onChange(event) {
-                console.log(event.target.value);
                 this.$store.commit("setLandscapeId", parseInt(event.target.value));
-                this.$store.commit("setLandscapeName", event.target[event.target.selectedIndex].label);
+                await this.$router.push({params: {'id': event.target.value}})
 
                 // Load BAU state
                 await this.$store.dispatch('loadBauState', true)
+            },
+
+            /**
+             * Programatically set select value to landscape ID on load
+             * @param val
+             */
+            setValue(val) {
+              // Select the DOM elements for the dropdown and change
+              // them to reflect the new value, `val`.
+              const elem = document.querySelector('#landscape-input')
+              const select = elem.querySelector('select')
+
+              select.value = val
+              elem.value = this.strings[val];
+
+              for(let e of elem.querySelectorAll("option[value]"))
+                e.selected = false
+
+              elem.querySelector(`option[value='${val}']`).selected = true
             }
         },
         computed: {
@@ -38,18 +60,21 @@
                 return this.$store.state.readonly
             }
         },
+        watch: {
+          $route() {
+            this.setValue(this.$store.state.landscape_id)
+          }
+        },
         mounted() {
-            // Set select value to landscape ID on load
-            const elem = document.querySelector('#landscape-input')
-            const select = elem.querySelector('select')
-            elem.querySelector("option[value='102']").selected = true
-            select.value = this.$store.state.landscape_id
-            elem.value = this.strings[this.$store.state.landscape_id];
+          // Do this on nextTick because landscape_id changes on mounted() of App.vue
+          this.$nextTick(() => {
+            this.setValue(this.$store.state.landscape_id)
 
             // Initialise the dropdown with Materialize
             this.$_M.FormSelect.init(
                 document.querySelector('#landscape-input select')
             )
+          })
         }
     }
 </script>
