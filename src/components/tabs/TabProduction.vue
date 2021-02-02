@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" id="production-tab">
     <div class="col s12 m12 l6">
       <div class="card panel">
         <div class="card-content">

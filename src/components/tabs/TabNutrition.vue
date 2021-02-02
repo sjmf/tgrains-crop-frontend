@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" id="nutrition-tab">
     <div class="col s12 m6">
       <div class="card panel">
         <div class="card-content">
