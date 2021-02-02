@@ -552,7 +552,6 @@ export default {
      * @param loadStatus Boolean
      */
     loading(state, loadStatus) {
-        console.warn(`Loading = ${loadStatus}`)
         state.loading = loadStatus
     }
 }
