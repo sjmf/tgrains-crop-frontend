@@ -264,6 +264,9 @@ export const initial_state = () => ({
     // Global read-only flag
     readonly: false,
 
+    // Global loading flag
+    loading: false,
+
     // Error handling: each element contains the following structure:
     // {
     //     message: "",

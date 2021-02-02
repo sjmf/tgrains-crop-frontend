@@ -1,5 +1,5 @@
 <template>
-  <div class="card panel">
+  <div class="card panel" id="environment-tab">
     <div class="card-content">
       <span class="card-title">Nitrogen Leaching and Pesticide Impacts</span>
       <div class="chart-panel">

@@ -29,22 +29,13 @@
       <tab-bar/>
 
       <!-- VISUALISATION CONTAINERS (TABBED) -->
-      <div class="container">
-        <div id="production-tab" class="col s12">
-          <TabProduction :chart-height="chartHeight"/>
-        </div>
-
-        <div id="environment-tab" class="col s12">
-          <TabEnvironment :chart-height="chartHeight*1.25"/>
-        </div>
-
-        <div id="nutrition-tab" class="col s12">
-          <TabNutrition :chart-height="chartHeight"/>
-        </div>
-
-        <div id="history-tab" class="col s12">
-          <TabHistory @load="(index) => $emit('load', index)"
-                      @comment="(index) => $refs.containerComments.attachState(index)"/>
+      <div class="col s12">
+        <div class="container">
+          <keep-alive>
+            <router-view @load="(index) => $emit('load', index)"
+                         @comment="(index) => $refs.containerComments.attachState(index)"
+                         :chart-height="chartHeight"/>
+          </keep-alive>
         </div>
       </div>
 
@@ -69,27 +60,21 @@
     import VizDebug from "@/components/visualisations/VizDebug";
     import ContainerComments from "@/components/comments/ContainerComments";
     import MessageBox from "@/components/MessageBox";
-    import TabHistory from "@/components/tabs/TabHistory";
-    import TabEnvironment from "@/components/tabs/TabEnvironment";
-    import TabProduction from "@/components/tabs/TabProduction";
-    import TabNutrition from "@/components/tabs/TabNutrition";
 
     export default {
         name: "ContainerMain",
         components: {
             LoadingOverlay,
-            TabHistory,
-            TabEnvironment,
-            TabProduction,
-            TabNutrition,
             TabBar,
             LandscapeJumbotron,
             VizDebug,
             ContainerComments,
             MessageBox
         },
-        props: {
-            loading: Boolean
+        computed: {
+            loading () {
+              return this.$store.state.loading;
+            }
         },
         data (){
             return {

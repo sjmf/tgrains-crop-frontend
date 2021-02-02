@@ -14,19 +14,8 @@ export default {
      * @param id
      */
     setLandscapeId (state, id) {
-        if(id === 101 || id === 102) {
-            state.landscape_id = id
-        }
-    },
-
-    /**
-     * Update the store with the landscape name. Triggered from the LandscapeAreaMenu
-     * and takes the value displayed in the selection box.
-     * @param state
-     * @param name
-     */
-    setLandscapeName (state, name) {
-        state.landscapeName = name;
+        state.landscape_id = id
+        state.landscapeName = state.landscapeNames[id]
     },
 
     /***
@@ -539,9 +528,19 @@ export default {
 
     /**
      * Invalidate store version hash
+     * @param state
      */
     invalidateStore(state) {
         state.versionHash = 'invalid';
         localStorage.clear()
+    },
+
+    /**
+     * Set global loading flag
+     * @param state
+     * @param loadStatus Boolean
+     */
+    loading(state, loadStatus) {
+        state.loading = loadStatus
     }
 }

@@ -27,6 +27,8 @@ require('@/css/styles.css');
 // Import and set up smooth scrolling
 import VueSmoothScroll from 'vue2-smooth-scroll'
 
+import router from './router'
+
 Vue.use(VueSmoothScroll, {
   duration: 400,
   updateHistory: false,
@@ -38,6 +40,7 @@ Vue.config.productionTip = false
 // Setup vue
 new Vue({
   render: h => h(App),
+  router,
 
   data: function() {
     return {

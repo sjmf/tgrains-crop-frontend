@@ -1,5 +1,5 @@
 <template>
-  <div class="row">
+  <div class="row" id="history-tab">
     <div class="col s12 m12 l12">
 
       <div class="card panel">
