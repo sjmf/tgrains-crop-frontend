@@ -31,9 +31,11 @@
       <!-- VISUALISATION CONTAINERS (TABBED) -->
       <div class="col s12">
         <div class="container">
-          <router-view @load="(index) => $emit('load', index)"
-                       @comment="(index) => $refs.containerComments.attachState(index)"
-                       :chart-height="chartHeight"/>
+          <keep-alive>
+            <router-view @load="(index) => $emit('load', index)"
+                         @comment="(index) => $refs.containerComments.attachState(index)"
+                         :chart-height="chartHeight"/>
+          </keep-alive>
         </div>
       </div>
 
