@@ -23,7 +23,7 @@
 
 <script>
     import NavbarHeader from '@/components/NavbarHeader.vue'
-    import SidebarMenu from '@/components/SidebarMenu';
+    import SidebarMenu from '@/components/sidebar/SidebarMenu';
     import ContainerFooter from '@/components/ContainerFooter';
     import ModalWelcome from '@/components/modals/ModalWelcome';
     import store from "@/store";

@@ -66,9 +66,9 @@
 </template>
 
 <script>
-    import LandAreaMenu from "@/components/LandAreaMenu"
+    import LandAreaMenu from "@/components/sidebar/LandAreaMenu"
     import LoadingOverlay from "@/components/LoadingOverlay";
-    import VariableGroup from "@/components/VariableGroup";
+    import VariableGroup from "@/components/sidebar/VariableGroup";
 
     export default {
         name: 'SidebarMenu',

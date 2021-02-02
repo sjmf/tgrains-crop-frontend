@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import VariableRow from "@/components/VariableRow"
+import VariableRow from "@/components/sidebar/VariableRow"
 
 export default {
   name: "VariableGroup",
