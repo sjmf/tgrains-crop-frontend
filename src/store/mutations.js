@@ -539,9 +539,20 @@ export default {
 
     /**
      * Invalidate store version hash
+     * @param state
      */
     invalidateStore(state) {
         state.versionHash = 'invalid';
         localStorage.clear()
+    },
+
+    /**
+     * Set global loading flag
+     * @param state
+     * @param loadStatus Boolean
+     */
+    loading(state, loadStatus) {
+        console.warn(`Loading = ${loadStatus}`)
+        state.loading = loadStatus
     }
 }

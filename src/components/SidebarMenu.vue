@@ -114,7 +114,7 @@
              */
             submitForm() {
                 this.changes=true
-                this.$emit('submitForm', [this.crops,this.livestock])
+                this.$store.dispatch('queryModel')
             },
 
             /**

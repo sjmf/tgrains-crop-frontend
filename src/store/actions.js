@@ -48,12 +48,18 @@ export default {
      * @returns {Promise<void>}
      */
     async queryModel() {
+        if (this.state.loading) return
+
+        // Timeout prevents flash of loader in case of fast response
+        let timer = setTimeout(()=>{ this.commit("loading", true) }, 200)
+
         // Close error message in preparation
         this.commit("clearMessages")
 
         // Prepare payload...
         let payload = await this.dispatch("getPayload")
 
+        // Query Model:
         try {
             // ... and send to API!
             // to cache: await this.cache.dispatch("doCachedModelQuery", payload)
@@ -68,9 +74,10 @@ export default {
         } catch (err) {
             console.error(err)
             this.commit("raiseError", err)
+        } finally {
+            clearTimeout(timer);
+            this.commit("loading", false)
         }
-
-        //console.info("Cached?", this.cache.has("doCachedModelQuery", payload))
     },
 
     /**
@@ -139,7 +146,6 @@ export default {
 
         return uplandArea;
     },
-
 
     /**
      * Construct and return payload for model queries

@@ -88,8 +88,10 @@
             ContainerComments,
             MessageBox
         },
-        props: {
-            loading: Boolean
+        computed: {
+            loading () {
+              return this.$store.state.loading;
+            }
         },
         data (){
             return {

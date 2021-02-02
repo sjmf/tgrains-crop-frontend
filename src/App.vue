@@ -8,14 +8,10 @@
     </navbar-header>
 
     <!-- VALUE SELECT SIDEBAR -->
-    <sidebar-menu @submitForm="doAJAX($event)"
-                  ref="sidebarMenu">
-    </sidebar-menu>
+    <sidebar-menu ref="sidebarMenu"/>
 
     <!-- MAIN PAGE CONTENT -->
-    <container-main :loading="loading"
-                    @load="stateLoaded()">
-    </container-main>
+    <router-view @load="$refs.sidebarMenu.historyLoaded()"/>
 
     <!-- Modal for welcome message -->
     <modal-welcome id="modal-welcome"/>
@@ -28,7 +24,6 @@
 <script>
     import NavbarHeader from '@/components/NavbarHeader.vue'
     import SidebarMenu from '@/components/SidebarMenu';
-    import ContainerMain from '@/components/ContainerMain';
     import ContainerFooter from '@/components/ContainerFooter';
     import ModalWelcome from '@/components/modals/ModalWelcome';
     import store from "@/store";
@@ -40,7 +35,6 @@
             ContainerFooter,
             SidebarMenu,
             NavbarHeader,
-            ContainerMain,
             ModalWelcome
         },
         data: () => {
@@ -55,31 +49,10 @@
                 timer: null
             }
         },
-        methods: {
-            /**
-             * Perform AJAX request to query the model
-             */
-            async doAJAX() {
-                if (this.loading) return
-
-                // Timeout prevents flash of loader in case of fast response
-                this.timer = setTimeout(()=>{ this.loading = true }, 200);
-
-                await this.$store.dispatch('queryModel')
-
-                clearTimeout(this.timer);
-                this.loading = false;
-            },
-
-            /**
-             * Notify SidebarMenu when history is loaded
-             */
-            stateLoaded() {
-                this.$refs.sidebarMenu.historyLoaded()
-            },
-        },
         /** Actions which occur on page-load **/
         mounted() {
+            // Set not loading (edge case clear loader where page is reloaded while waiting for model query)
+            this.$store.commit('loading', false)
             // Check if Vuex state was updated due to new code version:
             this.$store.dispatch('checkVersion')
             // Clear messages on clean reload
