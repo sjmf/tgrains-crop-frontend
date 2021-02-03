@@ -250,12 +250,7 @@ export default {
                 .map(x => this.state.tags.tags[x].selected ? parseInt(x) : null)
                 .filter(x => x!==null)
 
-            // Used to add model state to payload. Now we just reference the stored one
-            // payload['state'] = {
-            //     "inputs": this.state.landscapes[this.state.landscape_id],
-            //     "outputs": this.state.data.raw[this.state.landscape_id],
-            //     "totalArea": this.state.totalArea
-            // }
+            payload['landscape_id'] = this.state.landscape_id
             payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
             payload['index'] = this.state.historyIndex
 
