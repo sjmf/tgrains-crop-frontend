@@ -51,6 +51,18 @@
           <label for="size-select">Comments per page:</label>
         </div>
       </div>
+
+      <div class="col s12">
+        <p>
+          <label>
+            <input type="checkbox"
+                   class="filled-in green darken-4"
+                   v-model="landscape_checkbox"
+                   @change="loadComments()"/>
+            <span>Include only comments from local area ({{$store.state.landscapeNames[$store.state.landscape_id]}})</span>
+          </label>
+        </p>
+      </div>
     </div>
 
     <div class="comment-main row" v-show="filter_value === 2">
@@ -133,6 +145,7 @@ export default {
     return {
       sort:   ["Date Descending", "Date Ascending", "Distance from BAU state", "Closest to current state"],
       filter: ["All", "Mine", "Someone else's", "Replies", "Tags"],
+      landscape_checkbox: true,
       show: range(2,12,2),
     }
   },
@@ -145,6 +158,9 @@ export default {
       // https://stackoverflow.com/a/40560953/1681205
       return {
         'sort' : this.sort_value,
+
+        ...(this.landscape_checkbox &&
+            {'landscape_id': this.landscape_id}),
 
         ...(!(this.filter_value === 2 && this.user_id === undefined) &&
             !(this.filter_value === 3 && this.reply_card === undefined) &&
@@ -167,6 +183,14 @@ export default {
             {'tags': this.tags.join(',')})
       }
     },
+
+    /**
+     * Mapping to landscape_id
+     */
+    landscape_id() {
+      return this.$store.state.landscape_id
+    },
+
     /**
      * v-model bindings for sort/filter/size values
      */
@@ -179,6 +203,7 @@ export default {
         this.loadComments()
       }
     },
+
     filter_value: {
       get () {
         return this.$store.state.comments.filter
@@ -190,6 +215,7 @@ export default {
         this.loadComments()
       }
     },
+
     size_value: {
       get () {
         return this.$store.state.comments.size
@@ -203,13 +229,21 @@ export default {
     },
   },
   methods: {
+    /**
+     * Set value of #id and call internal materialize update method ;_;
+     * (This is a disgusting hack but it does work.)
+     * @param id
+     * @param index
+     */
     setMaterialFormSelectSelected(id, index) {
-      // Set value of #id and call internal materialize update method ;_;
-      // This is a disgusting hack but it does work.
       const elem = document.querySelector(id)
       elem.parentElement.querySelector('select').value = index
       this.$_M.FormSelect.getInstance(elem)._setValueToInput()
     },
+
+    /***
+     * Set filter value in form and adjust visual drop-downs accordingly
+     */
     setFilter() {
       let value = 0
       if (this.user_id !== undefined || this.user_id === this.$store.state.user.id)
@@ -222,25 +256,47 @@ export default {
       this.$set(this, 'filter_value', value)
       this.setMaterialFormSelectSelected('#filter-select', value)
     },
+
+    /**
+     * Get meta values for a tag at 'id'
+     * @param id
+     * @returns {*}
+     */
     tag_meta(id) {
       return this.$store.state.tags.tags[id]
     },
+
+    /**
+     * Get group data for a tag at 'id'
+     * @param id
+     * @returns {*}
+     */
     tag_group(id) {
       return this.$store.state.tag_groups[id]
     },
+
+    /**
+     * Switch the comments page and re-load comments
+     * @param page
+     */
     changePage(page) {
       this.$store.commit('setCommentsPage', page)
       this.loadComments()
     },
+
+    /**
+     * Hit the action to load comments, passing the payload computed property
+     */
     loadComments() {
       this.$store.dispatch("loadComments", this.comments_payload)
     }
   },
   watch: {
-    // On change of props, jump the dropdown to the appropriate filter
-    user_id    () { this.setFilter() },
-    reply_card () { this.setFilter() },
-    tags       () { this.setFilter() },
+    /** On change of props, jump the dropdown to the appropriate filter **/
+    user_id      () { this.setFilter() },
+    reply_card   () { this.setFilter() },
+    tags         () { this.setFilter() },
+    landscape_id () { this.loadComments() }
   },
   mounted() {
     for (let elem of document.querySelectorAll('div.select-wrapper.comment-controls select')) {
@@ -253,6 +309,14 @@ export default {
 
 <style scoped>
 .card-panel div.row:last-child {
+  margin-bottom: 0;
+}
+input[type="checkbox"].green.darken-4.filled-in:checked + span:not(.lever):after{
+  border: 2px solid #1B5E20;
+  background-color: #1B5E20;
+}
+
+#comment-filter div.comment-main.row {
   margin-bottom: 0;
 }
 </style>
