@@ -109,17 +109,19 @@ export default {
         // and then reset the state to it
         newSession() {
             this.$store.dispatch('newSession')
-            this.dispatch('resetState')
+            this.$store.dispatch('resetState')
         },
 
         forkSession(index) {
-            this.$store.dispatch('forkSession', index)
+          this.$store.commit('clearMessages')
+          this.$store.dispatch('forkSession', index)
         },
 
         // View session. Called on event `view` from modalSessions
         viewSession(event) {
             let index = event.index
             let time = event.time
+            this.$store.commit('clearMessages')
             this.$store.dispatch('viewSession', index)
             this.$store.commit('setMessage', {
                 title: 'Viewing historic session',

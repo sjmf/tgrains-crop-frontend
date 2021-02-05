@@ -193,7 +193,7 @@ export default {
     pushSession(state, {count, forkSID}) {
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
-        state.sessions.push({
+        state.sessions[state.landscape_id].push({
             id: createUniqueID(),
             count: count || 0,
             opened: Date.now(),
@@ -201,7 +201,8 @@ export default {
             fork: forkSID
         })
 
-        console.log("Created session " + state.sessions[state.sessions.length -1].id)
+        console.log("Created session "
+            + state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].id)
     },
 
     /**
@@ -213,7 +214,7 @@ export default {
         // Set history to undefined so that state.history no longer points to the same object
         //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
         state.history = undefined
-        state.history = cloneDeep(state.sessions[index].history)
+        state.history = cloneDeep(state.sessions[state.landscape_id][index].history)
     },
 
     /**
@@ -223,7 +224,7 @@ export default {
      * @param index
      */
     shallowCopyHistoryFromSession(state, index) {
-        state.history = state.sessions[index].history
+        state.history = state.sessions[state.landscape_id][index].history
     },
 
     /**
@@ -267,7 +268,7 @@ export default {
 
         // Set indices
         state.historyIndex = state.history.length -1
-        state.sessions[state.sessions.length -1].count++
+        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count++
     },
 
     /**
@@ -289,7 +290,7 @@ export default {
         // Push to history queue and set indices
         state.history.push(load)
         state.historyIndex = state.history.length -1
-        state.sessions[state.sessions.length -1].count++
+        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count++
     },
 
     /**
@@ -314,7 +315,7 @@ export default {
      */
     deleteFromHistory(state, index) {
         state.history[index].deleted = true
-        state.sessions[state.sessions.length -1].count--
+        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count--
     },
 
     /**

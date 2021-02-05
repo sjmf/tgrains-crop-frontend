@@ -32,7 +32,7 @@ export default {
             }
 
             // Create new session and push initial state onto history stack (including BAU tag [1])
-            if(areaChanged || this.state.sessions.length === 0)
+            if(areaChanged || this.state.sessions[this.state.landscape_id].length === 0)
                 await this.dispatch('newSession')
             this.dispatch('resetState')
 
@@ -181,7 +181,7 @@ export default {
      * Query the model without caching
      * @returns {Promise<void>}
      */
-    doModelQuery (state, payload) {
+    doModelQuery (_, payload) {
         try {
             return http.queryModel(payload)
         }
@@ -250,11 +250,11 @@ export default {
                 .map(x => this.state.tags.tags[x].selected ? parseInt(x) : null)
                 .filter(x => x!==null)
 
+            let last = this.state.sessions[this.state.landscape_id].length - 1
+            payload['session_id']   = this.state.sessions[this.state.landscape_id][last].id
+            payload['index']        = this.state.historyIndex
             payload['landscape_id'] = this.state.landscape_id
-            payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
-            payload['index'] = this.state.historyIndex
-
-            payload['distance'] = this.state.history[this.state.historyIndex].changes.distance
+            payload['distance']     = this.state.history[this.state.historyIndex].changes.distance
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
@@ -343,6 +343,7 @@ export default {
             this.commit('pushSession', {})
         }
         catch (err) {
+            console.error(err)
             this.commit("raiseError", err)
         }
     },
@@ -353,9 +354,9 @@ export default {
      * @param index
      */
     viewSession(_, index) {
-        console.info(`Viewing session at ${index} with id ${this.state.sessions[index].id} `+
-            `and a history of ${this.state.sessions[index].history.length} states ` +
-            `(recorded ${this.state.sessions[index].count})`)
+        console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
+            `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states ` +
+            `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
         this.commit('deepCopyHistoryFromSession', index)
         this.commit('setGlobalReadOnly', true)
         this.commit('loadFromHistory', this.state.history.length -1)
@@ -365,7 +366,7 @@ export default {
      * Cancel viewing a session and return to the usual view
      */
     cancelViewSession() {
-        this.commit('shallowCopyHistoryFromSession', this.state.sessions.length -1)
+        this.commit('shallowCopyHistoryFromSession', this.state.sessions[this.state.landscape_id].length -1)
         this.commit('setGlobalReadOnly', false)
         this.commit('loadFromHistory', this.state.history.length -1)
     },
@@ -376,7 +377,7 @@ export default {
      * @param index
      */
     forkSession(_, index) {
-        const forkSID = this.state.sessions[index].id
+        const forkSID = this.state.sessions[this.state.landscape_id][index].id
         const count = this.state.history.length
 
         console.info(`Forking session at ${index} with id ${forkSID}`)
@@ -394,7 +395,7 @@ export default {
     async pushStateAndPOST(_, tags = []) {
 
         // Do we have a session ID yet?
-        if(this.state.sessions.length === 0) {
+        if(this.state.sessions[this.state.landscape_id].length === 0) {
             console.error('Set up sessions before pushing history!')
             return
         }
@@ -416,7 +417,7 @@ export default {
 
         // Now, post it to the server (asynchronously, so we don't have to wait)
         http.postState({
-            'session_id': this.state.sessions[this.state.sessions.length -1].id,
+            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions[this.state.landscape_id].length -1].id,
             'index': this.state.history.length -1,
             'user_id': this.state.user.id,
             'state': this.state.history[this.state.history.length -1],
@@ -434,7 +435,7 @@ export default {
         this.commit('deleteFromHistory', index)
 
         http.postState({
-            'session_id': this.state.sessions[this.state.sessions.length -1].id,
+            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions.length -1].id,
             'index': this.state.history.length -1,
             'user_id': this.state.user.id,
             'deleted': true,

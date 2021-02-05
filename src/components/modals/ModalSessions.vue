@@ -1,7 +1,7 @@
 <template>
   <div id="modal-sessions" class="modal">
     <div class="modal-content">
-      <h4>Sessions</h4>
+      <h4>My Sessions for {{$store.state.landscapeNames[$store.state.landscape_id]}}</h4>
 
       <div class="row">
         <div class="col s4"><strong>Time / Date</strong></div>
@@ -78,7 +78,7 @@ export default {
       return document.querySelector('#' + this.id)
     },
     sessions() {
-      return this.$store.state.sessions
+      return this.$store.state.sessions[this.$store.state.landscape_id]
     }
   },
   methods: {
