@@ -62,7 +62,12 @@
         },
         watch: {
           $route() {
+            console.info('route changed in landAreaMneu')
             this.setValue(this.$store.state.landscape_id)
+          },
+          readonly() {
+            const elem = document.querySelector("#landscape-input .select-wrapper input")
+            elem.disabled = this.readonly
           }
         },
         mounted() {
