@@ -13,6 +13,10 @@ export default {
      * @returns {Promise<void>}
      */
     async loadBauState(_, areaChanged) {
+        // If there's already a session active for this landscape, just load it.
+        if (this.state.sessions[this.state.landscape_id].length > 0)
+            return this.dispatch("loadTopSession")
+
         try {
             let bau = this.state.bau[this.state.landscape_id]
 
@@ -330,6 +334,29 @@ export default {
         await this.dispatch("sumArea")
         this.dispatch("pushStateAndPOST", [1]) // Include 'business-as-usual' tag
         this.commit("activateTags", this.state.historyIndex)
+    },
+
+    /**
+     * Load the session at the top of the stack
+     *
+     * @returns {Promise<void>}
+     */
+    async loadTopSession() {
+        try {
+            console.log(`Loading top session+state from stack "this.state.sessions[${this.state.landscape_id}] `+
+                        `with length ${this.state.sessions[this.state.landscape_id].length}`)
+            let index = this.state.sessions[this.state.landscape_id].length -1
+            await this.commit('shallowCopyHistoryFromSession', index)
+            await this.commit('loadFromHistory', this.state.history.length -1)
+
+            // Sum area and activate tags
+            await this.dispatch("sumArea")
+            this.commit("activateTags", this.state.historyIndex)
+        }
+        catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
+        }
     },
 
     /***
