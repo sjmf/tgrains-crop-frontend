@@ -206,6 +206,24 @@ export default {
     },
 
     /**
+     * Set the session index (highlights in ModalSessions the currently viewed session)
+     *
+     * @param state
+     * @param index
+     */
+    setSessionIndex(state, index) {
+        state.sessionIndex = index
+    },
+
+    /**
+     * Reset session index to zero
+     * @param state
+     */
+    resetSessionIndex(state){
+        state.sessionIndex = state.sessions[state.landscape_id].length -1
+    },
+
+    /**
      * Deep Copy a history from a Session into the current history stack
      * @param state
      * @param index

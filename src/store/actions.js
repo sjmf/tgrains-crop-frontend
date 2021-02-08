@@ -348,6 +348,7 @@ export default {
             let index = this.state.sessions[this.state.landscape_id].length -1
             await this.commit('shallowCopyHistoryFromSession', index)
             await this.commit('loadFromHistory', this.state.history.length -1)
+            await this.commit('resetSessionIndex')
 
             // Sum area and activate tags
             await this.dispatch("sumArea")
@@ -367,7 +368,8 @@ export default {
     async newSession() {
         try {
             await this.commit('clearHistory')
-            this.commit('pushSession', {})
+            await this.commit('pushSession', {})
+            await this.commit('resetSessionIndex')
         }
         catch (err) {
             console.error(err)
@@ -386,6 +388,7 @@ export default {
             `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
         await this.commit('deepCopyHistoryFromSession', index)
         await this.commit('loadFromHistory', this.state.history.length -1)
+        await this.commit('setSessionIndex', index)
         this.commit('setGlobalReadOnly', true)
     },
 
@@ -395,6 +398,7 @@ export default {
     async cancelViewSession() {
         await this.commit('shallowCopyHistoryFromSession', this.state.sessions[this.state.landscape_id].length -1)
         await this.commit('loadFromHistory', this.state.history.length -1)
+        await this.commit('resetSessionIndex')
         this.commit('setGlobalReadOnly', false)
     },
 
@@ -410,6 +414,7 @@ export default {
         console.info(`Forking session at ${index} with id ${forkSID}`)
         await this.commit('deepCopyHistoryFromSession', index)
         await this.commit('pushSession', {count, forkSID})
+        await this.commit('resetSessionIndex')
         await this.commit('loadFromHistory', this.state.history.length -1)
         this.commit('setGlobalReadOnly', false)
     },

@@ -69,6 +69,7 @@ export const initial_state = () => ({
         101:[ ],
         102:[ ]
     },
+    sessionIndex: 0,
 
     // Business-as-usual state. Loaded via AJAX.
     bau: {

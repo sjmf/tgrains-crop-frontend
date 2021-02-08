@@ -72,7 +72,8 @@
     <modal-sessions
         ref="modalSessions"
         @fork="$refs.modalFork.open($event)"
-        @view="viewSession($event)"/>
+        @view="viewSession($event)"
+        @return="cancelViewSession()"/>
   </div>
 </template>
 <script>
@@ -133,6 +134,12 @@ export default {
                 callbackText: 'Click here to close this banner and return',
                 dismissible: false
             })
+        },
+
+        cancelViewSession() {
+          this.$store.commit('clearMessages')
+          this.$store.dispatch('cancelViewSession')
+          this.$refs.modalSessions.close()
         }
     }
 }

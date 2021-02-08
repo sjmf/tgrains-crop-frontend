@@ -25,22 +25,30 @@
             <span>{{s.count}}</span>
           </div>
 
-          <div class="col s7" v-if="i>0">
-            <a class="btn pad btn-small btn-flat waves-effect waves-purple deep-purple white-text right"
-               @click="close(); $emit('view', {index: sessions.length -1 -i, time: $options.filters.moment(s.opened)})"> <!-- INDEXES ARE REVERSED!! -->
-              <i class="material-icons right">live_tv</i>
-              View
-            </a>
+          <div class="col s7">
+            <span v-if="i > 0">
+              <a class="btn pad btn-small btn-flat waves-effect waves-purple deep-purple white-text right"
+                 @click="close(); $emit('view', {index: sessions.length -1 -i, time: $options.filters.moment(s.opened)})"> <!-- INDEXES ARE REVERSED!! -->
+                <i class="material-icons right">live_tv</i>
+                View
+              </a>
+            </span>
+
+            <span v-if="i === 0 && index > 0">
+              <a class="btn pad btn-small btn-flat waves-effect waves-green green darken-2 white-text right"
+                  @click="$emit('return')">
+                <i class="material-icons right">backspace</i>
+                Return
+              </a>
+            </span>
 
             <a class="btn btn-small btn-flat waves-effect waves-blue blue darken-2 white-text right"
                @click="close(); $emit('fork', sessions.length -1 -i)">
               <i class="material-icons right">call_split</i>
               Fork
             </a>
-          </div>
 
-          <div class="col s7 align-right" v-else>
-            <span>Current Session</span>
+            <span v-if="i === 0">Current Session</span>
           </div>
         </div>
 
@@ -69,7 +77,6 @@ export default {
   data() {
     return {
       id: 'modal-sessions',
-      index: 0,
       sessionToFork: 0,
     }
   },
@@ -79,7 +86,10 @@ export default {
     },
     sessions() {
       return this.$store.state.sessions[this.$store.state.landscape_id]
-    }
+    },
+    index() {
+      return this.$store.state.sessions[this.$store.state.landscape_id].length - this.$store.state.sessionIndex - 1
+    },
   },
   methods: {
     instance() {
