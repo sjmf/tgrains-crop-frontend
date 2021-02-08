@@ -339,7 +339,7 @@ export default {
      */
     async newSession() {
         try {
-            this.commit('clearHistory')
+            await this.commit('clearHistory')
             this.commit('pushSession', {})
         }
         catch (err) {
@@ -353,22 +353,22 @@ export default {
      * @param _
      * @param index
      */
-    viewSession(_, index) {
+    async viewSession(_, index) {
         console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
             `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states ` +
             `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
-        this.commit('deepCopyHistoryFromSession', index)
+        await this.commit('deepCopyHistoryFromSession', index)
+        await this.commit('loadFromHistory', this.state.history.length -1)
         this.commit('setGlobalReadOnly', true)
-        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
      * Cancel viewing a session and return to the usual view
      */
-    cancelViewSession() {
-        this.commit('shallowCopyHistoryFromSession', this.state.sessions[this.state.landscape_id].length -1)
+    async cancelViewSession() {
+        await this.commit('shallowCopyHistoryFromSession', this.state.sessions[this.state.landscape_id].length -1)
+        await this.commit('loadFromHistory', this.state.history.length -1)
         this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
@@ -376,15 +376,15 @@ export default {
      * @param _
      * @param index
      */
-    forkSession(_, index) {
+    async forkSession(_, index) {
         const forkSID = this.state.sessions[this.state.landscape_id][index].id
         const count = this.state.history.length
 
         console.info(`Forking session at ${index} with id ${forkSID}`)
-        this.commit('deepCopyHistoryFromSession', index)
-        this.commit('pushSession', {count, forkSID})
+        await this.commit('deepCopyHistoryFromSession', index)
+        await this.commit('pushSession', {count, forkSID})
+        await this.commit('loadFromHistory', this.state.history.length -1)
         this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
@@ -413,7 +413,7 @@ export default {
         }
 
         // Okay, push history to the local queue (this also sets the tags if they're un-set)
-        this.commit("pushHistory", tags)
+        await this.commit("pushHistory", tags)
 
         // Now, post it to the server (asynchronously, so we don't have to wait)
         http.postState({
@@ -435,7 +435,7 @@ export default {
         this.commit('deleteFromHistory', index)
 
         http.postState({
-            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions.length -1].id,
+            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions[this.state.landscape_id].length -1].id,
             'index': this.state.history.length -1,
             'user_id': this.state.user.id,
             'deleted': true,
