@@ -6,6 +6,7 @@ import TabEnvironment from "@/components/tabs/TabEnvironment";
 import TabProduction from "@/components/tabs/TabProduction";
 import TabNutrition from "@/components/tabs/TabNutrition";
 import TabHistory from "@/components/tabs/TabHistory";
+import RouteError from "@/components/RouteError";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,10 @@ const routes = [
     component: ContainerMain,
     children: tabs,
   },
+  {
+    path: '*',
+    component: RouteError
+  }
 ]
 
 const router = new VueRouter({
