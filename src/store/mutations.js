@@ -14,6 +14,8 @@ export default {
      * @param id
      */
     setLandscapeId (state, id) {
+        if (isNaN(id) || id < 100) return
+
         state.landscape_id = id
         state.landscapeName = state.landscapeNames[id]
     },
