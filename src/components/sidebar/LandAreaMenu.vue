@@ -62,7 +62,6 @@
         },
         watch: {
           $route() {
-            console.info('route changed in landAreaMneu')
             this.setValue(this.$store.state.landscape_id)
           },
           readonly() {
