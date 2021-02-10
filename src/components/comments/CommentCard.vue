@@ -66,7 +66,7 @@
         </div>
 
         <!-- Compare buttons -->
-        <div class="row" v-if="state">
+        <div class="row" v-if="session">
           <div class="col s8">
             <span class="grey-text">Distance from {{ distance_text }}: {{ distance }} ha</span>
           </div>
@@ -125,7 +125,10 @@ export default {
       text: String,
       timestamp: Number,
       tags: Array,
-      state: [Object, undefined],
+      landscape_id: Number,
+      session: [Array, undefined],
+      state_index: Number,
+      session_id: String,
       reply_view: Boolean,
       distance: Number
   },
@@ -160,8 +163,9 @@ export default {
       if(this.readonly)
           return
 
-      await this.$store.dispatch('loadStateFromComment', {
-        'state': this.state,
+      await this.$store.dispatch('loadSessionFromComment', {
+        'session': this.session,
+        'index': this.state_index,
         'tags': this.tags,
         'author': this.author
       })
@@ -183,6 +187,9 @@ export default {
 </script>
 
 <style scoped>
+.jdenticon:hover {
+  cursor:pointer;
+}
 span.reply, .compare-buttons a {
   padding: 0 0 0 10px;
   cursor: pointer;
