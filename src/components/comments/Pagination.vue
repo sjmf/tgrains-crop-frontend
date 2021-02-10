@@ -4,19 +4,19 @@
     <ul class="pagination">
       <li v-bind:class="[current_page <= 1 ? 'disabled' : 'waves-effect']"
           @click="set_page(current_page - 1)">
-        <a href="#!"><i class="material-icons">chevron_left</i></a>
+        <span><i class="material-icons">chevron_left</i></span>
       </li>
 
       <li v-for="n in total_pages"
           v-bind:key="n"
           v-bind:class="[current_page === n ? 'active' : 'waves-effect']"
           @click="set_page(n)">
-        <a href="#!">{{ n }}</a>
+        <span>{{ n }}</span>
       </li>
 
       <li v-bind:class="[current_page >= total_pages ? 'disabled' : 'waves-effect']"
           @click="set_page(current_page + 1)">
-        <a href="#!"><i class="material-icons">chevron_right</i></a>
+        <span><i class="material-icons">chevron_right</i></span>
       </li>
     </ul>
   </div>
@@ -42,3 +42,23 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+ul.pagination span {
+  cursor: pointer;
+}
+.pagination li.active span {
+  color: #fff;
+}
+.pagination li.disabled span {
+  cursor: default;
+  color: #999;
+}
+.pagination li span {
+  color: #444;
+  display: inline-block;
+  font-size: 1.2rem;
+  padding: 0 10px;
+  line-height: 30px;
+}
+</style>

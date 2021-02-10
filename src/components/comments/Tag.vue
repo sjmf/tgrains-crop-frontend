@@ -7,11 +7,11 @@
     <span v-bind:class="colour">{{ name }}</span>
   </label>
   <span v-else>
-    <a v-if="id" href="#!" @click="$emit('filterTag', id)">
-      <span class="new badge tag link"
+    <span v-if="id"
+          class="new badge tag link"
           v-bind:data-badge-caption="name"
-          v-bind:class="colour"/>
-    </a>
+          v-bind:class="colour"
+          @click="$emit('filterTag', id)"/>
     <span v-else class="new badge tag"
           v-bind:data-badge-caption="name"
           v-bind:class="colour"/>
@@ -67,6 +67,7 @@
 span.tag.link:hover,
 [type="checkbox"].tag + span:hover {
   filter: brightness(90%);
+  cursor: pointer;
 }
 
 span.tag.link:active,

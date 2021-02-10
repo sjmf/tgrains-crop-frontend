@@ -2,21 +2,20 @@
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="comment-main row">
       <div class="col s3 m2">
-        <a href="#!"
-           @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
-          <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
-        </a>
+          <Jdenticon class="jdenticon"
+                     @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null"
+                     v-bind:value="this.hash" v-bind:size="80"
+                     alt="avatar"/>
       </div>
 
       <div class="col s9 m10">
         <div class="row">
           <div class="col s12 m6">
             <span class="username">
-              <a href="#!"
-                 class="green-text text-darken-2"
-                 @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
+              <span class="green-text text-darken-2"
+                    @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
                 {{ author | decode }}
-              </a>
+              </span>
             </span>
           </div>
 
@@ -86,7 +85,7 @@
         <p class="grey-text small">
           This comment is a reply: <a v-if="!replyCard" @click="load_reply(reply_id)">(load reply)</a>
         </p>
-        <a href="#!" @click="$emit('filterReply', replyCard)">
+        <span class="reply-card" @click="$emit('filterReply', replyCard)">
           <comment-card
               v-if="replyCard"
               v-bind:id="replyCard.id"
@@ -99,7 +98,7 @@
               v-bind:timestamp="replyCard.timestamp"
               v-bind:reply_view="true"
               @filterUser="(user) => $emit('filterUser', user)"/>
-        </a>
+        </span>
       </div>
     </div>
   </div>
@@ -187,9 +186,10 @@ export default {
 </script>
 
 <style scoped>
-.jdenticon:hover {
+.jdenticon:hover, .username span, .reply-card {
   cursor:pointer;
 }
+
 span.reply, .compare-buttons a {
   padding: 0 0 0 10px;
   cursor: pointer;
