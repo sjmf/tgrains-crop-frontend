@@ -505,20 +505,24 @@ export default {
     },
 
     /**
-     * Delete history state and POST changes to server
+     * Delete/undelete history state and POST changes to server
      *
+     * @param _
+     * @param index
+     * @param deleted
      * @returns {Promise<void>}
      */
-    async deleteState(_, index) {
-        this.commit('deleteFromHistory', index)
+    async setStateDeleted(_, {index, deleted}) {
+        this.commit('setHistoryDeleted', {index, deleted})
 
         http.postState({
             'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions[this.state.landscape_id].length -1].id,
-            'index': this.state.history.length -1,
             'user_id': this.state.user.id,
-            'deleted': true,
+            'index': index,
+            'deleted': deleted,
         }).catch((err)=>{
             this.commit("raiseError", err)
         })
-    }
+    },
+
 }

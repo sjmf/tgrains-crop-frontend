@@ -1,5 +1,5 @@
 <template>
-  <div id="modal-sessions" class="modal">
+  <div :id="id" class="modal">
     <div class="modal-content">
       <h4>My Sessions for {{$store.state.landscapeNames[$store.state.landscape_id]}}</h4>
 

@@ -36,6 +36,13 @@
                    @comment="$emit('comment', history.length -1 -index)"/>
     </div>
 
+    <div class="container">
+      <a class="right pad overrun btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
+         v-bind:class="{'disabled': history.length === 1 || readonly}"
+         @click="showTrashDialog">
+        <i class="material-icons right">delete_sweep</i>Deleted States
+      </a>
+    </div>
 
     <!-- MODALS -->
 
@@ -74,18 +81,23 @@
         @fork="$refs.modalFork.open($event)"
         @view="viewSession($event)"
         @return="cancelViewSession()"/>
+
+    <modal-trash
+        ref="modalTrash"/>
   </div>
 </template>
 <script>
 import HistoryRow from "@/components/tabs/HistoryRow";
 import ModalSessions from "@/components/modals/ModalSessions";
 import ModalConfirm from "@/components/modals/ModalConfirm";
+import ModalTrash from "@/components/modals/ModalTrash";
 
 export default {
     name: 'TabHistory',
     components: {
         ModalConfirm,
         ModalSessions,
+        ModalTrash,
         HistoryRow
     },
     computed: {
@@ -104,6 +116,10 @@ export default {
 
         showNewSessionConfirm() {
             this.$refs.modalConfirm.open()
+        },
+
+        showTrashDialog() {
+            this.$refs.modalTrash.open()
         },
 
         // Create new session– Used as a callback by modalConfirm

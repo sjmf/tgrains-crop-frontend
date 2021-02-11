@@ -283,7 +283,8 @@ export default {
             "time": Date.now(),
             "tags": tags,
             "changes": result,
-            "deleted": false
+            "deleted": false,
+            "index": state.history.length
         })
 
         // Set indices
@@ -331,10 +332,10 @@ export default {
      * Delete state from history
      * @param state
      * @param index
+     * @param deleted
      */
-    deleteFromHistory(state, index) {
-        state.history[index].deleted = true
-        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count--
+    setHistoryDeleted(state, {index, deleted}) {
+        state.history[index].deleted = deleted
     },
 
     /**
