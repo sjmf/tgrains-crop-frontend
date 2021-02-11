@@ -66,9 +66,11 @@
 
 <script>
 import moment from "moment";
+import ModalMixin from "./modalMixin"
 
 export default {
   name: "ModalSessions",
+  mixins: [ModalMixin],
   filters: {
     moment: function (date) {
       return moment(date).format('HH:mm:ss, Do MMM YYYY');
@@ -76,36 +78,16 @@ export default {
   },
   data() {
     return {
-      id: 'modal-sessions',
       sessionToFork: 0,
     }
   },
   computed: {
-    domNode() {
-      return document.querySelector('#' + this.id)
-    },
     sessions() {
       return this.$store.state.sessions[this.$store.state.landscape_id]
     },
     index() {
       return this.$store.state.sessions[this.$store.state.landscape_id].length - this.$store.state.sessionIndex - 1
     },
-  },
-  methods: {
-    instance() {
-      // NB: This must be a method, NOT a computed property
-      return this.$_M.Modal.getInstance(this.domNode)
-    },
-    open() {
-      // Instantiate if undefined.
-      if (this.instance() === undefined) {
-        this.$_M.Modal.init(this.domNode)
-      }
-      this.instance().open();
-    },
-    close() {
-      this.instance().close()
-    }
   }
 }
 </script>

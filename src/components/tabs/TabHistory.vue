@@ -78,11 +78,13 @@
 
     <modal-sessions
         ref="modalSessions"
+        id="modal-sessions"
         @fork="$refs.modalFork.open($event)"
         @view="viewSession($event)"
         @return="cancelViewSession()"/>
 
     <modal-trash
+        id="modal-trash"
         ref="modalTrash"/>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div v-bind:id="id" class="modal">
+  <div :id="id" class="modal">
     <div class="modal-content">
       <h4>{{ heading }}</h4>
       <slot></slot>
@@ -16,24 +16,19 @@
 </template>
 
 <script>
+import ModalMixin from "./modalMixin"
+
 export default {
   name: 'modal-confirm',
+  mixins: [ModalMixin],
   props: {
-    id: String,
     heading: String,
     cancelCallback: Function,
     confirmCallback: Function,
   },
-  data() {
-    return {
-      params: undefined
-    }
-  },
-  computed: {
-    domNode() {
-      return document.querySelector('#' + this.id)
-    }
-  },
+  data: () => ({
+    params: undefined
+  }),
   methods: {
     callback(callbackFn) {
       if(typeof(callbackFn) === "function") {
@@ -41,10 +36,6 @@ export default {
       } else {
         console.warn("No callback function defined!")
       }
-    },
-    instance() {
-      // NB: This must be a method, NOT a computed property
-      return this.$_M.Modal.getInstance(this.domNode)
     },
     open(params) {
       // Open params are treated as the argument for the callback function. Store them for later use.
@@ -56,9 +47,6 @@ export default {
       }
       this.instance().open()
     },
-    close() {
-      this.instance().close()
-    }
   }
 }
 </script>

@@ -30,16 +30,13 @@
 
 <script>
 import HistoryRow from "@/components/tabs/HistoryRow";
+import ModalMixin from "@/components/modals/modalMixin";
 
 export default {
   name: "ModalSessions",
+  mixins: [ModalMixin],
   components: {
     HistoryRow
-  },
-  data() {
-    return {
-      id: 'modal-content',
-    }
   },
   computed: {
     deletedHistory() {
@@ -51,25 +48,6 @@ export default {
         }
       }
       return deletedHistory
-    },
-    domNode() {
-      return document.querySelector('#' + this.id)
-    },
-  },
-  methods: {
-    instance() {
-      // NB: This must be a method, NOT a computed property
-      return this.$_M.Modal.getInstance(this.domNode)
-    },
-    open() {
-      // Instantiate if undefined.
-      if (this.instance() === undefined) {
-        this.$_M.Modal.init(this.domNode)
-      }
-      this.instance().open();
-    },
-    close() {
-      this.instance().close()
     }
   }
 }
