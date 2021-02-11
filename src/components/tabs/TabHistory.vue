@@ -120,20 +120,8 @@ export default {
 
         // View session. Called on event `view` from modalSessions
         viewSession(event) {
-            let index = event.index
-            let time = event.time
             this.$store.commit('clearMessages')
-            this.$store.dispatch('viewSession', index)
-            this.$store.commit('setMessage', {
-                title: 'Viewing historic session',
-                message: `The current view shows a historic session created at ${time}.`,
-                kind: 'info',
-                callback: () => {
-                    this.$store.dispatch('cancelViewSession')
-                },
-                callbackText: 'Click here to close this banner and return',
-                dismissible: false
-            })
+            this.$store.dispatch('viewSession', event)
         },
 
         cancelViewSession() {

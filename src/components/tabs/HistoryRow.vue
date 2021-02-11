@@ -77,7 +77,10 @@ export default {
   methods: {
     loadState() {
       // Load state from history and activate its tags
-      this.$store.commit("loadFromHistory", this.index)
+      this.$store.commit("loadFromHistory", {
+        'history': this.$store.state.history,
+        'index': this.index
+      })
       this.$store.commit("activateTags", this.index)
       this.$emit('load', this.index);
     },

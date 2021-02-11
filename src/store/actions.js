@@ -2,7 +2,6 @@
 
 import { cacheAction } from "vuex-cache";
 import http from "@/services/http";
-import {cloneDeep} from "lodash";
 
 export default {
     /***
@@ -274,32 +273,46 @@ export default {
     },
 
     /**
-     * Load a state from a comment into the current session/state
-     * Actions: pushStateAndPOST
-     * @param _ unused state
-     * @param comment
+     * View a session from a comment
+     * @param _
+     * @param session
+     * @param index
+     * @param author
      */
-    loadStateFromComment(_, comment) {
-        // Save existing state in local variable
-        let history = cloneDeep(this.state.history[this.state.historyIndex])
+    async viewSessionFromComment(_, {session, index, author}) {
+        try {
+            console.log(`Loading session from comment by ${author} with id ${session.id} at index ${index}.`)
 
-        // Overwrite state
-        this.commit("updateLandscape", comment.state.inputs)
-        this.commit("setDataFromQuery", comment.state.raw) // PASS RAW!
-        this.commit("setAreaUsed", {"lowlandArea": comment.state.area.lowland, "uplandArea": comment.state.area.upland})
+            await this.commit('deepCopyHistoryFromSession', session)
+            await this.commit('loadFromHistory', {
+                'history': session.history,
+                'index': index
+            })
+            await this.dispatch("sumArea")
+            this.commit("activateTags", this.state.historyIndex)
 
-        // Push this new state onto history stack (and server)
-        this.dispatch("pushStateAndPOST", [...comment.tags, 2])
+            this.commit('setGlobalReadOnly', true)
 
-        // Tell the user what we've done!
-        this.commit('setMessage', {
-            message: "Loaded model state from comment by " + comment.author,
-            kind: "info",
-            callback: () => {
-                this.commit("rollbackHistory", history)
-            },
-            callbackText: "Click here to restore previous state"
-        }) // Will also scroll viewport to top
+            const format_datetime = (unix_timestamp) => {
+                let d = new Date(unix_timestamp * 1000)
+                return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB")
+            }
+
+            this.commit('setMessage', {
+                title: `Viewing session from comment by ${author}`,
+                message: `The current view shows a historic session created at ${format_datetime(session.opened)}.`,
+                kind: 'info',
+                callback: () => {
+                    this.dispatch('cancelViewSession')
+                },
+                callbackText: 'Click here to close this banner and return',
+                dismissible: false
+            })
+        }
+        catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
+        }
     },
 
     /***
@@ -345,9 +358,13 @@ export default {
         try {
             console.log(`Loading top session+state from stack "this.state.sessions[${this.state.landscape_id}] `+
                         `with length ${this.state.sessions[this.state.landscape_id].length}`)
-            let index = this.state.sessions[this.state.landscape_id].length -1
-            await this.commit('shallowCopyHistoryFromSession', index)
-            await this.commit('loadFromHistory', this.state.history.length -1)
+
+            const session = this.state.sessions[this.state.landscape_id]
+            await this.commit('shallowCopyHistoryFromSession', session[session.length -1])
+            await this.commit('loadFromHistory', {
+                'history': this.state.history,
+                'index': this.state.history.length - 1
+            })
             await this.commit('resetSessionIndex')
 
             // Sum area and activate tags
@@ -381,23 +398,49 @@ export default {
      * Load a session into history for viewing (read-only)
      * @param _
      * @param index
+     * @param time
      */
-    async viewSession(_, index) {
-        console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
-            `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states ` +
-            `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
-        await this.commit('deepCopyHistoryFromSession', index)
-        await this.commit('loadFromHistory', this.state.history.length -1)
-        await this.commit('setSessionIndex', index)
-        this.commit('setGlobalReadOnly', true)
+    async viewSession(_, {index, time}) {
+        try {
+            console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
+                `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states ` +
+                `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
+
+            await this.commit('deepCopyHistoryFromSession', this.state.sessions[this.state.landscape_id][index])
+            await this.commit('loadFromHistory', {
+                'history': this.state.history,
+                'index': this.state.history.length - 1
+            })
+            await this.commit('setSessionIndex', index)
+            this.commit('setGlobalReadOnly', true)
+
+            this.commit('setMessage', {
+                title: 'Viewing historic session',
+                message: `The current view shows a historic session created at ${time}.`,
+                kind: 'info',
+                callback: () => {
+                    this.dispatch('cancelViewSession')
+                },
+                callbackText: 'Click here to close this banner and return',
+                dismissible: false
+            })
+        }
+        catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
+        }
     },
 
     /**
      * Cancel viewing a session and return to the usual view
      */
     async cancelViewSession() {
-        await this.commit('shallowCopyHistoryFromSession', this.state.sessions[this.state.landscape_id].length -1)
-        await this.commit('loadFromHistory', this.state.history.length -1)
+        const session = this.state.sessions[this.state.landscape_id]
+        await this.commit('shallowCopyHistoryFromSession', session[session.length -1])
+        await this.commit('loadFromHistory', {
+            'history': this.state.history,
+            'index': this.state.history.length - 1
+        })
         await this.commit('resetSessionIndex')
         this.commit('setGlobalReadOnly', false)
     },
@@ -412,10 +455,13 @@ export default {
         const count = this.state.history.length
 
         console.info(`Forking session at ${index} with id ${forkSID}`)
-        await this.commit('deepCopyHistoryFromSession', index)
+        await this.commit('deepCopyHistoryFromSession', this.state.sessions[this.state.landscape_id][index])
         await this.commit('pushSession', {count, forkSID})
         await this.commit('resetSessionIndex')
-        await this.commit('loadFromHistory', this.state.history.length -1)
+        await this.commit('loadFromHistory', {
+            'history': this.state.history,
+            'index': this.state.history.length - 1
+        })
         this.commit('setGlobalReadOnly', false)
     },
 

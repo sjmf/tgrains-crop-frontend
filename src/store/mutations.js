@@ -228,23 +228,23 @@ export default {
     /**
      * Deep Copy a history from a Session into the current history stack
      * @param state
-     * @param index
+     * @param session
      */
-    deepCopyHistoryFromSession(state, index) {
+    deepCopyHistoryFromSession(state, session) {
         // Set history to undefined so that state.history no longer points to the same object
         //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
         state.history = undefined
-        state.history = cloneDeep(state.sessions[state.landscape_id][index].history)
+        state.history = cloneDeep(session.history)
     },
 
     /**
      * Shallow copy a history from a session into the current history stack
      * (used for setting history pointer back to same object)
      * @param state
-     * @param index
+     * @param session
      */
-    shallowCopyHistoryFromSession(state, index) {
-        state.history = state.sessions[state.landscape_id][index].history
+    shallowCopyHistoryFromSession(state, session) {
+        state.history = session.history
     },
 
     /**
@@ -316,14 +316,13 @@ export default {
     /**
      * Load state from history
      * @param state
-     * @param index
+     * @param {history, index} – the state to load
      */
-    loadFromHistory(state, index= 0) {
-        let load = state.history[index]
-        state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
-        state.data[state.landscape_id] = cloneDeep(load.outputs)
-        state.data.raw[state.landscape_id] = cloneDeep(load.raw)
-        state.area = load.area
+    loadFromHistory(state, {history, index}) {
+        state.landscapes[state.landscape_id] = cloneDeep(history[index].inputs)
+        state.data[state.landscape_id] = cloneDeep(history[index].outputs)
+        state.data.raw[state.landscape_id] = cloneDeep(history[index].raw)
+        state.area = history[index].area
 
         state.historyIndex = index
     },
@@ -365,8 +364,6 @@ export default {
         state.comments.page     = comments.page
         state.comments.size     = comments.size
         state.comments.length   = comments.length
-        // state.comments.filter   = comments.filter // TODO: Uncomment when server echoes these values
-        // state.comments.sort     = comments.sort
     },
 
     /**

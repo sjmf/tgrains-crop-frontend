@@ -125,7 +125,7 @@ export default {
       timestamp: Number,
       tags: Array,
       landscape_id: Number,
-      session: [Array, undefined],
+      session: [Object, undefined],
       state_index: Number,
       session_id: String,
       reply_view: Boolean,
@@ -162,10 +162,9 @@ export default {
       if(this.readonly)
           return
 
-      await this.$store.dispatch('loadSessionFromComment', {
+      await this.$store.dispatch('viewSessionFromComment', {
         'session': this.session,
         'index': this.state_index,
-        'tags': this.tags,
         'author': this.author
       })
       this.$emit('load')
