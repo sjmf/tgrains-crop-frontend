@@ -22,7 +22,7 @@
           </div>
 
           <div class="col s1">
-            <span>{{s.count}}</span>
+            <span>{{s.history.length}}</span>
           </div>
 
           <div class="col s7">

@@ -2,6 +2,7 @@
 
 import { cacheAction } from "vuex-cache";
 import http from "@/services/http";
+import {createUniqueID} from "@/store/helpers";
 
 export default {
     /***
@@ -403,8 +404,7 @@ export default {
     async viewSession(_, {index, time}) {
         try {
             console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
-                `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states ` +
-                `(recorded ${this.state.sessions[this.state.landscape_id][index].count})`)
+                `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states.`)
 
             await this.commit('deepCopyHistoryFromSession', this.state.sessions[this.state.landscape_id][index])
             await this.commit('loadFromHistory', {
@@ -435,8 +435,8 @@ export default {
      * Cancel viewing a session and return to the usual view
      */
     async cancelViewSession() {
-        const session = this.state.sessions[this.state.landscape_id]
-        await this.commit('shallowCopyHistoryFromSession', session[session.length -1])
+        const sessions = this.state.sessions[this.state.landscape_id]
+        await this.commit('shallowCopyHistoryFromSession', sessions[sessions.length -1])
         await this.commit('loadFromHistory', {
             'history': this.state.history,
             'index': this.state.history.length - 1
@@ -451,18 +451,40 @@ export default {
      * @param index
      */
     async forkSession(_, index) {
-        const forkSID = this.state.sessions[this.state.landscape_id][index].id
-        const count = this.state.history.length
+        // TODO: Modify this method to allow taking session from comment instead of stack
+        const session_stack = this.state.sessions[this.state.landscape_id]
+        const session = session_stack[index]
+        const new_session_id = createUniqueID()
 
-        console.info(`Forking session at ${index} with id ${forkSID}`)
-        await this.commit('deepCopyHistoryFromSession', this.state.sessions[this.state.landscape_id][index])
-        await this.commit('pushSession', {count, forkSID})
-        await this.commit('resetSessionIndex')
-        await this.commit('loadFromHistory', {
-            'history': this.state.history,
-            'index': this.state.history.length - 1
-        })
-        this.commit('setGlobalReadOnly', false)
+        console.info(`Forking session at ${index} with id ${session.id} and length ${session.history.length}`)
+
+        try {
+            // Ask the server to fork the session on the back-end database
+            await http.forkSession({
+                'user_id': this.state.user.id,
+                'session_id': session.id,
+                'new_session_id': new_session_id
+            })
+
+            // pushSession copies history from state.history, so populate state.history first by
+            // deep-copying history from selected session (at index) into state.history
+            await this.commit('deepCopyHistoryFromSession', session)
+            await this.commit('pushSession', {forkSID: session.id, newSID: new_session_id})
+            await this.commit('resetSessionIndex')
+
+            // Then, load the history into landscapes
+            await this.commit('loadFromHistory', {
+                'history': session.history,
+                'index': session.history.length - 1
+            })
+        }
+        catch (err) {
+            console.error(err)
+            this.commit("raiseError", err)
+        }
+        finally {
+            this.commit('setGlobalReadOnly', false)
+        }
     },
 
     /**

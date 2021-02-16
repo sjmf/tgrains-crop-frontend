@@ -189,15 +189,14 @@ export default {
      * Push a new session onto the session stack.
      * Commit clearHistory() first for a clean state, or pass its length in to fork a session
      * @param state
-     * @param count
+     * @param newSID
      * @param forkSID - SID for the session this was forked from (Default undefined)
      */
-    pushSession(state, {count, forkSID}) {
+    pushSession(state, {newSID, forkSID}) {
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
         state.sessions[state.landscape_id].push({
-            id: createUniqueID(),
-            count: count || 0,
+            id: newSID || createUniqueID(),
             opened: Date.now(),
             history: state.history,
             fork: forkSID
@@ -289,7 +288,6 @@ export default {
 
         // Set indices
         state.historyIndex = state.history.length -1
-        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count++
     },
 
     /**
@@ -311,7 +309,6 @@ export default {
         // Push to history queue and set indices
         state.history.push(load)
         state.historyIndex = state.history.length -1
-        state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].count++
     },
 
     /**

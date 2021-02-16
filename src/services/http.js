@@ -234,5 +234,20 @@ export default {
             console.error(err)
             throw "History POST failed. " + err.toString() || ''
         }
+    },
+
+    /**
+     * Tell the server to fork a session
+     * @param data {user_id, session_id, new_session_id}
+     * @returns {Promise<void>}
+     */
+    async forkSession(data) {
+        try {
+            return await axios.post('/fork', data)
+        }
+        catch (err) {
+            console.error(err)
+            throw "History POST failed. " + err.toString() || ''
+        }
     }
 }

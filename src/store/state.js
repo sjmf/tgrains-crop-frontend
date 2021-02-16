@@ -64,7 +64,7 @@ export const initial_state = () => ({
     historyIndex: 0,
 
     // Sessions data structure
-    // {id: 'unique ID from server', count: 10, opened: Date.now(), history: []},
+    // {id: 'unique ID from server', opened: Date.now(), history: []},
     sessions: {
         101:[ ],
         102:[ ]
