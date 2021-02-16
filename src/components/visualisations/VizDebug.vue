@@ -1,12 +1,18 @@
 <template>
   <div class="container">
     <div class="col s12">
-      <a class="right smalltext" @click="showDebug = !showDebug">Toggle Debug information</a>
+      <a class="right smalltext" @click="showDebug = !showDebug">Show technical information</a>
     </div>
     <div class="col s12" v-if="showDebug">
       <div class="card panel">
         <div class="card-content">
-          <span class="card-title">Debug Information</span>
+          <span class="card-title">Technical Information</span>
+          <div class="">
+            <span>To <strong>revoke your consent for this session</strong>, please provide the facilitator with the following user ID:</span>
+            <pre>{{user_id}}</pre>
+          </div>
+
+          <div>Full debugging information <a @click="copyDebug()">(copy to clipboard)</a>:</div>
           <div class="debug-info-panel">
             <vue-code-highlight>
             {{debug}}
@@ -14,15 +20,15 @@
           </div>
           <br/>
           <div class="row">
-            <div class="col s8">
+            <div class="col s6 right">
               <a class="btn red" @click="reload_store">Reload data store from defaults</a>
             </div>
-            <div class="col s4">
-              <a class="btn red" @click="raiseError()">Raise Error</a>
-              <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>
-              <a class="btn blue" @click="setMessage('info')">Raise Info</a>
-              <a class="btn green" @click="setMessage('success')">Raise Success</a>
-            </div>
+<!--            <div class="col s3">-->
+<!--              <a class="btn red" @click="raiseError()">Raise Error</a>-->
+<!--              <a class="btn blue" @click="setMessage('info')">Raise Info</a>-->
+<!--              <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>-->
+<!--              <a class="btn green" @click="setMessage('success')">Raise Success</a>-->
+<!--            </div>-->
           </div>
         </div>
       </div>
@@ -54,21 +60,33 @@
             },
             setMessage(kind) {
               this.$store.commit('setMessage', {message: 'Testing ' + kind, kind:kind, timeout: 5000})
+            },
+            copyDebug() {
+              navigator.clipboard.writeText(JSON.stringify(this.$store.state, null, 2))
             }
         },
         computed: {
           debug() {
               return this.$store.state;
+          },
+          user_id() {
+            return this.$store.state.user.id
           }
         }
     }
 </script>
 
 <style scoped>
+  a:hover {
+    cursor: pointer;
+  }
+  .btn {
+    width: 100%;
+  }
   .debug-info-panel {
     font-family: 'Ubuntu', 'Consolas', 'Courier New', monospace;
     font-size: .8em;
-    max-height: 500px;
+    max-height: 300px;
     overflow-y: scroll;
   }
   .debug-info-panel pre {
