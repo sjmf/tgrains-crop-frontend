@@ -38,7 +38,7 @@ export default {
             let errormessage = ""
 
             // Parse error messages from model
-            if(match.length > 0) {
+            if(Array.isArray(match) && match.length > 0) {
                 match = match[match.length - 1]
                 errormessage = match.charAt(0).toUpperCase() + match.slice(1) // Capitalise first letter
             } else {
