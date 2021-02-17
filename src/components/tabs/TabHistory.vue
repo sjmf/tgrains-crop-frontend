@@ -133,7 +133,7 @@ export default {
 
         forkSession(index) {
           this.$store.commit('clearMessages')
-          this.$store.dispatch('forkSession', index)
+          this.$store.dispatch('forkSession', {index})
         },
 
         // View session. Called on event `view` from modalSessions
