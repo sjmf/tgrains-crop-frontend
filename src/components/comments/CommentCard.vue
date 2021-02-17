@@ -164,11 +164,11 @@ export default {
 
       if(this.landscape_id !== this.$store.state.landscape_id) {
         return this.$store.commit('setMessage', {
-          title: `Sorry! I can't load the session from ${this.author}'s comment`,
-          message: `it is set within the `+
+          title: `Can't load session`,
+          message: `${this.author}'s comment is about the `+
                     `<strong>${this.$store.state.landscapeNames[this.landscape_id]}</strong>`+
                     ` area, but you are currently viewing `+
-                    `<strong>${this.$store.state.landscapeNames[this.$store.state.landscape_id]}</strong>.`+
+                    `<strong>${this.$store.state.landscapeNames[this.$store.state.landscape_id]}</strong>. `+
                     `To change your area, use the <strong>Land Area</strong> menu in the left-hand sidebar.`,
           kind:'warning',
         })

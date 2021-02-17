@@ -23,12 +23,12 @@
             <div class="col s6 right">
               <a class="btn red" @click="reload_store">Reload data store from defaults</a>
             </div>
-<!--            <div class="col s3">-->
-<!--              <a class="btn red" @click="raiseError()">Raise Error</a>-->
-<!--              <a class="btn blue" @click="setMessage('info')">Raise Info</a>-->
-<!--              <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>-->
-<!--              <a class="btn green" @click="setMessage('success')">Raise Success</a>-->
-<!--            </div>-->
+            <div class="col s3">
+              <a class="btn red" @click="setMessage('error')">Raise Error</a>
+              <a class="btn blue" @click="setMessage('info')">Raise Info</a>
+              <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>
+              <a class="btn green" @click="setMessage('success')">Raise Success</a>
+            </div>
           </div>
         </div>
       </div>
@@ -36,44 +36,51 @@
   </div>
 </template>
 
-<script>// You have to extract the component from the module
-    import { component as VueCodeHighlight } from 'vue-code-highlight';
-    import 'vue-code-highlight/themes/prism-coy.css'
+<script>
+  import { component as VueCodeHighlight } from 'vue-code-highlight';
+  import 'vue-code-highlight/themes/prism-coy.css'
 
-    export default {
-        name: 'viz-debug',
-        components: {
-            VueCodeHighlight
-        },
-        data() {
-            return {
-                showDebug: false
-            }
-        },
-        methods: {
-            reload_store() {
-                this.$store.commit('invalidateStore');
-                window.location.reload(false);
-            },
-            raiseError() {
-              this.$store.commit('setMessage', {message: 'Testing', kind:'error', timeout: 5000})
-            },
-            setMessage(kind) {
-              this.$store.commit('setMessage', {message: 'Testing ' + kind, kind:kind, timeout: 5000})
-            },
-            copyDebug() {
-              navigator.clipboard.writeText(JSON.stringify(this.$store.state, null, 2))
-            }
-        },
-        computed: {
-          debug() {
-              return this.$store.state;
-          },
-          user_id() {
-            return this.$store.state.user.id
-          }
-        }
+  export default {
+    name: 'viz-debug',
+    components: {
+      VueCodeHighlight
+    },
+    data() {
+      return {
+        showDebug: false
+      }
+    },
+    methods: {
+      reload_store() {
+        this.$store.commit('invalidateStore');
+        window.location.reload(false);
+      },
+      setMessage(kind) {
+        this.$store.commit('setMessage', {
+          message: 'Testing ' + kind,
+          kind: kind,
+          timeout: 5000,
+          callbacks: [
+              () => {console.log('Successful callback!')}
+          ],
+          callbackInnerHTML: [
+              "<span class='btn btn-small btn-flat white-text red waves-red waves-effect'>Testing!</span>"
+          ]
+        })
+      },
+      copyDebug() {
+        navigator.clipboard.writeText(JSON.stringify(this.$store.state, null, 2))
+      }
+    },
+    computed: {
+      debug() {
+        return this.$store.state;
+      },
+      user_id() {
+        return this.$store.state.user.id
+      }
     }
+  }
 </script>
 
 <style scoped>
