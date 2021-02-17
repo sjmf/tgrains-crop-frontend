@@ -353,11 +353,15 @@ export default {
                 message: `You are currently viewing a loaded session created at ${format_datetime(session.opened)}.`,
                 kind: 'default',
                 callbacks: [
-                    () => { this.dispatch('cancelViewSession') }
+                    () => { this.dispatch('cancelViewSession') },
+                    () => { this.dispatch('forkSession', {session: session}) }
                 ],
                 callbackInnerHTML: [
-                    '<span class="btn btn-small btn-flat white-text waves-effect green darken-2 waves-green">' +
-                    '<i class="material-icons right">backspace</i>Close and return</span>'
+                    "<span class='btn btn-small btn-flat white-text waves-effect green darken-2 waves-green'>" +
+                    "<i class='material-icons right'>backspace</i>Close and return</span>",
+
+                    "<span class='btn btn-small btn-flat white-text waves-effect waves-blue blue darken-2'>" +
+                    "<i class='material-icons right'>call_split</i> Fork </span>"
                 ],
                 dismissible: false
             })
