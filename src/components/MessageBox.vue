@@ -1,8 +1,9 @@
 <template>
   <div class="container">
-    <div class="card-panel" v-bind:class="this.colour()" id="message">
-      <span><strong>{{ this.heading() }}</strong> {{message}}</span>
-      <span v-if="callback !== undefined"><br/><a href="#" @click="callback(); closeMsg()">{{ callbackText }}</a></span>
+    <div class="card-panel" v-bind:class="this.colour" id="message">
+      <span><strong>{{this.heading}}</strong></span>
+      <span v-html="message"></span>
+      <span v-if="callback !== undefined"><br/><a href="#" @click="callback(); closeMsg()" v-html="callbackText"></a></span>
       <i v-if="dismissible" id="closeBtn" class="close material-icons right" v-on:click="closeMsg()">close</i>
     </div>
   </div>
@@ -31,11 +32,13 @@
       closeMsg() {
         store.commit("closeMessage", this.index)
       },
+    },
+    computed: {
       colour() {
         if(this.kind==='error')   return 'red   lighten-4'
         if(this.kind==='warning') return 'amber lighten-4'
         if(this.kind==='info')    return 'blue  lighten-4'
-        if(this.kind==='success') return 'green lighten-4'
+        return 'green lighten-4'
       },
       heading() {
         if(this.title!==undefined) return this.title + ':'
@@ -43,6 +46,7 @@
         if(this.kind==='warning')  return "Warning:"
         if(this.kind==='info')     return "Information:"
         if(this.kind==='success')  return "Success!"
+        return ""
       }
     },
     mounted() {

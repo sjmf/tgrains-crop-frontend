@@ -71,7 +71,7 @@
           </div>
           <div class="col s4 right compare-buttons">
 <!--            <a><i class="material-icons">insert_chart</i> Compare </a>-->
-            <a @click="set_state" :class="{'disabled': readonly}">
+            <a @click="load_session" :class="{'disabled': readonly}">
               <i class="material-icons">play_arrow</i> Load
             </a>
           </div>
@@ -157,10 +157,22 @@ export default {
     async load_reply(reply_id) {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
     },
-    async set_state(){
+    async load_session(){
       // If readonly, don't apply the state
       if(this.readonly)
           return
+
+      if(this.landscape_id !== this.$store.state.landscape_id) {
+        return this.$store.commit('setMessage', {
+          title: `Sorry! I can't load the session from ${this.author}'s comment`,
+          message: `it is set within the `+
+                    `<strong>${this.$store.state.landscapeNames[this.landscape_id]}</strong>`+
+                    ` area, but you are currently viewing `+
+                    `<strong>${this.$store.state.landscapeNames[this.$store.state.landscape_id]}</strong>.`+
+                    `To change your area, use the <strong>Land Area</strong> menu in the left-hand sidebar.`,
+          kind:'warning',
+        })
+      }
 
       await this.$store.dispatch('viewSessionFromComment', {
         'session': this.session,
