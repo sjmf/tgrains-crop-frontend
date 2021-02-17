@@ -97,3 +97,18 @@ export function createUniqueID() {
             return (a!==0 ? a + ':' : '') + Math.random().toString(16).substring(2, 6)
         })
 }
+
+/**
+ * Set or undefine all properties of an object
+ * Adapted from https://stackoverflow.com/questions/45897879
+ * @param obj
+ * @param val
+ */
+export function setAll(obj, val) {
+    for(let index in obj)
+        if(Object.prototype.hasOwnProperty.call(obj, index))
+            obj[index] = val;
+}
+export function setUndef(obj) {
+    setAll(obj, undefined);
+}

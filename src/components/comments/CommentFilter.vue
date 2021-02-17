@@ -57,7 +57,7 @@
           <label>
             <input type="checkbox"
                    class="filled-in green darken-4"
-                   v-model="landscape_checkbox"
+                   v-model="by_landscape"
                    @change="loadComments()"/>
             <span>Include only comments from local area ({{$store.state.landscapeNames[$store.state.landscape_id]}})</span>
           </label>
@@ -70,7 +70,7 @@
         <div class="grey-text">Filter by someone else's comments:</div>
         <div v-if="user_name">
           <span>Showing comments by <strong>{{user_name}}</strong>.</span>
-          <button class="btn btn-small right" @click="$emit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
+          <button class="btn btn-small right" @click="$store.commit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
         </div>
         <span v-else>To use this filter, select a user by clicking on their avatar or name.</span>
       </div>
@@ -80,7 +80,7 @@
       <div v-if="reply_card">
         <div class="col s12">
           <span class="grey-text">Filtering by replies to this comment:</span>
-          <button class="btn btn-small right" @click="$emit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
+          <button class="btn btn-small right" @click="$store.commit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
         </div>
         <div class="col s12">
           <comment-card
@@ -94,7 +94,7 @@
               v-bind:tags="reply_card.tags"
               v-bind:timestamp="reply_card.timestamp"
               v-bind:reply_view="true"
-              @filterUser="(user) => $emit('filterUser', user)"/>
+              @filterUser="$store.commit('filterUser', $event)"/>
         </div>
       </div>
       <div v-else class="col s12">
@@ -105,7 +105,7 @@
     <div class="comment-main row" v-if="filter_value === 4">
       <div v-if="tags !== undefined" class="col s12">
         <span class="grey-text">Filtering by the following tags:</span>
-        <button class="btn btn-small right" @click="$emit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
+        <button class="btn btn-small right" @click="$store.commit('clearFilter')"><i class="material-icons right small">clear</i>Clear filter</button>
       </div>
       <div v-if="tags !== undefined" class="col s12">
         <tag v-for="t in tags"
@@ -114,7 +114,7 @@
              :colour="tag_group(tag_meta(t).group).colour"
              :name="tag_meta(t).name"
              :value="null"
-             @filterTag="(tag_id) => $emit('removeTag', tag_id)"/>
+             @filterTag="(tag_id) => $store.commit('removeTag', tag_id)"/>
       </div>
       <div v-else class="col s12">
         <span>To use this filter, click on a tag in the comments section below</span>
@@ -135,53 +135,31 @@ export default {
     CommentCard,
     Tag
   },
-  props: {
-    user_name: String,  // Contains {id: '', name: ''}
-    user_id: String,
-    reply_card: Object,
-    tags: Array
-  },
   data() {
     return {
       sort:   ["Date Descending", "Date Ascending", "Distance from BAU state", "Closest to current state"],
       filter: ["All", "Mine", "Someone else's", "Replies", "Tags"],
-      landscape_checkbox: true,
       show: range(2,12,2),
     }
   },
   computed: {
     /**
-     * Compute the payload for filtering comments
+     * Filtering options (user_name, user_id, reply_card, tags)
      */
-    comments_payload() {
-      // Conditionally construct payload for comments. I –love- this ES6 syntax.
-      // https://stackoverflow.com/a/40560953/1681205
-      return {
-        'sort' : this.sort_value,
+    user_name () {
+      return this.$store.state.comments.filter_opts.user_name
+    },
 
-        ...(this.landscape_checkbox &&
-            {'landscape_id': this.landscape_id}),
+    user_id () {
+      return this.$store.state.comments.filter_opts.user_id
+    },
 
-        ...(!(this.filter_value === 2 && this.user_id === undefined) &&
-            !(this.filter_value === 3 && this.reply_card === undefined) &&
-            !(this.filter_value === 4 && this.tags === undefined) &&
-            {'filter': this.filter_value}),
+    reply_card () {
+      return this.$store.state.comments.filter_opts.reply_card
+    },
 
-        ...(this.sort_value >= 2 &&
-            {'distance': this.$store.state.history[this.$store.state.historyIndex].changes.distance}),
-
-        ...(this.filter_value === 1 &&
-            {'user_id': this.$store.state.user.id}),
-
-        ...(this.filter_value === 2 && this.user_id !== undefined &&
-            {'user_id': this.user_id}),
-
-        ...(this.filter_value === 3 && this.reply_card !== undefined &&
-            {'reply_id': this.reply_card.id}),
-
-        ...((this.filter_value === 4 && this.tags !== undefined) &&
-            {'tags': this.tags.join(',')})
-      }
+    tags () {
+      return this.$store.state.comments.filter_opts.tags
     },
 
     /**
@@ -227,6 +205,16 @@ export default {
         this.loadComments()
       }
     },
+
+    by_landscape: {
+      get() {
+        return this.$store.state.comments.by_landscape
+      },
+      set (value) {
+        this.$store.commit('filterLandscape', value)
+        // Don't need to loadComments() because it's loaded in the watcher
+      },
+    }
   },
   methods: {
     /**
@@ -253,6 +241,7 @@ export default {
       else if (this.tags !== undefined)
         value = 4
 
+      // $set maintains Vue reactivity
       this.$set(this, 'filter_value', value)
       this.setMaterialFormSelectSelected('#filter-select', value)
     },
@@ -285,10 +274,10 @@ export default {
     },
 
     /**
-     * Hit the action to load comments, passing the payload computed property
+     * Hit the action to load comments
      */
     loadComments() {
-      this.$store.dispatch("loadComments", this.comments_payload)
+      this.$store.dispatch("loadComments")
     }
   },
   watch: {

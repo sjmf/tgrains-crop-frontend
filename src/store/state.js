@@ -180,6 +180,16 @@ export const initial_state = () => ({
         filter: 0,
         sort: 0,
         length: 0,
+
+        // Comment filtering options
+        filter_opts:  {
+            user_name: undefined,
+            user_id: undefined,
+            reply_card: undefined,
+            tags: undefined,
+        },
+
+        by_landscape: true
     },
 
     // User details

@@ -1,7 +1,7 @@
 // mutations.js
 import Vue from 'vue'
 
-import {difference, distanceFromBAU, formatData, createUniqueID} from "@/store/helpers";
+import {difference, distanceFromBAU, formatData, createUniqueID, setUndef} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
 const cloneDeep = require('lodash/cloneDeep');
@@ -558,5 +558,72 @@ export default {
      */
     loading(state, loadStatus) {
         state.loading = loadStatus
+    },
+
+    /* ==================
+     * Comment filtering options
+     */
+
+    /***
+     * Clear state.comments.filter_opts
+     * @param state
+     */
+    clearFilter(state) {
+        setUndef(state.comments.filter_opts)
+    },
+
+    /***
+     * Set user_id and user_name to filter by
+     * @param event
+     * @param state
+     */
+    filterUser(state, {user_id, user_name}) {
+        setUndef(state.comments.filter_opts)
+        state.comments.filter_opts.user_id = user_id
+        state.comments.filter_opts.user_name = user_name
+    },
+
+    /**
+     * Filter by a reply-to card
+     * @param state
+     * @param reply_card
+     */
+    filterReply(state, reply_card) {
+        setUndef(state.comments.filter_opts)
+        this.comments.filter_opts.reply_card = reply_card
+    },
+
+    /**
+     * Add a tag to the filter set
+     * @param state
+     * @param new_tag
+     */
+    filterTag(state, new_tag) {
+        let tags = (Array.isArray(state.comments.filter_opts.tags)) ? state.comments.filter_opts.tags.slice() : []
+        setUndef(state.comments.filter_opts)
+
+        tags.push(new_tag)
+        state.comments.filter_opts.tags = [...new Set(tags)].slice().sort()
+    },
+
+    /**
+     * Remove a tag from the filter set
+     * @param state
+     * @param tag
+     */
+    removeTag(state, tag) {
+        let index = state.comments.filter_opts.tags.indexOf(tag);
+        if (index !== -1) {
+            state.comments.filter_opts.tags.splice(index, 1);
+        }
+    },
+
+    /**
+     * Filter by the current landscape (or not)
+     * @param state
+     * @param bool
+     */
+    filterLandscape(state, bool) {
+        state.comments.by_landscape = bool
     }
 }

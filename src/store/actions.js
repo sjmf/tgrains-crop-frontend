@@ -41,8 +41,8 @@ export default {
             this.dispatch('resetState')
 
         } catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -76,8 +76,8 @@ export default {
                     this.commit("activateTags", this.state.historyIndex)
                 })
         } catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         } finally {
             clearTimeout(timer);
             this.commit("loading", false)
@@ -178,6 +178,7 @@ export default {
             }
             catch (err) {
                 commit("raiseError", err)
+                throw err
             }
     }),
 
@@ -191,6 +192,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -209,7 +211,7 @@ export default {
     /***
      * Retrieve comments from the server and load them into vuex
      * @param _
-     * @param ...kwargs
+     * @param kwargs
      */
     async loadComments(_, {...kwargs} = {}) {
 
@@ -217,13 +219,14 @@ export default {
             let comments = await http.loadComments(
                 this.state.comments.page,
                 this.state.comments.size,
-                kwargs
+                await this.dispatch('getCommentsPayload', kwargs)
             )
 
             this.commit("setComments", comments)
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -234,6 +237,52 @@ export default {
     async loadTags() {
         let tagData = await http.loadTags()
         this.commit("setTags", tagData)
+    },
+
+    /**
+     * Conditionally construct payload for comments.
+     * @param _
+     * @param kwargs
+     * @returns {Promise<{sort: {set(*=): void, get(): number}}>}
+     */
+    async getCommentsPayload(_, {...kwargs} = {}) {
+        // I –love- this ES6 syntax.
+        // https://stackoverflow.com/a/40560953/1681205
+        const sort_value = this.state.comments.sort
+        const filter_value = this.state.comments.filter
+        const user_id = this.state.comments.filter_opts.user_id
+        const reply_card = this.state.comments.filter_opts.reply_card
+        const tags = this.state.comments.filter_opts.tags
+        const by_landscape = this.state.comments.by_landscape
+
+        return {
+            'sort' : sort_value,
+
+            ...(by_landscape &&
+                {'landscape_id': this.state.landscape_id}),
+
+            ...(!(filter_value === 2 && user_id === undefined) &&
+                !(filter_value === 3 && reply_card === undefined) &&
+                !(filter_value === 4 && tags === undefined) &&
+                {'filter': filter_value}),
+
+            ...(sort_value >= 2 &&
+                {'distance': this.state.history[this.state.historyIndex].changes.distance}),
+
+            ...(filter_value === 1 &&
+                {'user_id': this.state.user.id}),
+
+            ...(filter_value === 2 && user_id !== undefined &&
+                {'user_id': user_id}),
+
+            ...(filter_value === 3 && reply_card !== undefined &&
+                {'reply_id': reply_card.id}),
+
+            ...((filter_value === 4 && tags !== undefined) &&
+                {'tags': tags.join(',')}),
+
+            ...kwargs
+        }
     },
 
     /***
@@ -266,7 +315,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
-            return err
+            throw err
         }
 
         this.commit("resetAllTagSelected")
@@ -311,8 +360,8 @@ export default {
             })
         }
         catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -328,6 +377,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -373,8 +423,8 @@ export default {
             this.commit("activateTags", this.state.historyIndex)
         }
         catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -390,8 +440,8 @@ export default {
             await this.commit('resetSessionIndex')
         }
         catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -426,8 +476,8 @@ export default {
             })
         }
         catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -449,11 +499,14 @@ export default {
      * Load a session into history to edit (copy)
      * @param _
      * @param index
+     * @param session
      */
-    async forkSession(_, index) {
+    async forkSession(_, {index, session}) {
         // TODO: Modify this method to allow taking session from comment instead of stack
-        const session_stack = this.state.sessions[this.state.landscape_id]
-        const session = session_stack[index]
+        if (session === undefined) {
+            const session_stack = this.state.sessions[this.state.landscape_id]
+            session = session_stack[index]
+        }
         const new_session_id = createUniqueID()
 
         console.info(`Forking session at ${index} with id ${session.id} and length ${session.history.length}`)
@@ -479,8 +532,8 @@ export default {
             })
         }
         catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
         finally {
             this.commit('setGlobalReadOnly', false)
@@ -523,6 +576,7 @@ export default {
             'state': this.state.history[this.state.history.length -1],
         }).catch((err)=>{
             this.commit("raiseError", err)
+            throw err
         })
     },
 
@@ -544,6 +598,7 @@ export default {
             'deleted': deleted,
         }).catch((err)=>{
             this.commit("raiseError", err)
+            throw err
         })
     },
 
