@@ -1,6 +1,13 @@
 <template>
   <div class="container">
     <div class="card-panel" v-bind:class="colour" id="message">
+      <span>
+        <i v-if="dismissible" id="closeBtn"
+           class="close material-icons right"
+           v-on:click="closeMsg()">
+          close
+        </i>
+      </span>
       <span><strong>{{heading}}</strong></span>
       &nbsp;
       <span v-html="message"></span>
@@ -10,7 +17,6 @@
           <a href="#" @click="callback(); closeMsg()" v-html="callbackInnerHTML[i]"></a>
         </span>
       </div>
-      <i v-if="dismissible" id="closeBtn" class="close material-icons right" v-on:click="closeMsg()">close</i>
     </div>
   </div>
 </template>
