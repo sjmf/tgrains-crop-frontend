@@ -169,7 +169,9 @@ export default {
                     `<strong>${this.$store.state.landscapeNames[this.landscape_id]}</strong>`+
                     ` area, but you are currently viewing `+
                     `<strong>${this.$store.state.landscapeNames[this.$store.state.landscape_id]}</strong>. `+
-                    `To change your area, use the <strong>Land Area</strong> menu in the left-hand sidebar.`,
+                    `To change your area, use the <strong>Land Area</strong> menu in the left-hand sidebar.`+
+                    ` Or, to restrict comments to the local area only, check 'Include only comments from `+
+                    `local area' below.`,
           kind:'warning',
         })
       }
