@@ -2,7 +2,7 @@
 
 import { cacheAction } from "vuex-cache";
 import http from "@/services/http";
-import {cloneDeep} from "lodash";
+import {createUniqueID} from "@/store/helpers";
 
 export default {
     /***
@@ -13,6 +13,10 @@ export default {
      * @returns {Promise<void>}
      */
     async loadBauState(_, areaChanged) {
+        // If there's already a session active for this landscape, just load it.
+        if (this.state.sessions[this.state.landscape_id].length > 0)
+            return this.dispatch("loadTopSession")
+
         try {
             let bau = this.state.bau[this.state.landscape_id]
 
@@ -32,13 +36,13 @@ export default {
             }
 
             // Create new session and push initial state onto history stack (including BAU tag [1])
-            if(areaChanged || this.state.sessions.length === 0)
+            if(areaChanged || this.state.sessions[this.state.landscape_id].length === 0)
                 await this.dispatch('newSession')
             this.dispatch('resetState')
 
         } catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -72,8 +76,8 @@ export default {
                     this.commit("activateTags", this.state.historyIndex)
                 })
         } catch (err) {
-            console.error(err)
             this.commit("raiseError", err)
+            throw err
         } finally {
             clearTimeout(timer);
             this.commit("loading", false)
@@ -174,6 +178,7 @@ export default {
             }
             catch (err) {
                 commit("raiseError", err)
+                throw err
             }
     }),
 
@@ -181,12 +186,13 @@ export default {
      * Query the model without caching
      * @returns {Promise<void>}
      */
-    doModelQuery (state, payload) {
+    doModelQuery (_, payload) {
         try {
             return http.queryModel(payload)
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -205,7 +211,7 @@ export default {
     /***
      * Retrieve comments from the server and load them into vuex
      * @param _
-     * @param ...kwargs
+     * @param kwargs
      */
     async loadComments(_, {...kwargs} = {}) {
 
@@ -213,13 +219,14 @@ export default {
             let comments = await http.loadComments(
                 this.state.comments.page,
                 this.state.comments.size,
-                kwargs
+                await this.dispatch('getCommentsPayload', kwargs)
             )
 
             this.commit("setComments", comments)
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -230,6 +237,52 @@ export default {
     async loadTags() {
         let tagData = await http.loadTags()
         this.commit("setTags", tagData)
+    },
+
+    /**
+     * Conditionally construct payload for comments.
+     * @param _
+     * @param kwargs
+     * @returns {Promise<{sort: {set(*=): void, get(): number}}>}
+     */
+    async getCommentsPayload(_, {...kwargs} = {}) {
+        // I –love- this ES6 syntax.
+        // https://stackoverflow.com/a/40560953/1681205
+        const sort_value = this.state.comments.sort
+        const filter_value = this.state.comments.filter
+        const user_id = this.state.comments.filter_opts.user_id
+        const reply_card = this.state.comments.filter_opts.reply_card
+        const tags = this.state.comments.filter_opts.tags
+        const by_landscape = this.state.comments.by_landscape
+
+        return {
+            'sort' : sort_value,
+
+            ...(by_landscape &&
+                {'landscape_id': this.state.landscape_id}),
+
+            ...(!(filter_value === 2 && user_id === undefined) &&
+                !(filter_value === 3 && reply_card === undefined) &&
+                !(filter_value === 4 && tags === undefined) &&
+                {'filter': filter_value}),
+
+            ...(sort_value >= 2 &&
+                {'distance': this.state.history[this.state.historyIndex].changes.distance}),
+
+            ...(filter_value === 1 &&
+                {'user_id': this.state.user.id}),
+
+            ...(filter_value === 2 && user_id !== undefined &&
+                {'user_id': user_id}),
+
+            ...(filter_value === 3 && reply_card !== undefined &&
+                {'reply_id': reply_card.id}),
+
+            ...((filter_value === 4 && tags !== undefined) &&
+                {'tags': tags.join(',')}),
+
+            ...kwargs
+        }
     },
 
     /***
@@ -250,11 +303,11 @@ export default {
                 .map(x => this.state.tags.tags[x].selected ? parseInt(x) : null)
                 .filter(x => x!==null)
 
+            let last = this.state.sessions[this.state.landscape_id].length - 1
+            payload['session_id']   = this.state.sessions[this.state.landscape_id][last].id
+            payload['index']        = this.state.historyIndex
             payload['landscape_id'] = this.state.landscape_id
-            payload['session_id'] = this.state.sessions[this.state.sessions.length -1].id
-            payload['index'] = this.state.historyIndex
-
-            payload['distance'] = this.state.history[this.state.historyIndex].changes.distance
+            payload['distance']     = this.state.history[this.state.historyIndex].changes.distance
 
             // Now reload the first comments page to display user's comment
             let newComments = await http.postComment(payload)
@@ -262,7 +315,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
-            return err
+            throw err
         }
 
         this.commit("resetAllTagSelected")
@@ -270,32 +323,53 @@ export default {
     },
 
     /**
-     * Load a state from a comment into the current session/state
-     * Actions: pushStateAndPOST
-     * @param _ unused state
-     * @param comment
+     * View a session from a comment
+     * @param _
+     * @param session
+     * @param index
+     * @param author
      */
-    loadStateFromComment(_, comment) {
-        // Save existing state in local variable
-        let history = cloneDeep(this.state.history[this.state.historyIndex])
+    async viewSessionFromComment(_, {session, index, author}) {
+        try {
+            console.log(`Loading session from comment by ${author} with id ${session.id} at index ${index}.`)
 
-        // Overwrite state
-        this.commit("updateLandscape", comment.state.inputs)
-        this.commit("setDataFromQuery", comment.state.raw) // PASS RAW!
-        this.commit("setAreaUsed", {"lowlandArea": comment.state.area.lowland, "uplandArea": comment.state.area.upland})
+            await this.commit('deepCopyHistoryFromSession', session)
+            await this.commit('loadFromHistory', {
+                'history': session.history,
+                'index': index
+            })
+            await this.dispatch("sumArea")
+            this.commit("activateTags", this.state.historyIndex)
 
-        // Push this new state onto history stack (and server)
-        this.dispatch("pushStateAndPOST", [...comment.tags, 2])
+            this.commit('setGlobalReadOnly', true)
 
-        // Tell the user what we've done!
-        this.commit('setMessage', {
-            message: "Loaded model state from comment by " + comment.author,
-            kind: "info",
-            callback: () => {
-                this.commit("rollbackHistory", history)
-            },
-            callbackText: "Click here to restore previous state"
-        }) // Will also scroll viewport to top
+            const format_datetime = (unix_timestamp) => {
+                let d = new Date(unix_timestamp * 1000)
+                return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB")
+            }
+
+            this.commit('setMessage', {
+                title: `Viewing session from comment by ${author}`,
+                message: `You are currently viewing a loaded session created at ${format_datetime(session.opened)}.`,
+                kind: 'default',
+                callbacks: [
+                    () => { this.dispatch('cancelViewSession') },
+                    () => { this.dispatch('forkSession', {session: session}) }
+                ],
+                callbackInnerHTML: [
+                    "<span class='btn btn-small btn-flat white-text waves-effect green darken-2 waves-green'>" +
+                    "<i class='material-icons right'>backspace</i>Close and return</span>",
+
+                    "<span class='btn btn-small btn-flat white-text waves-effect waves-blue blue darken-2'>" +
+                    "<i class='material-icons right'>call_split</i> Fork </span>"
+                ],
+                dismissible: false
+            })
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+            throw err
+        }
     },
 
     /***
@@ -310,6 +384,7 @@ export default {
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -332,6 +407,34 @@ export default {
         this.commit("activateTags", this.state.historyIndex)
     },
 
+    /**
+     * Load the session at the top of the stack
+     *
+     * @returns {Promise<void>}
+     */
+    async loadTopSession() {
+        try {
+            console.log(`Loading top session+state from stack "this.state.sessions[${this.state.landscape_id}] `+
+                        `with length ${this.state.sessions[this.state.landscape_id].length}`)
+
+            const session = this.state.sessions[this.state.landscape_id]
+            await this.commit('shallowCopyHistoryFromSession', session[session.length -1])
+            await this.commit('loadFromHistory', {
+                'history': this.state.history,
+                'index': this.state.history.length - 1
+            })
+            await this.commit('resetSessionIndex')
+
+            // Sum area and activate tags
+            await this.dispatch("sumArea")
+            this.commit("activateTags", this.state.historyIndex)
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+            throw err
+        }
+    },
+
     /***
      * Get SID and commit new Session mutation in store
      * Actions: resetState
@@ -339,11 +442,13 @@ export default {
      */
     async newSession() {
         try {
-            this.commit('clearHistory')
-            this.commit('pushSession', {})
+            await this.commit('clearHistory')
+            await this.commit('pushSession', {})
+            await this.commit('resetSessionIndex')
         }
         catch (err) {
             this.commit("raiseError", err)
+            throw err
         }
     },
 
@@ -351,39 +456,102 @@ export default {
      * Load a session into history for viewing (read-only)
      * @param _
      * @param index
+     * @param time
      */
-    viewSession(_, index) {
-        console.info(`Viewing session at ${index} with id ${this.state.sessions[index].id} `+
-            `and a history of ${this.state.sessions[index].history.length} states ` +
-            `(recorded ${this.state.sessions[index].count})`)
-        this.commit('deepCopyHistoryFromSession', index)
-        this.commit('setGlobalReadOnly', true)
-        this.commit('loadFromHistory', this.state.history.length -1)
+    async viewSession(_, {index, time}) {
+        try {
+            console.info(`Viewing session at ${index} with id ${this.state.sessions[this.state.landscape_id][index].id} `+
+                `and a history of ${this.state.sessions[this.state.landscape_id][index].history.length} states.`)
+
+            await this.commit('deepCopyHistoryFromSession', this.state.sessions[this.state.landscape_id][index])
+            await this.commit('loadFromHistory', {
+                'history': this.state.history,
+                'index': this.state.history.length - 1
+            })
+            await this.commit('setSessionIndex', index)
+            this.commit('setGlobalReadOnly', true)
+
+            this.commit('setMessage', {
+                title: 'Viewing historic session',
+                message: `You are currently viewing an historic session created at ${time}.`,
+                kind: 'default',
+                callbacks: [
+                    () => { this.dispatch('cancelViewSession') },
+                    () => { this.dispatch('forkSession', {index}) }
+                ],
+                callbackInnerHTML: [
+                    "<span class='btn btn-small btn-flat white-text green darken-2 waves-effect waves-green'>" +
+                    "<i class='material-icons right'>backspace</i>Close and return</span>",
+
+                    "<span class='btn btn-small btn-flat white-text waves-effect waves-blue blue darken-2'>" +
+                    "<i class='material-icons right'>call_split</i> Fork </span>"
+                ],
+                dismissible: false
+            })
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+            throw err
+        }
     },
 
     /**
      * Cancel viewing a session and return to the usual view
      */
-    cancelViewSession() {
-        this.commit('shallowCopyHistoryFromSession', this.state.sessions.length -1)
+    async cancelViewSession() {
+        const sessions = this.state.sessions[this.state.landscape_id]
+        await this.commit('shallowCopyHistoryFromSession', sessions[sessions.length -1])
+        await this.commit('loadFromHistory', {
+            'history': this.state.history,
+            'index': this.state.history.length - 1
+        })
+        await this.commit('resetSessionIndex')
         this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', this.state.history.length -1)
     },
 
     /**
      * Load a session into history to edit (copy)
      * @param _
      * @param index
+     * @param session
      */
-    forkSession(_, index) {
-        const forkSID = this.state.sessions[index].id
-        const count = this.state.history.length
+    async forkSession(_, {index, session}) {
+        // TODO: Modify this method to allow taking session from comment instead of stack
+        if (session === undefined) {
+            const session_stack = this.state.sessions[this.state.landscape_id]
+            session = session_stack[index]
+        }
+        const new_session_id = createUniqueID()
 
-        console.info(`Forking session at ${index} with id ${forkSID}`)
-        this.commit('deepCopyHistoryFromSession', index)
-        this.commit('pushSession', {count, forkSID})
-        this.commit('setGlobalReadOnly', false)
-        this.commit('loadFromHistory', this.state.history.length -1)
+        console.info(`Forking session at ${index} with id ${session.id} and length ${session.history.length}`)
+
+        try {
+            // Ask the server to fork the session on the back-end database
+            await http.forkSession({
+                'user_id': this.state.user.id,
+                'session_id': session.id,
+                'new_session_id': new_session_id
+            })
+
+            // pushSession copies history from state.history, so populate state.history first by
+            // deep-copying history from selected session (at index) into state.history
+            await this.commit('deepCopyHistoryFromSession', session)
+            await this.commit('pushSession', {forkSID: session.id, newSID: new_session_id})
+            await this.commit('resetSessionIndex')
+
+            // Then, load the history into landscapes
+            await this.commit('loadFromHistory', {
+                'history': session.history,
+                'index': session.history.length - 1
+            })
+        }
+        catch (err) {
+            this.commit("raiseError", err)
+            throw err
+        }
+        finally {
+            this.commit('setGlobalReadOnly', false)
+        }
     },
 
     /**
@@ -394,7 +562,7 @@ export default {
     async pushStateAndPOST(_, tags = []) {
 
         // Do we have a session ID yet?
-        if(this.state.sessions.length === 0) {
+        if(this.state.sessions[this.state.landscape_id].length === 0) {
             console.error('Set up sessions before pushing history!')
             return
         }
@@ -412,34 +580,40 @@ export default {
         }
 
         // Okay, push history to the local queue (this also sets the tags if they're un-set)
-        this.commit("pushHistory", tags)
+        await this.commit("pushHistory", tags)
 
         // Now, post it to the server (asynchronously, so we don't have to wait)
         http.postState({
-            'session_id': this.state.sessions[this.state.sessions.length -1].id,
+            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions[this.state.landscape_id].length -1].id,
             'index': this.state.history.length -1,
             'user_id': this.state.user.id,
             'state': this.state.history[this.state.history.length -1],
         }).catch((err)=>{
             this.commit("raiseError", err)
+            throw err
         })
     },
 
     /**
-     * Delete history state and POST changes to server
+     * Delete/undelete history state and POST changes to server
      *
+     * @param _
+     * @param index
+     * @param deleted
      * @returns {Promise<void>}
      */
-    async deleteState(_, index) {
-        this.commit('deleteFromHistory', index)
+    async setStateDeleted(_, {index, deleted}) {
+        this.commit('setHistoryDeleted', {index, deleted})
 
         http.postState({
-            'session_id': this.state.sessions[this.state.sessions.length -1].id,
-            'index': this.state.history.length -1,
+            'session_id': this.state.sessions[this.state.landscape_id][this.state.sessions[this.state.landscape_id].length -1].id,
             'user_id': this.state.user.id,
-            'deleted': true,
+            'index': index,
+            'deleted': deleted,
         }).catch((err)=>{
             this.commit("raiseError", err)
+            throw err
         })
-    }
+    },
+
 }

@@ -19,6 +19,14 @@
                :value="null"></tag>
         </div>
 
+        <div v-if="trashView" class="col s3">
+          <a class="btn right btn-small btn-flat green darken-2 waves-effect waves-green"
+             @click="undeleteState()">
+            <i class="material-icons right">undo</i>Restore
+          </a>
+        </div>
+
+        <fragment v-else>
         <!-- NB: using v-show here as v-if seems to replace the component too soon,
                  triggering the anchor for #comment-head when load clicked... :/ -->
         <div class="col s3" v-show="index === historyIndex">
@@ -40,6 +48,7 @@
             <i class="material-icons">delete</i>
           </a>
         </div>
+        </fragment>
 
       </div>
     </div>
@@ -59,7 +68,8 @@ export default {
     length: Number,
     time: Number,
     tags: Array,
-    deleted: Boolean
+    deleted: Boolean,
+    trashView: Boolean,
   },
   filters: {
     moment: function (date) {
@@ -77,12 +87,18 @@ export default {
   methods: {
     loadState() {
       // Load state from history and activate its tags
-      this.$store.commit("loadFromHistory", this.index)
+      this.$store.commit("loadFromHistory", {
+        'history': this.$store.state.history,
+        'index': this.index
+      })
       this.$store.commit("activateTags", this.index)
       this.$emit('load', this.index);
     },
     deleteState() {
-      this.$store.dispatch('deleteState', this.index)
+      this.$store.dispatch('setStateDeleted', {'index': this.index, 'deleted': true})
+    },
+    undeleteState() {
+      this.$store.dispatch('setStateDeleted', {'index': this.index, 'deleted': false})
     },
     tag_meta(id) {
       return this.$store.state.tags.tags[id]

@@ -53,8 +53,12 @@
                     v-on:click="submitForm">Submit</button>
           </div>
 
-          <div class="col s12" v-if="readonly">
-            <p class="red-text">You are viewing an older session!<br/>Model queries are currently disabled.</p>
+          <div class="col s12 readonly" v-if="readonly">
+            <button class="btn btn-small green darken-2 waves-effect waves-green"
+                    @click="$store.dispatch('cancelViewSession'); $store.commit('clearMessages')">
+              <i class="material-icons right">backspace</i>Close and return
+            </button>
+            <p class="red-text">You are viewing an older session! Queries are currently disabled.</p>
           </div>
         </div>
       </li>
@@ -394,6 +398,11 @@
 
   button {
     z-index:0
+  }
+
+  .readonly p {
+    line-height: 2rem;
+    margin: 4px 0;
   }
 </style>
 

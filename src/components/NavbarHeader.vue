@@ -1,7 +1,7 @@
 <template>
   <header>
     <!-- TOP NAVBAR -->
-    <nav>
+    <nav :class="{'grey darken-2': $store.state.readonly}">
       <div class="row nav-wrapper">
         <div class="col s12">
           <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
@@ -19,18 +19,14 @@
 </template>
 
 <script>
-    export default {
-        name: 'navbar-header',
-        data: function() {
-            return {
-            }
-        },
-        props: {
-            pageTitle: String,
-            websiteTitle: String,
-            websiteUrl: String
-        }
+  export default {
+    name: 'navbar-header',
+    props: {
+      pageTitle: String,
+      websiteTitle: String,
+      websiteUrl: String
     }
+  }
 </script>
 
 <style scoped>

@@ -1,7 +1,7 @@
 // mutations.js
 import Vue from 'vue'
 
-import {difference, distanceFromBAU, formatData, createUniqueID} from "@/store/helpers";
+import {difference, distanceFromBAU, formatData, createUniqueID, setUndef} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
 const cloneDeep = require('lodash/cloneDeep');
@@ -14,6 +14,8 @@ export default {
      * @param id
      */
     setLandscapeId (state, id) {
+        if (isNaN(id) || id < 100) return
+
         state.landscape_id = id
         state.landscapeName = state.landscapeNames[id]
     },
@@ -187,43 +189,61 @@ export default {
      * Push a new session onto the session stack.
      * Commit clearHistory() first for a clean state, or pass its length in to fork a session
      * @param state
-     * @param count
+     * @param newSID
      * @param forkSID - SID for the session this was forked from (Default undefined)
      */
-    pushSession(state, {count, forkSID}) {
+    pushSession(state, {newSID, forkSID}) {
         // Session has a REFERENCE to history.
         // This must be updated with a cloneDeep when new session started
-        state.sessions.push({
-            id: createUniqueID(),
-            count: count || 0,
+        state.sessions[state.landscape_id].push({
+            id: newSID || createUniqueID(),
             opened: Date.now(),
             history: state.history,
             fork: forkSID
         })
 
-        console.log("Created session " + state.sessions[state.sessions.length -1].id)
+        console.log("Created session "
+            + state.sessions[state.landscape_id][state.sessions[state.landscape_id].length -1].id)
+    },
+
+    /**
+     * Set the session index (highlights in ModalSessions the currently viewed session)
+     *
+     * @param state
+     * @param index
+     */
+    setSessionIndex(state, index) {
+        state.sessionIndex = index
+    },
+
+    /**
+     * Reset session index to zero
+     * @param state
+     */
+    resetSessionIndex(state){
+        state.sessionIndex = state.sessions[state.landscape_id].length -1
     },
 
     /**
      * Deep Copy a history from a Session into the current history stack
      * @param state
-     * @param index
+     * @param session
      */
-    deepCopyHistoryFromSession(state, index) {
+    deepCopyHistoryFromSession(state, session) {
         // Set history to undefined so that state.history no longer points to the same object
         //  as the current session! Undesirable behaviour can result from cloneDeep otherwise...
         state.history = undefined
-        state.history = cloneDeep(state.sessions[index].history)
+        state.history = cloneDeep(session.history)
     },
 
     /**
      * Shallow copy a history from a session into the current history stack
      * (used for setting history pointer back to same object)
      * @param state
-     * @param index
+     * @param session
      */
-    shallowCopyHistoryFromSession(state, index) {
-        state.history = state.sessions[index].history
+    shallowCopyHistoryFromSession(state, session) {
+        state.history = session.history
     },
 
     /**
@@ -262,12 +282,12 @@ export default {
             "time": Date.now(),
             "tags": tags,
             "changes": result,
-            "deleted": false
+            "deleted": false,
+            "index": state.history.length
         })
 
         // Set indices
         state.historyIndex = state.history.length -1
-        state.sessions[state.sessions.length -1].count++
     },
 
     /**
@@ -289,20 +309,18 @@ export default {
         // Push to history queue and set indices
         state.history.push(load)
         state.historyIndex = state.history.length -1
-        state.sessions[state.sessions.length -1].count++
     },
 
     /**
      * Load state from history
      * @param state
-     * @param index
+     * @param {history, index} – the state to load
      */
-    loadFromHistory(state, index= 0) {
-        let load = state.history[index]
-        state.landscapes[state.landscape_id] = cloneDeep(load.inputs)
-        state.data[state.landscape_id] = cloneDeep(load.outputs)
-        state.data.raw[state.landscape_id] = cloneDeep(load.raw)
-        state.area = load.area
+    loadFromHistory(state, {history, index}) {
+        state.landscapes[state.landscape_id] = cloneDeep(history[index].inputs)
+        state.data[state.landscape_id] = cloneDeep(history[index].outputs)
+        state.data.raw[state.landscape_id] = cloneDeep(history[index].raw)
+        state.area = history[index].area
 
         state.historyIndex = index
     },
@@ -311,10 +329,10 @@ export default {
      * Delete state from history
      * @param state
      * @param index
+     * @param deleted
      */
-    deleteFromHistory(state, index) {
-        state.history[index].deleted = true
-        state.sessions[state.sessions.length -1].count--
+    setHistoryDeleted(state, {index, deleted}) {
+        state.history[index].deleted = deleted
     },
 
     /**
@@ -344,8 +362,6 @@ export default {
         state.comments.page     = comments.page
         state.comments.size     = comments.size
         state.comments.length   = comments.length
-        // state.comments.filter   = comments.filter // TODO: Uncomment when server echoes these values
-        // state.comments.sort     = comments.sort
     },
 
     /**
@@ -542,5 +558,72 @@ export default {
      */
     loading(state, loadStatus) {
         state.loading = loadStatus
+    },
+
+    /* ==================
+     * Comment filtering options
+     */
+
+    /***
+     * Clear state.comments.filter_opts
+     * @param state
+     */
+    clearFilter(state) {
+        setUndef(state.comments.filter_opts)
+    },
+
+    /***
+     * Set user_id and user_name to filter by
+     * @param event
+     * @param state
+     */
+    filterUser(state, {user_id, user_name}) {
+        setUndef(state.comments.filter_opts)
+        state.comments.filter_opts.user_id = user_id
+        state.comments.filter_opts.user_name = user_name
+    },
+
+    /**
+     * Filter by a reply-to card
+     * @param state
+     * @param reply_card
+     */
+    filterReply(state, reply_card) {
+        setUndef(state.comments.filter_opts)
+        this.comments.filter_opts.reply_card = reply_card
+    },
+
+    /**
+     * Add a tag to the filter set
+     * @param state
+     * @param new_tag
+     */
+    filterTag(state, new_tag) {
+        let tags = (Array.isArray(state.comments.filter_opts.tags)) ? state.comments.filter_opts.tags.slice() : []
+        setUndef(state.comments.filter_opts)
+
+        tags.push(new_tag)
+        state.comments.filter_opts.tags = [...new Set(tags)].slice().sort()
+    },
+
+    /**
+     * Remove a tag from the filter set
+     * @param state
+     * @param tag
+     */
+    removeTag(state, tag) {
+        let index = state.comments.filter_opts.tags.indexOf(tag);
+        if (index !== -1) {
+            state.comments.filter_opts.tags.splice(index, 1);
+        }
+    },
+
+    /**
+     * Filter by the current landscape (or not)
+     * @param state
+     * @param bool
+     */
+    filterLandscape(state, bool) {
+        state.comments.by_landscape = bool
     }
 }

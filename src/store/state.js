@@ -8,6 +8,24 @@ export const initial_state = () => ({
     landscape_id: 101,
     landscapeName: 'East Anglia',
 
+    /*
+     * Each landscape [101],[102] contains a crop and livestock data object {crops: {}, livestock: {}}
+     * Within these, we store the string identifier (name), a string label (visually presented to the user),
+     * the value of the crop, and an optional description.
+     *    E.g.: peas: { name:"peas", label: "Peas & Beans", value: 800, description: ""}
+     * These are bound to the VariableRow components in the SidebarMenu, and are used when submitting a Model query.
+     */
+    landscapes: {
+        101: { },
+        102: { }
+    },
+
+    // Name strings for landscapes
+    landscapeNames: {
+        101: "East Anglia",
+        102: "South Wales"
+    },
+
     // Calculated sum of all crop Areas:
     area: {
         lowland: 0,
@@ -46,20 +64,12 @@ export const initial_state = () => ({
     historyIndex: 0,
 
     // Sessions data structure
-    // {id: 'unique ID from server', count: 10, opened: Date.now(), history: []},
-    sessions: [],
-
-    /*
-     * Each landscape [101],[102] contains a crop and livestock data object {crops: {}, livestock: {}}
-     * Within these, we store the string identifier (name), a string label (visually presented to the user),
-     * the value of the crop, and an optional description.
-     *    E.g.: peas: { name:"peas", label: "Peas & Beans", value: 800, description: ""}
-     * These are bound to the VariableRow components in the SidebarMenu, and are used when submitting a Model query.
-     */
-    landscapes: {
-        101: { },
-        102: { }
+    // {id: 'unique ID from server', opened: Date.now(), history: []},
+    sessions: {
+        101:[ ],
+        102:[ ]
     },
+    sessionIndex: 0,
 
     // Business-as-usual state. Loaded via AJAX.
     bau: {
@@ -71,12 +81,6 @@ export const initial_state = () => ({
     strings: {
         101: { },
         102: { }
-    },
-
-    // Name strings for landscapes
-    landscapeNames: {
-        101: "East Anglia",
-        102: "South Wales"
     },
 
     // Dictionary used to look up labels from the variable name returned by the model
@@ -176,6 +180,16 @@ export const initial_state = () => ({
         filter: 0,
         sort: 0,
         length: 0,
+
+        // Comment filtering options
+        filter_opts:  {
+            user_name: undefined,
+            user_id: undefined,
+            reply_card: undefined,
+            tags: undefined,
+        },
+
+        by_landscape: true
     },
 
     // User details

@@ -38,7 +38,7 @@ export default {
             let errormessage = ""
 
             // Parse error messages from model
-            if(match.length > 0) {
+            if(Array.isArray(match) && match.length > 0) {
                 match = match[match.length - 1]
                 errormessage = match.charAt(0).toUpperCase() + match.slice(1) // Capitalise first letter
             } else {
@@ -229,6 +229,21 @@ export default {
             let response = await axios.post('/state', data)
             console.info('Posted state to server')
             return response
+        }
+        catch (err) {
+            console.error(err)
+            throw "History POST failed. " + err.toString() || ''
+        }
+    },
+
+    /**
+     * Tell the server to fork a session
+     * @param data {user_id, session_id, new_session_id}
+     * @returns {Promise<void>}
+     */
+    async forkSession(data) {
+        try {
+            return await axios.post('/fork', data)
         }
         catch (err) {
             console.error(err)

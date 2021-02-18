@@ -36,6 +36,13 @@
                    @comment="$emit('comment', history.length -1 -index)"/>
     </div>
 
+    <div class="container">
+      <a class="right pad overrun btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
+         v-bind:class="{'disabled': history.length === 1 || readonly}"
+         @click="showTrashDialog">
+        <i class="material-icons right">delete_sweep</i>Deleted States
+      </a>
+    </div>
 
     <!-- MODALS -->
 
@@ -71,20 +78,28 @@
 
     <modal-sessions
         ref="modalSessions"
+        id="modal-sessions"
         @fork="$refs.modalFork.open($event)"
-        @view="viewSession($event)"/>
+        @view="viewSession($event)"
+        @return="cancelViewSession()"/>
+
+    <modal-trash
+        id="modal-trash"
+        ref="modalTrash"/>
   </div>
 </template>
 <script>
 import HistoryRow from "@/components/tabs/HistoryRow";
 import ModalSessions from "@/components/modals/ModalSessions";
 import ModalConfirm from "@/components/modals/ModalConfirm";
+import ModalTrash from "@/components/modals/ModalTrash";
 
 export default {
     name: 'TabHistory',
     components: {
         ModalConfirm,
         ModalSessions,
+        ModalTrash,
         HistoryRow
     },
     computed: {
@@ -105,32 +120,32 @@ export default {
             this.$refs.modalConfirm.open()
         },
 
+        showTrashDialog() {
+            this.$refs.modalTrash.open()
+        },
+
         // Create new session– Used as a callback by modalConfirm
         // and then reset the state to it
         newSession() {
             this.$store.dispatch('newSession')
-            this.dispatch('resetState')
+            this.$store.dispatch('resetState')
         },
 
         forkSession(index) {
-            this.$store.dispatch('forkSession', index)
+          this.$store.commit('clearMessages')
+          this.$store.dispatch('forkSession', {index})
         },
 
         // View session. Called on event `view` from modalSessions
         viewSession(event) {
-            let index = event.index
-            let time = event.time
-            this.$store.dispatch('viewSession', index)
-            this.$store.commit('setMessage', {
-                title: 'Viewing historic session',
-                message: `The current view shows a historic session created at ${time}.`,
-                kind: 'info',
-                callback: () => {
-                    this.$store.dispatch('cancelViewSession')
-                },
-                callbackText: 'Click here to close this banner and return',
-                dismissible: false
-            })
+            this.$store.commit('clearMessages')
+            this.$store.dispatch('viewSession', event)
+        },
+
+        cancelViewSession() {
+          this.$store.commit('clearMessages')
+          this.$store.dispatch('cancelViewSession')
+          this.$refs.modalSessions.close()
         }
     }
 }

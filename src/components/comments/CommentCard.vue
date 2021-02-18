@@ -2,21 +2,20 @@
   <div class="comment-card card-panel grey lighten-5 z-depth-1">
     <div class="comment-main row">
       <div class="col s3 m2">
-        <a href="#!"
-           @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
-          <Jdenticon v-bind:value="this.hash" v-bind:size="80" alt="avatar"/>
-        </a>
+          <Jdenticon class="jdenticon"
+                     @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null"
+                     v-bind:value="this.hash" v-bind:size="80"
+                     alt="avatar"/>
       </div>
 
       <div class="col s9 m10">
         <div class="row">
           <div class="col s12 m6">
             <span class="username">
-              <a href="#!"
-                 class="green-text text-darken-2"
-                 @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
+              <span class="green-text text-darken-2"
+                    @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
                 {{ author | decode }}
-              </a>
+              </span>
             </span>
           </div>
 
@@ -66,13 +65,13 @@
         </div>
 
         <!-- Compare buttons -->
-        <div class="row" v-if="state">
+        <div class="row" v-if="session">
           <div class="col s8">
             <span class="grey-text">Distance from {{ distance_text }}: {{ distance }} ha</span>
           </div>
           <div class="col s4 right compare-buttons">
 <!--            <a><i class="material-icons">insert_chart</i> Compare </a>-->
-            <a @click="set_state" :class="{'disabled': readonly}">
+            <a @click="load_session" :class="{'disabled': readonly}">
               <i class="material-icons">play_arrow</i> Load
             </a>
           </div>
@@ -86,7 +85,7 @@
         <p class="grey-text small">
           This comment is a reply: <a v-if="!replyCard" @click="load_reply(reply_id)">(load reply)</a>
         </p>
-        <a href="#!" @click="$emit('filterReply', replyCard)">
+        <span class="reply-card" @click="$emit('filterReply', replyCard)">
           <comment-card
               v-if="replyCard"
               v-bind:id="replyCard.id"
@@ -99,7 +98,7 @@
               v-bind:timestamp="replyCard.timestamp"
               v-bind:reply_view="true"
               @filterUser="(user) => $emit('filterUser', user)"/>
-        </a>
+        </span>
       </div>
     </div>
   </div>
@@ -125,7 +124,10 @@ export default {
       text: String,
       timestamp: Number,
       tags: Array,
-      state: [Object, undefined],
+      landscape_id: Number,
+      session: [Object, undefined],
+      state_index: Number,
+      session_id: String,
       reply_view: Boolean,
       distance: Number
   },
@@ -155,14 +157,26 @@ export default {
     async load_reply(reply_id) {
       this.loadedReply = await this.$store.dispatch('loadReply', reply_id)
     },
-    async set_state(){
+    async load_session(){
       // If readonly, don't apply the state
       if(this.readonly)
           return
 
-      await this.$store.dispatch('loadStateFromComment', {
-        'state': this.state,
-        'tags': this.tags,
+      if(this.landscape_id !== this.$store.state.landscape_id) {
+        return this.$store.commit('setMessage', {
+          title: `Can't load session`,
+          message: `${this.author}'s comment is about the `+
+                    `<strong>${this.$store.state.landscapeNames[this.landscape_id]}</strong>`+
+                    ` area, but you are currently viewing `+
+                    `<strong>${this.$store.state.landscapeNames[this.$store.state.landscape_id]}</strong>. `+
+                    `To change your area, use the <strong>Land Area</strong> menu in the left-hand sidebar.`,
+          kind:'warning',
+        })
+      }
+
+      await this.$store.dispatch('viewSessionFromComment', {
+        'session': this.session,
+        'index': this.state_index,
         'author': this.author
       })
       this.$emit('load')
@@ -183,6 +197,10 @@ export default {
 </script>
 
 <style scoped>
+.jdenticon:hover, .username span, .reply-card {
+  cursor:pointer;
+}
+
 span.reply, .compare-buttons a {
   padding: 0 0 0 10px;
   cursor: pointer;

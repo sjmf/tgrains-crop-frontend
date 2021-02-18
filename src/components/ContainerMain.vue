@@ -17,8 +17,8 @@
               v-bind:message="message.message"
               v-bind:title="message.title"
               v-bind:kind="message.kind"
-              v-bind:callback="message.callback"
-              v-bind:callbackText="message.callbackText"
+              v-bind:callbacks="message.callbacks"
+              v-bind:callbackInnerHTML="message.callbackInnerHTML"
               v-bind:dismissible="message.dismissible"
               v-bind:timeout="message.timeout"
               v-bind:index="index"/>

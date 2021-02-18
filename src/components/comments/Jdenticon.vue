@@ -1,5 +1,9 @@
 <template>
-  <div v-html='identicon' class="avatar">{{ alt }}</div>
+  <div v-html='identicon'
+       class="avatar"
+       @click="$emit('click', $event)">
+    {{ alt }}
+  </div>
 </template>
 <script>
 import jdenticon from 'jdenticon/standalone'
