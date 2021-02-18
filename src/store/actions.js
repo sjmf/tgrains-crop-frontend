@@ -616,4 +616,25 @@ export default {
         })
     },
 
+    /**
+     * Check for read-only status and commit a warning message if we are
+     */
+    checkReadOnlyAndWarn() {
+        if(! this.state.readonly)
+            return
+
+        this.commit('setMessage', {
+            title: `Read-only Mode`,
+            message: `You are in read-only mode (maybe you refreshed the page while viewing a state?) <br/>Click the button below to return to the most recent state.`,
+            kind: 'warning',
+            callbacks: [
+                () => { this.dispatch('cancelViewSession') }
+            ],
+            callbackInnerHTML: [
+                "<span class='btn btn-small btn-flat white-text waves-effect amber darken-3 waves-amber'>" +
+                "<i class='material-icons right'>backspace</i>Close and return</span>"
+            ],
+            dismissible: false
+        })
+    }
 }
