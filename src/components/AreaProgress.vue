@@ -25,7 +25,10 @@
       <span>{{ currentUplandArea | formatNumber }}/{{ maxUplandArea | formatNumber }}kha</span>
         in upland areas
       <span v-if="!valid" class="label invalid">
-          – Area exceeded!
+        – Area exceeded!
+      </span>
+      <span v-if="$store.state.readonly" class="red-text">
+        (read-only <i class="tiny material-icons material-icons">lock</i>)
       </span>
     </div>
 
@@ -112,8 +115,10 @@
   .label.invalid {
     color: #F44336;
   }
-
   .progress {
     margin: 0.5rem 0;
+  }
+  i.tiny.material-icons {
+    vertical-align: middle;
   }
 </style>
