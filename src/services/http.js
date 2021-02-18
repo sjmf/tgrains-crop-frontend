@@ -19,15 +19,19 @@ export default {
      */
     async checkCeleryStatus (response) {
         const pathname = new URL(response.request.responseURL).pathname
-        console.log(pathname)
 
         // Keep checking the celery status if result is deferred, e.g. state= "PENDING", "STARTED", or "RETRY"
         while (!(['SUCCESS', 'FAILURE', 'REVOKED'].includes(response.data.state))) {
             await this.sleep(500)
-            console.log("Awake! Checking state again...")
+            console.log("Awake! Checking state again...", response)
 
             response = await axios.get(pathname)
-            // console.log(response)
+
+            // Handle server mis-configuration (200 OK returned, but not a valid object)
+            if(typeof response.data !== 'object')
+                throw Error("The response did not contain valid JSON.")
+            if(!('state' in response.data))
+                throw Error("The response did not include a valid application state.")
         }
 
         if(response.data.state === 'SUCCESS') {
