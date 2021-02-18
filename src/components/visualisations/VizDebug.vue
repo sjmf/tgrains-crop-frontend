@@ -14,9 +14,7 @@
 
           <div>Full debugging information <a @click="copyDebug()">(copy to clipboard)</a>:</div>
           <div class="debug-info-panel">
-            <vue-code-highlight>
-            {{debug}}
-            </vue-code-highlight>
+            <pre>{{debug}}</pre>
           </div>
           <br/>
           <div class="row">
@@ -37,14 +35,8 @@
 </template>
 
 <script>
-  import { component as VueCodeHighlight } from 'vue-code-highlight';
-  import 'vue-code-highlight/themes/prism-coy.css'
-
   export default {
     name: 'viz-debug',
-    components: {
-      VueCodeHighlight
-    },
     data() {
       return {
         showDebug: false
@@ -59,7 +51,7 @@
         this.$store.commit('setMessage', {
           message: 'Testing ' + kind,
           kind: kind,
-          timeout: 5000,
+          // timeout: 5000,
           callbacks: [
               () => {console.log('Successful callback!')}
           ],
@@ -69,12 +61,12 @@
         })
       },
       copyDebug() {
-        navigator.clipboard.writeText(JSON.stringify(this.$store.state, null, 2))
+        navigator.clipboard.writeText(this.debug)
       }
     },
     computed: {
       debug() {
-        return this.$store.state;
+        return JSON.stringify(this.$store.state, null, 2).trim()
       },
       user_id() {
         return this.$store.state.user.id
@@ -95,12 +87,27 @@
     font-size: .8em;
     max-height: 300px;
     overflow-y: scroll;
+    line-height: 1.5em;
+
+    border: 1px solid #999;
+    border-left: 12px solid #1B5E20;
   }
   .debug-info-panel pre {
     white-space: pre-wrap;       /* Since CSS 2.1 */
     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
     white-space: -o-pre-wrap;    /* Opera 7 */
     word-wrap: break-word;       /* Internet Explorer 5.5+ */
+
+    /* https://stackoverflow.com/questions/5840328 */
+    background: #eee;
+    background-image: -webkit-linear-gradient(#fafafa 50%, #e4efe4 50%);
+    background-image:    -moz-linear-gradient(#fafafa 50%, #e4efe4 50%);
+    background-image:     -ms-linear-gradient(#fafafa 50%, #e4efe4 50%);
+    background-image:      -o-linear-gradient(#fafafa 50%, #e4efe4 50%);
+    background-image:         linear-gradient(#fafafa 50%, #e4efe4 50%);
+    background-position: 0 0;
+    background-repeat: repeat;
+    background-size: 3em 3em;
   }
   .smalltext {
     font-size:0.8rem;
