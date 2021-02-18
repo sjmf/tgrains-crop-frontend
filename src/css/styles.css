@@ -145,3 +145,7 @@ a.pad.btn {
 .collapse-enter-to {
     overflow-y:hidden;
 }
+
+i.material-icons {
+    vertical-align: middle;
+}

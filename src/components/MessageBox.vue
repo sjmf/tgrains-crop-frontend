@@ -1,21 +1,32 @@
 <template>
   <div class="container">
-    <div class="card-panel" v-bind:class="colour" id="message">
-      <span>
-        <i v-if="dismissible" id="closeBtn"
-           class="close material-icons right"
-           v-on:click="closeMsg()">
-          close
-        </i>
-      </span>
-      <span><strong>{{heading}}</strong></span>
-      &nbsp;
-      <span v-html="message"></span>
-
-      <div v-if="callbacks" class="callbacks">
-        <span v-for="(callback, i) in callbacks" :key="i">
-          <a href="#" @click="callback(); closeMsg()" v-html="callbackInnerHTML[i]"></a>
+    <div class="card panel" v-bind:class="colour" id="message">
+      <div class="card-content">
+        <span>
+          <i v-if="dismissible" id="closeBtn"
+             class="close material-icons right"
+             v-on:click="closeMsg()">
+            close
+          </i>
         </span>
+
+        <span class="card-title">
+          <i v-if="kind==='warning'" class="material-icons small">warning</i>
+          <i v-if="kind==='error'" class="material-icons small">error</i>
+          <i v-if="kind==='info'" class="material-icons small">help</i>
+          <i v-if="kind==='success'" class="material-icons small">thumb_up</i>
+
+          {{heading}}
+        </span>
+
+        &nbsp;
+        <span v-html="message"></span>
+
+        <div v-if="callbacks" class="callbacks">
+          <span v-for="(callback, i) in callbacks" :key="i">
+            <a href="#" @click="callback(); closeMsg()" v-html="callbackInnerHTML[i]"></a>
+          </span>
+        </div>
       </div>
     </div>
   </div>
@@ -64,10 +75,10 @@
         return 'grey lighten-4'
       },
       heading() {
-        if(this.title!==undefined) return this.title + ':'
-        if(this.kind==='error')    return "A problem occurred:"
-        if(this.kind==='warning')  return "Warning:"
-        if(this.kind==='info')     return "Information:"
+        if(this.title!==undefined) return this.title
+        if(this.kind==='error')    return "A Problem Occurred"
+        if(this.kind==='warning')  return "Warning"
+        if(this.kind==='info')     return "Information"
         if(this.kind==='success')  return "Success!"
         return ""
       }
@@ -99,5 +110,11 @@
   }
   .callbacks span {
     margin: 0 5px 0 0;
+  }
+  .card .card-title {
+    font-size: 1.4rem;
+  }
+  i.material-icons.small {
+    font-size: 1.6rem;
   }
 </style>
