@@ -50,6 +50,10 @@
                 e.selected = false
 
               elem.querySelector(`option[value='${val}']`).selected = true
+            },
+
+            enable() {
+              document.querySelector('#landscape-input select').M_FormSelect
             }
         },
         computed: {
@@ -65,8 +69,23 @@
             this.setValue(this.$store.state.landscape_id)
           },
           readonly() {
-            const elem = document.querySelector("#landscape-input .select-wrapper input")
+            let elem = document.querySelector("#landscape-input .select-wrapper input")
             elem.disabled = this.readonly
+            elem = document.querySelector("#landscape-input .select-wrapper")
+            elem.classList.toggle("disabled", this.readonly)
+
+            /* Re-initialise Materialize dropdown when clearing read-only:
+             *
+             * This is an ugly hack, but it fixes a corner case when the dropdown is disabled
+             * on page-load (e.g. user was viewing a state but refreshed), and clearing the
+             * flags is not enough to make the Materialize drop-down work again. Boo. */
+            if(! this.readonly) {
+              this.$nextTick(() => {
+                let elem = document.querySelector('#landscape-input select')
+                elem.M_FormSelect.destroy()
+                this.$_M.FormSelect.init(elem)
+              })
+            }
           }
         },
         mounted() {
