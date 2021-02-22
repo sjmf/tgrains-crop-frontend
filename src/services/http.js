@@ -13,17 +13,18 @@ export default {
     },
 
     /***
-     * Check the /status/<job_id> route for the return from the Celery task queue
+     * Check the /api/status/<job_id> route for the return from the Celery task queue
      * @param response
      * @returns {Promise<*>}
      */
     async checkCeleryStatus (response) {
         const pathname = new URL(response.request.responseURL).pathname
+        // console.trace(response.config.url, response.data)
 
         // Keep checking the celery status if result is deferred, e.g. state= "PENDING", "STARTED", or "RETRY"
         while (!(['SUCCESS', 'FAILURE', 'REVOKED'].includes(response.data.state))) {
             await this.sleep(500)
-            console.log("Awake! Checking state again...", response)
+            console.debug("Awake! Checking state again...", pathname)
 
             response = await axios.get(pathname)
 
@@ -62,7 +63,7 @@ export default {
     async queryModel (data) {
         try {
             // Query the model and kick off celery task
-            let response = await axios.post('/model', data)
+            let response = await axios.post('/api/model', data)
             // console.log(response)
 
             response = await this.checkCeleryStatus(response)
@@ -82,7 +83,7 @@ export default {
         try {
             const data = {params: {'landscape_id': landscape_id}}
 
-            let response = await axios.get('/model', data)
+            let response = await axios.get('/api/model', data)
             response = await this.checkCeleryStatus(response)
 
             console.info("BAU State Loaded!")
@@ -102,7 +103,7 @@ export default {
         try {
             const data = {params: {'landscape_id': landscape_id}}
 
-            let response = await axios.get('/strings', data)
+            let response = await axios.get('/api/strings', data)
             response = await this.checkCeleryStatus(response)
 
             console.info("Crop & Livestock Strings Loaded!")
@@ -144,7 +145,7 @@ export default {
                 }
             }
 
-            let response = await axios.get('/comment', data)
+            let response = await axios.get('/api/comment', data)
 
             console.info("Loaded comments")
             return response.data
@@ -177,7 +178,7 @@ export default {
      */
     async postComment(data) {
         try {
-            let response = await axios.post('/comment', data)
+            let response = await axios.post('/api/comment', data)
 
             console.info("Comment posted")
             return response.data
@@ -194,7 +195,7 @@ export default {
      */
     async loadTags() {
         try {
-            let response = await axios.get('/tags')
+            let response = await axios.get('/api/tags')
 
             console.info("Loaded tags")
             return response.data
@@ -212,7 +213,7 @@ export default {
     async loadReply(reply_id) {
         try {
             const data = {params: {'id': reply_id}}
-            let response = await axios.get('/reply', data)
+            let response = await axios.get('/api/reply', data)
 
             console.info("Loaded reply")
             return response.data
@@ -230,7 +231,7 @@ export default {
      */
     async postState(data) {
         try {
-            let response = await axios.post('/state', data)
+            let response = await axios.post('/api/state', data)
             console.info('Posted state to server')
             return response
         }
@@ -247,7 +248,7 @@ export default {
      */
     async forkSession(data) {
         try {
-            return await axios.post('/fork', data)
+            return await axios.post('/api/fork', data)
         }
         catch (err) {
             console.error(err)
