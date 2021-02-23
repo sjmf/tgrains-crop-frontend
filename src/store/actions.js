@@ -515,7 +515,6 @@ export default {
      * @param session
      */
     async forkSession(_, {index, session}) {
-        // TODO: Modify this method to allow taking session from comment instead of stack
         if (session === undefined) {
             const session_stack = this.state.sessions[this.state.landscape_id]
             session = session_stack[index]
@@ -624,7 +623,8 @@ export default {
 
         this.commit('setMessage', {
             title: `Read-only Mode`,
-            message: `You are in read-only mode (maybe you refreshed the page while viewing a state?) <br/>Click the button below to return to the most recent state.`,
+            message: `You are in read-only mode (maybe you refreshed the page while viewing a state?) <br/>`+
+                      `Click the button below to return to the most recent state.`,
             kind: 'warning',
             callbacks: [
                 () => { this.dispatch('cancelViewSession') }

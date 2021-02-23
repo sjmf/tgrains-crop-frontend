@@ -8,13 +8,11 @@ Vue.use(Fragment.Plugin)
 // Import Axios for HTTP AJAX requests
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-
 Vue.use(VueAxios, axios)
 
 // Import Materialize library for UI and attach it to the Vue prototype
 import Material from 'materialize-css'
 import M from 'materialize-css'
-
 Vue.use(Material);
 Vue.prototype.$_M = M
 
@@ -26,16 +24,16 @@ require('@/css/styles.css');
 
 // Import and set up smooth scrolling
 import VueSmoothScroll from 'vue2-smooth-scroll'
-
-import router from './router'
-
 Vue.use(VueSmoothScroll, {
   duration: 400,
   updateHistory: false,
 })
 
+// Import the vue router
+import router from './router'
+
 /// Disable “development mode” warning
-Vue.config.productionTip = false
+// Vue.config.productionTip = false
 
 // Setup vue
 new Vue({
