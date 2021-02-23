@@ -33,6 +33,7 @@ export default {
         environmentData() {
             return {
                 labels: [
+                    'Greenhouse Gas',
                     'Nitrogen leaching',
                     'Ground Water',
                     'Fish',

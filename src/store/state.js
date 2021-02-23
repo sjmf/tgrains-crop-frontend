@@ -36,10 +36,10 @@ export const initial_state = () => ({
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {
-            // GHG, Profit, Calories
+            // Profit, Calories
             production:           [0,0,0],
-            // Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
-            environmentImpacts:     [0,0,0,0,0,0],
+            // GHG, Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
+            environmentImpacts:   [0,0,0,0,0,0,0],
             // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             // EAT Lancet plate in same order as nutritionalDelivery
@@ -48,7 +48,7 @@ export const initial_state = () => ({
         102: {
             // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
             production:           [0,0,0],
-            environmentImpacts:     [0,0,0,0,0,0],
+            environmentImpacts:   [0,0,0,0,0,0],
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
         },
