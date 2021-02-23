@@ -55,8 +55,6 @@
             this.$store.commit('loading', false)
             // Check if Vuex state was updated due to new code version:
             this.$store.dispatch('checkVersion')
-            // Clear messages on clean reload
-            this.$store.commit('clearMessages')
             // Check for read-only status on load (as messages are cleared)
             this.$store.dispatch('checkReadOnlyAndWarn')
             // Set landscapeID from route params

@@ -23,7 +23,19 @@ export default new Vuex.Store({
     actions,
     modules: {},
     plugins: [
-        createPersistedState({key: 'vuex'}),
+        createPersistedState({
+            key: 'vuex',
+            reducer: (state) => {
+                let reducer = Object.assign({}, state)
+                // Paths to discard from store:
+                delete reducer.messages     // Don't reload messages
+                return (reducer)
+            },
+            filter: (mutation) => {
+                let exclude = ['setMessage']
+                return ! exclude.includes(mutation.type)
+            }
+        }),
         createCache()
     ]
 })
