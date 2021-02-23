@@ -274,10 +274,10 @@ export default {
     },
 
     /**
-     * Hit the action to load comments
+     * Bubble up event to load comments
      */
     loadComments() {
-      this.$store.dispatch("loadComments")
+      this.$emit("loadComments")
     }
   },
   watch: {
