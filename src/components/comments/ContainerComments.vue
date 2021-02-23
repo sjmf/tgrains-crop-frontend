@@ -93,7 +93,7 @@ export default {
   data() {
     return {
       show_add_comment: false,
-      show_filter_comment: true,
+      show_filter_comment: false,
       reply_id: undefined,
       state_id: undefined
     }
