@@ -87,7 +87,8 @@ export default {
             return {
                 labels: [
                     'Profit',
-                    'Calories'
+                    'Calories',
+                    'Area change'
                 ],
                 datasets: [{
                     label: '% change from BAU state',

@@ -36,7 +36,7 @@ export const initial_state = () => ({
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {
-            // Profit, Calories
+            // Profit, Calories, area %change (ha)
             production:           [0,0,0],
             // GHG, Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
             environmentImpacts:   [0,0,0,0,0,0,0],

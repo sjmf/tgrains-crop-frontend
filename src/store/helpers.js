@@ -25,6 +25,13 @@ export function difference(bau, new_data) {
 }
 
 /***
+ * Calculate a percentage change in area used
+ */
+export function sumArea(data) {
+    return data.cropAreas.reduce((a,b)=>b+a) + data.livestockAreas.reduce((a,b)=>b+a)
+}
+
+/***
  * Format data returned by model, ready for graphing or differencing
  * @param state
  * @param new_data
@@ -35,7 +42,8 @@ export function formatData(state, new_data) {
 
     data['production'] = [
         new_data['profit'],
-        new_data['production']
+        new_data['production'],
+        sumArea(new_data)
     ]
 
     data['environmentImpacts'] = [

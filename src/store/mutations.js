@@ -165,9 +165,9 @@ export default {
      */
     resetToBAU (state) {
         // Reset graphs to '0'
-        for (let i of ['production', 'pesticideImpacts']) {
-            state.data[state.landscape_id][i] = Array.from(state.bau[state.landscape_id][i], () => 0)
-        }
+        for (let i of ['production', 'environmentImpacts'])
+            state.data[state.landscape_id][i] = Array.from(state.data[state.landscape_id][i], () => 0)
+
         state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
 
         // Reset landscape values (sidebar data values)
