@@ -44,12 +44,12 @@
         <div class="row">
           <div class="col l6">
             <button class="waves-effect waves-light btn red"
-                    v-bind:class="{'disabled': (!this.changes) || this.readonly}"
+                    v-bind:class="{'disabled': resetDisabled}"
                     v-on:click="resetSidebar">Reset</button>
           </div>
           <div class="col l6">
             <button class="waves-effect waves-light btn green"
-                    v-bind:disabled="submitDisabled  || this.readonly"
+                    v-bind:disabled="submitDisabled"
                     v-on:click="submitForm">Submit</button>
           </div>
 
@@ -83,7 +83,7 @@
         },
         data() {
             return {
-                submitDisabled: false,
+                inner_submitDisabled: false,
                 changes: false,
                 errors: {},
                 resetSignal: false
@@ -220,6 +220,25 @@
             },
         },
         computed: {
+          /**
+           * Used by UI to check if the submit button should be disabled
+           */
+          submitDisabled: {
+            get() {
+              return this.inner_submitDisabled || this.readonly || this.$store.state.loading
+            },
+            set(val) {
+              this.inner_submitDisabled = val
+            }
+          },
+
+          /**
+           * UI check if reset button should be disabled
+           */
+          resetDisabled() {
+            return (!this.changes) || this.readonly || this.$store.state.loading
+          },
+
           /**
            * Check if crop area is exceeded
            */

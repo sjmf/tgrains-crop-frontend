@@ -43,7 +43,7 @@
     height: 100%;
     width: 100%;
 
-    z-index: 1;
+    z-index: 5;
   }
   .card {
     position: fixed;
@@ -58,7 +58,7 @@
     align-items: center;
     justify-content: center;
 
-    z-index: 2;
+    z-index: 10;
     position:fixed;
   }
   .card-title {
