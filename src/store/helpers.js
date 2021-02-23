@@ -19,6 +19,7 @@ export function difference(bau, new_data) {
         for (let j = 0; j < bau[f].length; j++) {
             //console.debug(i, j, new_data[i][j], bau[i][j])
             data[f][j] = ((new_data[f][j] / bau[f][j]) * 100) - 100
+            data[f][j] = Math.round( data[f][j] * 100 + Number.EPSILON ) / 100
         }
     }
     return data
