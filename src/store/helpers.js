@@ -4,21 +4,21 @@
  * Perform percentage difference on old data and new data
  * @param bau
  * @param new_data
- * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: *}}
+ * @returns {{environmentImpacts: [], production: [], nutritionaldelivery: *}}
  */
 export function difference(bau, new_data) {
     let data = {
         production: [],
-        pesticideImpacts: [],
+        environmentImpacts: [],
         nutritionaldelivery: new_data['nutritionaldelivery'], // Nutri pie chart not diffed
         eatLancetPlate: new_data['eatLancetPlate']            // EAT Lancet plate not diffed
     }
 
-    let fields = ['production', 'pesticideImpacts']
-    for (let i of fields) {
-        for (let j = 0; j < bau[i].length; j++) {
+    let fields = ['production', 'environmentImpacts']
+    for (let f of fields) {
+        for (let j = 0; j < bau[f].length; j++) {
             //console.debug(i, j, new_data[i][j], bau[i][j])
-            data[i][j] = ((new_data[i][j] / bau[i][j]) * 100) - 100
+            data[f][j] = ((new_data[f][j] / bau[f][j]) * 100) - 100
         }
     }
     return data
@@ -31,7 +31,7 @@ export function difference(bau, new_data) {
  * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: []}}
  */
 export function formatData(state, new_data) {
-    let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], eatLancetPlate: []}
+    let data = {production: [], environmentImpacts: [], nutritionaldelivery: [], eatLancetPlate: []}
 
     data['production'] = [
         new_data['greenhouseGasEmissions'],
@@ -40,7 +40,7 @@ export function formatData(state, new_data) {
         new_data['production']
     ]
 
-    data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
+    data['environmentImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
     data['nutritionaldelivery'] = new_data['nutritionaldelivery']
     // .map(x => Math.round(x*10000)/100)   // Round the float-point to 2dp
     data['eatLancetPlate'] = state.data[state.landscape_id].eatLancetPlate // Static. Does not change.

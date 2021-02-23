@@ -1,13 +1,16 @@
 <template>
   <div class="card panel" id="environment-tab">
     <div class="card-content">
-      <span class="card-title">Nitrogen Leaching and Pesticide Impacts</span>
+      <span class="card-title">Environmental Impacts</span>
       <div class="chart-panel">
         <viz-pests
-            :chart-data="pestData"
+            :chart-data="environmentData"
             :height="chartHeight"/>
       </div>
-      <p>In this chart, higher values indicate worse environmental impacts.</p>
+      <p>This chart shows environmental impacts, including those of fertilizers and
+        pesticides, on the environment and affected species.</p>
+      <p><em>Higher values indicate worse environmental impacts.
+        Lower values indicate an improvement.</em></p>
     </div>
   </div>
 </template>
@@ -27,7 +30,7 @@ export default {
         chartColors() {
             return this.$store.state.chartColors
         },
-        pestData() {
+        environmentData() {
             return {
                 labels: [
                     'Nitrogen leaching',
@@ -41,7 +44,7 @@ export default {
                     label: '% change from BAU state',
                     backgroundColor: this.chartColors.translucent[4],
                     borderWidth: 1,
-                    data: this.baseData.pesticideImpacts
+                    data: this.baseData.environmentImpacts
                 }]
             }
         }
