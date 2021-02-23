@@ -19,13 +19,14 @@
           <br/>
           <div class="row">
             <div class="col s6 right">
-              <a class="btn red" @click="reload_store">Reload data store from defaults</a>
+              <a class="btn btn-flat white-text red" @click="reload_store">Reload data store from defaults</a>
+              <a class="btn btn-flat white-text amber" @click="clear_store">Clear LocalStorage</a>
             </div>
             <div class="col s3">
-              <a class="btn red" @click="setMessage('error')">Raise Error</a>
-              <a class="btn blue" @click="setMessage('info')">Raise Info</a>
-              <a class="btn amber" @click="setMessage('warning')">Raise Warning</a>
-              <a class="btn green" @click="setMessage('success')">Raise Success</a>
+              <a class="btn btn-flat white-text red" @click="setMessage('error')">Raise Error</a>
+              <a class="btn btn-flat white-text blue" @click="setMessage('info')">Raise Info</a>
+              <a class="btn btn-flat white-text amber" @click="setMessage('warning')">Raise Warning</a>
+              <a class="btn btn-flat white-text green" @click="setMessage('success')">Raise Success</a>
             </div>
           </div>
         </div>
@@ -46,6 +47,9 @@
       reload_store() {
         this.$store.commit('invalidateStore');
         window.location.reload(false);
+      },
+      clear_store() {
+        localStorage.clear()
       },
       setMessage(kind) {
         this.$store.commit('setMessage', {
@@ -81,6 +85,7 @@
   }
   .btn {
     width: 100%;
+    margin-bottom: 4px;
   }
   .debug-info-panel {
     font-family: 'Ubuntu', 'Consolas', 'Courier New', monospace;
