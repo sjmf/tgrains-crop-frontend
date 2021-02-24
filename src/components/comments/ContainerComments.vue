@@ -43,7 +43,7 @@
 
       <!-- Comment cards -->
 
-      <transition-group name="collapse">
+      <transition-group name="fade">
         <comment-card
           v-for="(comment, index) in comments"
           v-bind:key="index"

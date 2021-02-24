@@ -19,14 +19,14 @@
           <br/>
           <div class="row">
             <div class="col s6 right">
-              <a class="btn btn-flat white-text red" @click="reload_store">Reload data store from defaults</a>
-              <a class="btn btn-flat white-text amber" @click="clear_store">Clear LocalStorage</a>
+              <a class="btn btn-flat white-text waves-effect waves-red red" @click="reload_store">Reload data store from defaults</a>
+              <a class="btn btn-flat white-text waves-effect waves-amber amber" @click="clear_store">Clear LocalStorage</a>
+              <a class="btn btn-flat white-text waves-effect waves-blue blue" @click="push_comment">Test Comment Card</a>
             </div>
             <div class="col s3">
-              <a class="btn btn-flat white-text red" @click="setMessage('error')">Raise Error</a>
-              <a class="btn btn-flat white-text blue" @click="setMessage('info')">Raise Info</a>
-              <a class="btn btn-flat white-text amber" @click="setMessage('warning')">Raise Warning</a>
-              <a class="btn btn-flat white-text green" @click="setMessage('success')">Raise Success</a>
+              <a class="btn btn-flat waves-effect waves-red white-text red" @click="setMessage('error')">Raise Error</a>
+              <a class="btn btn-flat waves-effect waves-amber white-text amber" @click="setMessage('warning')">Raise Warning</a>
+              <a class="btn btn-flat waves-effect waves-blue white-text blue" @click="setMessage('info')">Raise Info</a>
             </div>
           </div>
         </div>
@@ -36,6 +36,8 @@
 </template>
 
 <script>
+  import {cloneDeep} from "lodash";
+
   export default {
     name: 'viz-debug',
     data() {
@@ -50,6 +52,27 @@
       },
       clear_store() {
         localStorage.clear()
+      },
+      push_comment() {
+        let comments = cloneDeep(this.$store.state.comments)
+        comments.comments = [{
+            author: "Captain Testpants",
+            distance: 0,
+            hash: "testing",
+            id: 65535,
+            landscape_id: 101,
+            reply: null,
+            reply_id: null,
+            session: null,
+            session_id: "testing",
+            state_index: 5,
+            tags: [ 41 ],
+            text: "Test comment pushed from debug window. Not a real comment! ;)",
+            timestamp: 1614099072,
+            user_id: "testing",
+        }].concat(comments.comments)
+        console.log(comments)
+        this.$store.commit('setComments', comments)
       },
       setMessage(kind) {
         this.$store.commit('setMessage', {
