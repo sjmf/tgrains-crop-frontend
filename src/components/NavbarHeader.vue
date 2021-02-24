@@ -5,7 +5,7 @@
       <div class="row nav-wrapper">
         <div class="col s12">
           <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a>
-          <a href="#" class="brand-logo truncate">
+          <a href="/" class="brand-logo truncate">
             <span class="logo"><img alt="logo" src="../assets/TGRAINS logo B&W - dark bg.svg"/></span>
             <span v-html="pageTitle"></span>
           </a>
