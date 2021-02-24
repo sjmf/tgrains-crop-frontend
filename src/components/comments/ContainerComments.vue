@@ -9,7 +9,7 @@
           <i class="material-icons right">add</i>Add Comment
         </a>
         <span> </span>
-        <a @click="toggleFilterComment"
+        <a @click="toggleFilter"
             class="btn tooltipped right waves-effect waves-light blue darken-2"
             data-position="left" data-tooltip="Show Filtering Options">
           <i class="material-icons right">filter_list</i>Sort/Filter
@@ -62,9 +62,9 @@
           v-bind:timestamp="comment.timestamp"
           v-bind:distance="comment.distance"
           @replyToComment="doReply"
-          @filterUser="$store.commit('filterUser', $event)"
-          @filterReply="$store.commit('filterReply', $event)"
-          @filterTag="$store.commit('filterTag', $event)"
+          @filterUser="$store.commit('filterUser', $event); showFilter()"
+          @filterReply="$store.commit('filterReply', $event); showFilter()"
+          @filterTag="$store.commit('filterTag', $event); showFilter()"
           @load="$emit('load')"/>
       </transition-group>
       <!-- Pagination -->
@@ -114,8 +114,11 @@ export default {
     toggleAddComment() {
       this.show_add_comment = !this.show_add_comment
     },
-    toggleFilterComment() {
+    toggleFilter() {
       this.show_filter_comment = !this.show_filter_comment
+    },
+    showFilter() {
+      this.show_filter_comment = true
     },
     attachState(index) {
       this.show_add_comment = true
