@@ -99,6 +99,30 @@ export function distanceFromBAU(state) {
 }
 
 /***
+ * Function sent by Alice to calculate the number of people who can be fed based on the provided nutrition.
+ *
+ * @param totalCalories – number of calories produced in the region
+ * @param foodGroups    – proportions of each group that comes out of the region (i.e. the stuff that informs the pie chart)
+ * @param eatLancetFoodGroups – proportions of each group recommended by EatLancet
+ */
+export function calcPeopleFed(totalCalories, foodGroups, eatLancetFoodGroups) {
+    if(foodGroups === undefined)
+        return 0;
+
+    // First find the limiting group
+    const calsPerPerson = 2500
+    let myMin = foodGroups[0] / eatLancetFoodGroups[0]
+
+    for (let i=1; i < foodGroups.length; i++)
+    {
+        if (myMin > foodGroups[i] / eatLancetFoodGroups[i])
+            myMin = foodGroups[i] / eatLancetFoodGroups[i]
+    }
+
+    return Math.floor((totalCalories*1000000) * myMin / (calsPerPerson*365.2425))
+}
+
+/***
  * Generate a unique random UUID in the form "4602:8395:63da:d6a7:19ef:ab20:cd56"
  * @returns {*}
  */

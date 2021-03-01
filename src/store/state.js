@@ -43,14 +43,14 @@ export const initial_state = () => ({
             // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             // EAT Lancet plate in same order as nutritionalDelivery
-            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
+            eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
         },
         102: {
             // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
             production:           [0,0,0],
             environmentImpacts:   [0,0,0,0,0,0],
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
-            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
+            eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
         },
         // Raw data loaded from server
         raw: {

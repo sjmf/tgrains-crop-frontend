@@ -30,6 +30,8 @@
 import DataTable from "@/components/visualisations/DataTable"
 import VizProduction from "@/components/visualisations/VizProduction"
 
+import {calcPeopleFed} from "@/store/helpers.js"
+
 export default {
     name: 'TabProduction',
     components: {
@@ -99,41 +101,16 @@ export default {
             }
         },
         people_fed() {
-            return this.calc_people_fed(
+            return calcPeopleFed(
                 this.rawData.production,            // Total calories
                 this.baseData.nutritionaldelivery,  // Food Groups
                 this.baseData.eatLancetPlate)       // Eat Lancet food groups
         },
         people_fed_bau() {
-            return this.calc_people_fed(
+            return calcPeopleFed(
                 this.bau.production,
                 this.bau.nutritionaldelivery,
                 this.baseData.eatLancetPlate)
-        }
-    },
-    methods: {
-        /***
-         * Function sent by Alice to calculate the number of people who can be fed based on the provided nutrition.
-         *
-         * @param totalCalories – the number of calories produced in the region
-         * @param foodGroups are the proportions of each group that comes out of the region (i.e. the stuff that informs the pie chart)
-         * @param eatLancetFoodGroups are the proportions of each group recommended by EatLancet
-         */
-        calc_people_fed(totalCalories, foodGroups, eatLancetFoodGroups) {
-          if(foodGroups === undefined)
-            return 0;
-
-          // First find the limiting group
-          let myMin = foodGroups[0] / eatLancetFoodGroups[0]
-          //console.log(totalCalories, myMin, foodGroups, eatLancetFoodGroups)
-
-          for (let i=1 ; i < foodGroups.length; i++)
-          {
-            if (myMin > foodGroups[i] / eatLancetFoodGroups[i])
-              myMin = foodGroups[i] / eatLancetFoodGroups[i]
-          }
-
-          return Math.floor((totalCalories*1000000) * myMin / (2500*365.2425))
         }
     }
 }
