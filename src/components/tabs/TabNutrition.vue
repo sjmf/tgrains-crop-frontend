@@ -59,10 +59,13 @@ export default {
         chartHeight: Number
     },
     computed: {
+        nutriLabels() {
+            return (this.$store.state.strings[this.$store.state.landscape_id]['food_groups'] || [])
+                .map(x => this.$store.state.food_groups_dictionary[x])
+        },
         nutriData() {
             return {
-                labels: (this.$store.state.strings[this.$store.state.landscape_id]['food_groups'] || [])
-                    .map(x => this.$store.state.food_groups_dictionary[x]),
+                labels: this.nutriLabels,
                 type: 'outlabeledPie',
                 datasets: [{
                     backgroundColor: this.chartColors.opaque,
@@ -73,7 +76,7 @@ export default {
         },
         eatLancet() {
             return {
-                labels: this.nutriData.labels,
+                labels: this.nutriLabels,
                 type: 'outlabeledPie',
                 datasets: [{
                   backgroundColor: this.chartColors.opaque,
@@ -86,13 +89,24 @@ export default {
             return [
                 {
                     label: "People supported",
-                    value: this.people_fed,
-                    change: this.people_fed - this.people_fed_bau,
+                    value: this.people_fed.qty,
+                    change: this.people_fed.qty - this.people_fed_bau.qty,
                     description: "Total people receiving a fully-balanced diet"
+                },
+                {
+                    label: "Limiting factor",
+                    value: this.nutriLabels[this.people_fed.lim],
+                    change: Math.round(
+                        (this.baseData.nutritionaldelivery[this.people_fed.lim] -
+                            this.baseData.eatLancetPlate[this.people_fed.lim])
+                        * 1000 + Number.EPSILON) / 10,
+                    unit: {string: '%', loc: 'post', which: 'change'},
+                    description: "Increase production of this group to feed more people locally"
                 }
             ]
         },
         people_fed() {
+            // returns {qty, lim}
             return calcPeopleFed(
                 this.rawData.production,            // Total calories
                 this.baseData.nutritionaldelivery,  // Food Groups
@@ -104,6 +118,6 @@ export default {
                 this.bauData.nutritionaldelivery,
                 this.baseData.eatLancetPlate)
         }
-    }
+    },
 }
 </script>

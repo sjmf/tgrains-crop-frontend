@@ -112,14 +112,20 @@ export function calcPeopleFed(totalCalories, foodGroups, eatLancetFoodGroups) {
     // First find the limiting group
     const calsPerPerson = 2500
     let myMin = foodGroups[0] / eatLancetFoodGroups[0]
+    let mindex = 0
 
     for (let i=1; i < foodGroups.length; i++)
     {
-        if (myMin > foodGroups[i] / eatLancetFoodGroups[i])
+        if (myMin > foodGroups[i] / eatLancetFoodGroups[i]) {
             myMin = foodGroups[i] / eatLancetFoodGroups[i]
+            mindex = i
+        }
     }
 
-    return Math.floor((totalCalories*1000000) * myMin / (calsPerPerson*365.2425))
+    return {
+        'qty': Math.floor((totalCalories * 1000000) * myMin / (calsPerPerson * 365.2425)),
+        'lim': mindex
+    }
 }
 
 /***
