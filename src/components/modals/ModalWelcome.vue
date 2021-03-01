@@ -43,12 +43,11 @@
       },
     },
     mounted() {
-      console.info("Welcome modal mounted, acceptedTerms is:", this.$store.state.acceptedTerms)
+      // console.info("Welcome modal mounted, acceptedTerms is:", this.$store.state.acceptedTerms)
 
       // Run on nextTick for edge-case when Vuex store invalidated due to new version hash
       this.$nextTick(()=> {
         // Open Welcome modal if terms not accepted
-        console.log(this.$route.name, this.$router.history.current.path)
         if (this.$store.state.acceptedTerms === false && this.$router.history.current.path !== '/ethics')
           this.open()
       })
