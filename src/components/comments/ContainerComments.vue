@@ -9,7 +9,7 @@
           <i class="material-icons right">add</i>Add Comment
         </a>
         <span> </span>
-        <a @click="toggleFilterComment"
+        <a @click="toggleFilter"
             class="btn tooltipped right waves-effect waves-light blue darken-2"
             data-position="left" data-tooltip="Show Filtering Options">
           <i class="material-icons right">filter_list</i>Sort/Filter
@@ -32,7 +32,7 @@
     <!-- Filtering Options -->
     <transition name="fade">
       <div class="col s12 m10 l8 offset-m1 offset-l2" v-show="show_filter_comment">
-        <comment-filter/>
+        <comment-filter @loadComments="loadComments()"/>
       </div>
     </transition>
 
@@ -42,7 +42,9 @@
       <pagination v-if="comments.length" @changePage="changePage"/>
 
       <!-- Comment cards -->
-      <comment-card
+
+      <transition-group name="fade">
+        <comment-card
           v-for="(comment, index) in comments"
           v-bind:key="index"
           v-bind:id="comment.id"
@@ -60,11 +62,11 @@
           v-bind:timestamp="comment.timestamp"
           v-bind:distance="comment.distance"
           @replyToComment="doReply"
-          @filterUser="$store.commit('filterUser', $event)"
-          @filterReply="$store.commit('filterReply', $event)"
-          @filterTag="$store.commit('filterTag', $event)"
+          @filterUser="$store.commit('filterUser', $event); showFilter()"
+          @filterReply="$store.commit('filterReply', $event); showFilter()"
+          @filterTag="$store.commit('filterTag', $event); showFilter()"
           @load="$emit('load')"/>
-
+      </transition-group>
       <!-- Pagination -->
       <pagination v-if="comments.length" @changePage="changePage"/>
     </div>
@@ -95,7 +97,8 @@ export default {
       show_add_comment: false,
       show_filter_comment: false,
       reply_id: undefined,
-      state_id: undefined
+      state_id: undefined,
+      timer: undefined
     }
   },
   computed: {
@@ -111,8 +114,11 @@ export default {
     toggleAddComment() {
       this.show_add_comment = !this.show_add_comment
     },
-    toggleFilterComment() {
+    toggleFilter() {
       this.show_filter_comment = !this.show_filter_comment
+    },
+    showFilter() {
+      this.show_filter_comment = true
     },
     attachState(index) {
       this.show_add_comment = true
@@ -120,7 +126,17 @@ export default {
     },
     changePage(page){
       this.$store.commit('setCommentsPage', page)
-      this.$store.dispatch('loadComments')
+      this.loadComments()
+    },
+    async loadComments() {
+      await this.$store.dispatch("loadComments")
+
+      if(this.timer) clearTimeout(this.timer)
+
+      // Call loadComments again in 60 seconds (+ up to 10 seconds random)
+      this.timer = setTimeout(() => {
+        this.loadComments()
+      }, 60000 + Math.floor(Math.random() * 1000))
     }
   },
   async mounted() {
@@ -130,7 +146,7 @@ export default {
       if (this.$store.state.tags.tags.length === 0)
         await this.$store.dispatch("loadTags")
 
-      await this.$store.dispatch("loadComments")
+      await this.loadComments()
     })
   },
 }

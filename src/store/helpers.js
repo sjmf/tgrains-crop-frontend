@@ -4,24 +4,32 @@
  * Perform percentage difference on old data and new data
  * @param bau
  * @param new_data
- * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: *}}
+ * @returns {{environmentImpacts: [], production: [], nutritionaldelivery: *}}
  */
 export function difference(bau, new_data) {
     let data = {
         production: [],
-        pesticideImpacts: [],
+        environmentImpacts: [],
         nutritionaldelivery: new_data['nutritionaldelivery'], // Nutri pie chart not diffed
         eatLancetPlate: new_data['eatLancetPlate']            // EAT Lancet plate not diffed
     }
 
-    let fields = ['production', 'pesticideImpacts']
-    for (let i of fields) {
-        for (let j = 0; j < bau[i].length; j++) {
+    let fields = ['production', 'environmentImpacts']
+    for (let f of fields) {
+        for (let j = 0; j < bau[f].length; j++) {
             //console.debug(i, j, new_data[i][j], bau[i][j])
-            data[i][j] = ((new_data[i][j] / bau[i][j]) * 100) - 100
+            data[f][j] = ((new_data[f][j] / bau[f][j]) * 100) - 100
+            data[f][j] = Math.round( data[f][j] * 100 + Number.EPSILON ) / 100
         }
     }
     return data
+}
+
+/***
+ * Calculate a percentage change in area used
+ */
+export function sumArea(data) {
+    return data.cropAreas.reduce((a,b)=>b+a) + data.livestockAreas.reduce((a,b)=>b+a)
 }
 
 /***
@@ -31,16 +39,19 @@ export function difference(bau, new_data) {
  * @returns {{pesticideImpacts: [], production: [], nutritionaldelivery: []}}
  */
 export function formatData(state, new_data) {
-    let data = {production: [], pesticideImpacts: [], nutritionaldelivery: [], eatLancetPlate: []}
+    let data = {production: [], environmentImpacts: [], nutritionaldelivery: [], eatLancetPlate: []}
 
     data['production'] = [
-        new_data['greenhouseGasEmissions'],
-        new_data['nLeach'],
         new_data['profit'],
-        new_data['production']
+        new_data['production'],
+        sumArea(new_data)
     ]
 
-    data['pesticideImpacts'] = [new_data['nLeach']].concat(new_data['pesticideImpacts'])
+    data['environmentImpacts'] = [
+        new_data['greenhouseGasEmissions'],
+        new_data['nLeach']
+    ].concat(new_data['pesticideImpacts'])
+
     data['nutritionaldelivery'] = new_data['nutritionaldelivery']
     // .map(x => Math.round(x*10000)/100)   // Round the float-point to 2dp
     data['eatLancetPlate'] = state.data[state.landscape_id].eatLancetPlate // Static. Does not change.
@@ -84,6 +95,36 @@ export function distanceFromBAU(state) {
     return {
         distance: sum,
         changes: changes
+    }
+}
+
+/***
+ * Function sent by Alice to calculate the number of people who can be fed based on the provided nutrition.
+ *
+ * @param totalCalories – number of calories produced in the region
+ * @param foodGroups    – proportions of each group that comes out of the region (i.e. the stuff that informs the pie chart)
+ * @param eatLancetFoodGroups – proportions of each group recommended by EatLancet
+ */
+export function calcPeopleFed(totalCalories, foodGroups, eatLancetFoodGroups) {
+    if(foodGroups === undefined)
+        return 0;
+
+    // First find the limiting group
+    const calsPerPerson = 2500
+    let myMin = foodGroups[0] / eatLancetFoodGroups[0]
+    let mindex = 0
+
+    for (let i=1; i < foodGroups.length; i++)
+    {
+        if (myMin > foodGroups[i] / eatLancetFoodGroups[i]) {
+            myMin = foodGroups[i] / eatLancetFoodGroups[i]
+            mindex = i
+        }
+    }
+
+    return {
+        'qty': Math.floor((totalCalories * 1000000) * myMin / (calsPerPerson * 365.2425)),
+        'lim': mindex
     }
 }
 

@@ -7,6 +7,7 @@ import TabProduction from "@/components/tabs/TabProduction";
 import TabNutrition from "@/components/tabs/TabNutrition";
 import TabHistory from "@/components/tabs/TabHistory";
 import RouteError from "@/components/RouteError";
+import EthicsStatement from "@/components/EthicsStatement";
 
 Vue.use(VueRouter)
 
@@ -39,6 +40,10 @@ const routes = [
     redirect: '/landscape/:id/production',
     component: ContainerMain,
     children: tabs,
+  },
+  {
+    path: '/ethics',
+    component: EthicsStatement,
   },
   {
     path: '*',

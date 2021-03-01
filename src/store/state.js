@@ -36,21 +36,21 @@ export const initial_state = () => ({
     // Data used by chart.js to render graphs. Loaded via AJAX.
     data: {
         101: {
-            // GHG, Profit, Calories
+            // Profit, Calories, area %change (ha)
             production:           [0,0,0],
-            // Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
-            pesticideImpacts:     [0,0,0,0,0,0],
+            // GHG, Nitrogen leaching, ground water, fish, birds, bees, beneficial arthropods
+            environmentImpacts:   [0,0,0,0,0,0,0],
             // Whole Grains, Tubers, Vegetables, Fruits, Dairy, Added Fats, Saturated Fats, Sugars, Animal Protein, Vegetable Protein
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             // EAT Lancet plate in same order as nutritionalDelivery
-            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
+            eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
         },
         102: {
             // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
-            production:           [0,0,0,0],
-            pesticideImpacts:     [0,0,0,0,0,0],
+            production:           [0,0,0],
+            environmentImpacts:   [0,0,0,0,0,0],
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
-            eatLancetPlate:       [32.4, 1.6, 6.1, 6.0, 23.0, 17.9, 4.8, 3.1, 5.0],
+            eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
         },
         // Raw data loaded from server
         raw: {
@@ -166,10 +166,11 @@ export const initial_state = () => ({
         },
     ],
 
-    // Populations (retrieved from Wikipedia. More accurate ones needed)
+    // Populations
+    // https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_United_Kingdom#Demographic_statistics_by_NUTS_1_region)
     population: {
-        101: 6235000,
-        102: 2200000
+        101: 1594716, // 6,236,072 * 0.256
+        102: 755647 , // 3,152,879 * 0.24
     },
 
     // Comments retrieved from the server

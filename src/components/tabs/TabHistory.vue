@@ -24,7 +24,9 @@
           </a>
         </div>
       </div>
+    </div>
 
+    <div class="col l12 scroll">
       <history-row v-for="(row, index) in history.slice().reverse()"
                    v-bind:key="index"
                    :index="history.length -1 -index"
@@ -37,7 +39,7 @@
     </div>
 
     <div class="container">
-      <a class="right pad overrun btn btn-small btn-flat white-text brown lighten-1 right waves-effect waves-brown"
+      <a class="right top-space overrun btn btn-small brown lighten-1 right waves-effect waves-brown"
          v-bind:class="{'disabled': history.length === 1 || readonly}"
          @click="showTrashDialog">
         <i class="material-icons right">delete_sweep</i>Deleted States
@@ -153,5 +155,12 @@ export default {
 <style>
 a.overrun.btn {
   margin-right: -12px;
+}
+a.top-space.btn {
+  margin-top: 8px;
+}
+div.scroll {
+  max-height: 500px;
+  overflow-y: scroll;
 }
 </style>
