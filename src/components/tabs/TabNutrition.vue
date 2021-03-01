@@ -30,24 +30,35 @@
         </div>
       </div>
     </div>
+
+    <div class="col s12 m12">
+      <div class="card panel">
+        <div class="card-content">
+          <data-table
+              :titles="['Factor', 'Value', 'Change', 'Description']"
+              :values="nutriValues"/>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
 import VizNutrition from "@/components/visualisations/VizNutrition"
+import DataTable from "@/components/visualisations/DataTable";
+import {calcPeopleFed} from "@/store/helpers";
+import TabMixin from "@/components/tabs/tabMixin";
 
 export default {
     name: 'TabNutrition',
-    components: {VizNutrition},
+    components: {
+      VizNutrition,
+      DataTable
+    },
+    mixins: [TabMixin],
     props: {
         chartHeight: Number
     },
     computed: {
-        baseData() {
-            return this.$store.state.data[this.$store.state.landscape_id]
-        },
-        chartColors() {
-            return this.$store.state.chartColors
-        },
         nutriData() {
             return {
                 labels: (this.$store.state.strings[this.$store.state.landscape_id]['food_groups'] || [])
@@ -70,6 +81,28 @@ export default {
                   data: this.baseData.eatLancetPlate
                 }]
             }
+        },
+        nutriValues() {
+            return [
+                {
+                    label: "People supported",
+                    value: this.people_fed,
+                    change: this.people_fed - this.people_fed_bau,
+                    description: "Total people receiving a fully-balanced diet"
+                }
+            ]
+        },
+        people_fed() {
+            return calcPeopleFed(
+                this.rawData.production,            // Total calories
+                this.baseData.nutritionaldelivery,  // Food Groups
+                this.baseData.eatLancetPlate)       // Eat Lancet food groups
+        },
+        people_fed_bau() {
+            return calcPeopleFed(
+                this.bauData.production,
+                this.bauData.nutritionaldelivery,
+                this.baseData.eatLancetPlate)
         }
     }
 }

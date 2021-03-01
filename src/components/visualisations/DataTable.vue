@@ -9,16 +9,21 @@
       <tbody>
       <tr v-for="row in values" :key="row.label">
         <td>{{row.label}}</td>
-        <td>{{row.value | format_significance}}</td>
+        <td>
+          {{('unit' in row && row.unit.loc === 'pre')  ? row.unit.string : ''}}
+          {{row.value | format_significance}}
+          {{('unit' in row && row.unit.loc === 'post') ? row.unit.string : ''}}
+        </td>
         <td v-bind:class="row.change === 0 ? '' : row.change >= 0 ? 'green-text' : 'red-text'" class="text-darken-2">
             {{row.change | sign}} {{row.change | format_significance}}
         </td>
-        <td>{{row.unit}}</td>
+        <td v-html="row.description"></td>
       </tr>
       </tbody>
     </table>
   </div>
 </template>
+
 <script>
     function numberFormat(value) {
       return new Intl.NumberFormat('en-GB', {
@@ -31,7 +36,25 @@
         name: 'DataTable',
         props: {
             titles: Array,
-            values: Array
+            values: {
+              type: Array,
+              required: true,
+              validator: (prop) => {
+                return prop.every(
+                    val => typeof val === 'object' && val !== null
+                           && 'label' in val
+                           && 'value' in val
+                           && 'change' in val
+                           && 'description' in val
+                           && ('unit' in val
+                             ? typeof val.unit === 'object' && val.unit !== null
+                               && 'string' in val.unit
+                               && 'loc' in val.unit
+                               && ['pre', 'post'].includes(val.unit.loc)
+                             : true)
+                )
+              }
+            }
         },
         filters: {
             /***
@@ -62,12 +85,16 @@
         },
     }
 </script>
+
 <style scoped>
   .card .card-content .chart-panel + p {
     margin-top: 20px;
   }
   table {
     min-width:450px;
+  }
+  th {
+    padding: 0 5px 10px 5px;
   }
   .tcontainer {
     overflow-x: scroll;

@@ -19,7 +19,7 @@
         <div class="card-content">
           <span class="card-title">Production Values</span>
           <data-table
-              :titles="prodTitles"
+              :titles="['Factor', 'Value', 'Change', 'Description']"
               :values="prodValues"/>
         </div>
       </div>
@@ -29,60 +29,34 @@
 <script>
 import DataTable from "@/components/visualisations/DataTable"
 import VizProduction from "@/components/visualisations/VizProduction"
-
-import {calcPeopleFed} from "@/store/helpers.js"
-
+import TabMixin from "./tabMixin"
 export default {
     name: 'TabProduction',
     components: {
         DataTable,
         VizProduction
     },
+    mixins: [TabMixin],
     props: {
         chartHeight: Number
     },
     computed: {
-        baseData() {
-            return this.$store.state.data[this.$store.state.landscape_id]
-        },
-        rawData() {
-            return this.$store.state.data.raw[this.$store.state.landscape_id]
-        },
-        bau() {
-            return this.$store.state.bau[this.$store.state.landscape_id]
-        },
-        chartColors() {
-            return this.$store.state.chartColors
-        },
-        prodTitles() {
-            return ['Factor', 'Value', 'Change', 'Description']
-        },
         prodValues() {
             return [
                 {
-                    label: "Greenhouse Gasses",
-                    value: this.rawData['greenhouseGasEmissions'],
-                    change: this.rawData['greenhouseGasEmissions'] - this.bau['greenhouseGasEmissions'],
-                    unit: "Total emissions in CO2-equiv (average kg/ha/year)"
-                },
-                {
                     label: "Profit",
                     value: this.rawData['profit'],
-                    change: this.rawData['profit'] - this.bau['profit'],
-                    unit: "Profit over variable costs (average £ ha-1)"
+                    change: this.rawData['profit'] - this.bauData['profit'],
+                    unit: {string: '£', loc: 'pre'},
+                    description: "Profit over variable costs (average £ ha-1)"
                 },
                 {
                     label: "Calories",
                     value: this.rawData['production'],
-                    change: this.rawData['production'] - this.bau['production'],
-                    unit: "Calories delivered"
+                    change: this.rawData['production'] - this.bauData['production'],
+                    unit: {string: 'kCal', loc: 'post'},
+                    description: "Calories delivered"
                 },
-                {
-                    label: "People supported",
-                    value: this.people_fed,
-                    change: this.people_fed - this.people_fed_bau,
-                    unit: "Total people receiving a fully-balanced diet"
-                }
             ]
         },
         proddata() {
@@ -100,18 +74,6 @@ export default {
                 }]
             }
         },
-        people_fed() {
-            return calcPeopleFed(
-                this.rawData.production,            // Total calories
-                this.baseData.nutritionaldelivery,  // Food Groups
-                this.baseData.eatLancetPlate)       // Eat Lancet food groups
-        },
-        people_fed_bau() {
-            return calcPeopleFed(
-                this.bau.production,
-                this.bau.nutritionaldelivery,
-                this.baseData.eatLancetPlate)
-        }
     }
 }
 </script>
