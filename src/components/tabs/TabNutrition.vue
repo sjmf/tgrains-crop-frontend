@@ -94,6 +94,22 @@ export default {
                     description: "Total people receiving a fully-balanced diet"
                 },
                 {
+                    label: "Area population",
+                    value: this.population,
+                    description: "Number of people living in the study area"
+                },
+                {
+                    label: "Percentage fed",
+                    value: Math.round(
+                        (this.people_fed.qty / this.population)
+                        * 1000 + Number.EPSILON) / 10,
+                    change: Math.round(
+                        (this.people_fed.qty - this.people_fed_bau.qty) / this.population
+                        * 1000 + Number.EPSILON) / 10,
+                    unit: {string: '%', loc: 'post', which: 'both'},
+                    description: "Percentage of the population fed from the local area"
+                },
+                {
                     label: "Limiting factor",
                     value: this.nutriLabels[this.people_fed.lim],
                     change: Math.round(
@@ -102,8 +118,11 @@ export default {
                         * 1000 + Number.EPSILON) / 10,
                     unit: {string: '%', loc: 'post', which: 'change'},
                     description: "Increase production of this group to feed more people locally"
-                }
+                },
             ]
+        },
+        population() {
+            return this.$store.state.population[this.$store.state.landscape_id]
         },
         people_fed() {
             // returns {qty, lim}

@@ -166,10 +166,11 @@ export const initial_state = () => ({
         },
     ],
 
-    // Populations (retrieved from Wikipedia. More accurate ones needed)
+    // Populations
+    // https://en.wikipedia.org/wiki/NUTS_statistical_regions_of_the_United_Kingdom#Demographic_statistics_by_NUTS_1_region)
     population: {
-        101: 6235000,
-        102: 2200000
+        101: 1594716, // 6,236,072 * 0.256
+        102: 755647 , // 3,152,879 * 0.24
     },
 
     // Comments retrieved from the server
