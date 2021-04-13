@@ -506,6 +506,7 @@ export default {
         })
         await this.commit('resetSessionIndex')
         this.commit('setGlobalReadOnly', false)
+        this.commit('activateTags', this.state.historyIndex)
     },
 
     /**
