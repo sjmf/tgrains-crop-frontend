@@ -106,6 +106,11 @@ export default {
     }
   },
   computed: {
+    /**
+     * innerSum with get/set allows mutation of a computed property, as in this case
+     * where we need to set all sliders in the tree below when the top-level slider
+     * updates (and the sum changes accordingly).
+     */
     innerSum: {
       get() {
         const {sum} = this;
@@ -128,6 +133,9 @@ export default {
       }
     },
 
+    /**
+     * Return a flat list of the tree contained by this group, to allow easy summing
+     */
     flat() {
       // Flatten recursive elements structure to simple array
       const flatten = function(arr) {
@@ -160,8 +168,8 @@ export default {
     },
 
     /**
-     * Sum the elements in this group and set it in data
-     * @returns {number}
+     * Sum the elements in this group recursively
+     * @returns {number} The sum of elements in the group
      */
     sumElements() {
       // Recursively sum elements in this sub-tree
@@ -180,6 +188,10 @@ export default {
       this.sum = recursiveSum(this.elements)
       return this.sum
     },
+    // Previously implemented sum using Map+Reduce (filter+sum) – (but 27.51% slower)
+    // this.sum = Object.keys(this.elements)
+    //                  .map(x => this.elements[x].value)
+    //                  .reduce((x,y) => x+y)
 
     /**
      * Calculate the ratio between sub-elements when one is changed
