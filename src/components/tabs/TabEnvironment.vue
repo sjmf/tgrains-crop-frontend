@@ -69,8 +69,8 @@ export default {
               label: "Greenhouse Gasses",
               value: this.rawData['greenhouseGasEmissions'],
               change: this.rawData['greenhouseGasEmissions'] - this.bauData['greenhouseGasEmissions'],
-              unit: {string: "kg", loc: "post"},
-              description: "Total emissions equivalent to CO<sub>2</sub> (average kg/ha/year)"
+              unit: {string: "tons", loc: "post"},
+              description: "Total emissions equivalent to CO<sub>2</sub> (t-CO<sub>2</sub>/year)"
             },
           ]
         }

@@ -48,7 +48,7 @@ export default {
                     value: this.rawData['profit'],
                     change: this.rawData['profit'] - this.bauData['profit'],
                     unit: {string: '£', loc: 'pre'},
-                    description: "Profit over variable costs (average £ ha-1)"
+                    description: "Profit over variable costs (£/year)"
                 },
                 {
                     label: "Calories",
