@@ -3,17 +3,18 @@
     <span class="subheader">Available area</span>
     <div>
       <div class="progress first blue-grey lighten-4"
-           :style="{width: percent(this.maxLowlandArea, this.totalMax) + '%'}">
+           :class="{last: percent(maxUplandArea, totalMax) < 1}"
+           :style="{width: percent(maxLowlandArea, totalMax) + '%'}">
         <div class="determinate blue-grey"
              :class="{red: !valid}"
-             :style="{width: percent(this.currentLowlandArea, this.maxLowlandArea) + '%'}">
+             :style="{width: percent(currentLowlandArea, maxLowlandArea) + '%'}">
         </div>
       </div>
 
       <div class="progress last lime lighten-2"
-           :style="{width: percent(this.maxUplandArea, this.totalMax) + '%'}">
+           :style="{width: percent(maxUplandArea, totalMax) + '%'}">
         <div class="determinate right lime darken-2"
-             :style="{width: percent(this.currentUplandArea, this.maxUplandArea) + '%'}">
+             :style="{width: percent(currentUplandArea, maxUplandArea) + '%'}">
         </div>
       </div>
     </div>
@@ -21,11 +22,16 @@
       <span>{{ currentLowlandArea | formatNumber }}/{{ maxLowlandArea | formatNumber }}kha</span>
         (thousand hectares) in lowland
     </div>
-    <div class="label" :class="{invalid: !valid}">
-      <span>{{ currentUplandArea | formatNumber }}/{{ maxUplandArea | formatNumber }}kha</span>
+    <div v-if="maxUplandArea > 1"
+         class="label">
+      <span>
+        {{ currentUplandArea | formatNumber }}/{{ maxUplandArea | formatNumber }}kha</span>
         in upland areas
+    </div>
+    <div class="label"
+         :class="{invalid: !valid}">
       <span v-if="!valid" class="label invalid">
-        – Area exceeded!
+        Area exceeded!
       </span>
       <span v-if="$store.state.readonly" class="red-text">
         (read-only <i class="tiny material-icons material-icons">lock</i>)
@@ -105,12 +111,16 @@
   .progress {
     width: 50%; /* default only, is calculated on element with style="width:x%" */
     display: inline-block;
+    border-radius: 0;
+    height: 1.5rem;
   }
   .progress.first {
-    border-radius: 2px 0 0 2px;
+    border-top-left-radius: 2px;
+    border-bottom-left-radius: 2px;
   }
   .progress.last {
-    border-radius: 0 2px 2px 0 ;
+    border-top-right-radius: 2px;
+    border-bottom-right-radius: 2px;
   }
   .label.invalid {
     color: #F44336;
