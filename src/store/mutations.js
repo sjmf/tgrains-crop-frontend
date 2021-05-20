@@ -187,6 +187,7 @@ export default {
             state.data[state.landscape_id][i] = Array.from(state.data[state.landscape_id][i], () => 0)
 
         state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
+        state.data[state.landscape_id].area = state.area.bau.total
 
         // Reset landscape values (sidebar data values)
         const crops = state.landscapes[state.landscape_id].crops
