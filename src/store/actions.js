@@ -33,7 +33,6 @@ export default {
 
                 // Populate Landscapes in Vuex using strings and cropAreas from BAU state
                 this.commit("populate")
-                this.dispatch("sumBAUArea")
             }
 
             // Create new session and push initial state onto history stack (including BAU tag [1])
@@ -95,21 +94,6 @@ export default {
         }
 
         this.commit("setAreaUsed", {
-            'lowlandArea': await this.dispatch('getLowlandArea'),
-            'uplandArea': await this.dispatch('getUplandArea')
-        })
-    },
-
-    /**
-     * Calculate the area used in the Business-as-usual state
-     */
-    async sumBAUArea() {
-        console.debug("summingBAUArea")
-        if(Object.keys(this.state.landscapes[this.state.landscape_id]).length === 0) {
-            throw Error("Tried to sumBAUArea before BAU data was loaded!")
-        }
-
-        this.commit("setBAUArea", {
             'lowlandArea': await this.dispatch('getLowlandArea'),
             'uplandArea': await this.dispatch('getUplandArea')
         })

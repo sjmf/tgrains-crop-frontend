@@ -30,12 +30,7 @@ export const initial_state = () => ({
     area: {
         lowland: 0,
         upland: 0,
-        total: 0,
-        bau: {
-            lowland: 0,
-            upland: 0,
-            total: 0
-        }
+        total: 0
     },
 
     // Data used by chart.js to render graphs. Loaded via AJAX.
@@ -49,6 +44,8 @@ export const initial_state = () => ({
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             // EAT Lancet plate in same order as nutritionalDelivery
             eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
+            // Area used by cropAreas+livestockAreas
+            area: 0,
         },
         102: {
             // vue-chartjs doesn't really like loading undefined values. Breaks reactivity. Best define some.
@@ -56,6 +53,7 @@ export const initial_state = () => ({
             environmentImpacts:   [0,0,0,0,0,0],
             nutritionaldelivery:  [10,10,10,10,10,10,10,10,10],
             eatLancetPlate:       [0.324, 0.016, 0.061, 0.06, 0.23, 0.179, 0.048, 0.031, 0.05],
+            area: 0,
         },
         // Raw data loaded from server
         raw: {

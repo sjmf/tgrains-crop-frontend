@@ -22,6 +22,7 @@ export default {
 
     /***
      * Mutate the area values used to set cropping area display
+     * Overwritten on area change
      * @param state
      * @param lowlandArea
      * @param uplandArea
@@ -30,21 +31,6 @@ export default {
         state.area.lowland = lowlandArea
         state.area.upland = uplandArea
         state.area.total = lowlandArea + uplandArea
-    },
-
-    /***
-     * Set the Business-as-usual area used figure (used for production values display)
-     * @param state
-     * @param lowlandArea
-     * @param uplandArea
-     */
-    setBAUArea (state, {lowlandArea, uplandArea}) {
-        console.log("setBAUAREA", lowlandArea, uplandArea)
-        state.area.bau = {
-            lowland: lowlandArea,
-            upland: uplandArea,
-            total: lowlandArea + uplandArea
-        }
     },
 
     /***
@@ -99,6 +85,10 @@ export default {
         for (let i of ['production', 'pesticideImpacts']) {
             state.data[state.landscape_id][i] = Array.from(new_data[i], () => 0)
         }
+
+        // Set area in BAU. Use reduce() to sum and Math.floor() to match sidebar where decimals are stripped.
+        state.bau[state.landscape_id].area = new_data.cropAreas.reduce((a,b)=>a+Math.floor(b), 0)
+                                             + new_data.livestockAreas.reduce((a,b)=>a+Math.floor(b), 0)
     },
 
     /***
@@ -187,7 +177,7 @@ export default {
             state.data[state.landscape_id][i] = Array.from(state.data[state.landscape_id][i], () => 0)
 
         state.data[state.landscape_id]['nutritionaldelivery'] = state.bau[state.landscape_id].nutritionaldelivery
-        state.data[state.landscape_id].area = state.area.bau.total
+        state.data[state.landscape_id].area = state.bau[state.landscape_id].area
 
         // Reset landscape values (sidebar data values)
         const crops = state.landscapes[state.landscape_id].crops
