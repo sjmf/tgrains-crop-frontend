@@ -68,6 +68,7 @@ import DataTable from "@/components/visualisations/DataTable";
 import {calcPeopleFed} from "@/store/helpers";
 import TabMixin from "@/components/tabs/tabMixin";
 import VizRadar from "@/components/visualisations/VizRadar";
+const cloneDeep = require('lodash/cloneDeep');
 
 export default {
   name: 'TabNutrition',
@@ -192,11 +193,24 @@ export default {
      * @returns {{datasets: [{pointBackgroundColor: string, pointBorderColor: string, backgroundColor: string, borderColor: string, data, pointHoverBorderColor: string, label: string, pointHoverBackgroundColor: string, fill: boolean}, {pointBackgroundColor: string, pointBorderColor: string, backgroundColor: string, borderColor: string, data, pointHoverBorderColor: string, label: string, pointHoverBackgroundColor: string, fill: boolean}], labels: *}}
      */
     radarData() {
+      // Copy labels (we're about to mutate them)
+      let labels = cloneDeep(this.nutriLabels)
+      // Round all data to two significant figures (creates a copy)
+      let baseData = this.baseData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
+      let bauData = this.bauData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
+      let eatLancet = this.baseData.eatLancetPlate.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
+
+      // Rotate arrays so that Fruits is at the top (so the labels aren't obscured by the line to Whole Grains)
+      baseData.unshift(baseData.pop())
+      bauData.unshift(bauData.pop())
+      eatLancet.unshift(eatLancet.pop())
+      labels.unshift(labels.pop())
+
       return {
-        labels: this.nutriLabels,
+        labels: labels,
         datasets: [{
             label: 'Current State',
-            data: this.baseData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100),
+            data: baseData,
             fill: true,
             spanGaps: true,
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -207,7 +221,7 @@ export default {
             pointHoverBorderColor: 'rgb(255, 99, 132)',
           }, {
             label: 'Business-as-usual',
-            data: this.bauData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100),
+            data: bauData,
             fill: true,
             spanGaps: true,
             backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -218,7 +232,7 @@ export default {
             pointHoverBorderColor: 'rgb(54, 162, 235)'
           }, {
             label: 'Eat Lancet Plate',
-            data: this.baseData.eatLancetPlate.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100),
+            data: eatLancet,
             fill: true,
             spanGaps: true,
             backgroundColor: 'rgba(96,226,74,0.2)',
