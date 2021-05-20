@@ -57,6 +57,13 @@ export default {
                     unit: {string: 'kCal', loc: 'post'},
                     description: "Calories delivered"
                 },
+                {
+                    label: "Area",
+                    value: (this.$store.state.data[this.$store.state.landscape_id].area),
+                    change: (this.$store.state.data[this.$store.state.landscape_id].area - this.$store.state.area.bau.total),
+                    unit: {string: 'ha', loc: 'post'},
+                    description: "Area used (hectares)"
+                }
             ]
         },
         proddata() {

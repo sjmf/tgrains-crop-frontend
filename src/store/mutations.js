@@ -33,6 +33,21 @@ export default {
     },
 
     /***
+     * Set the Business-as-usual area used figure (used for production values display)
+     * @param state
+     * @param lowlandArea
+     * @param uplandArea
+     */
+    setBAUArea (state, {lowlandArea, uplandArea}) {
+        console.log("setBAUAREA", lowlandArea, uplandArea)
+        state.area.bau = {
+            lowland: lowlandArea,
+            upland: uplandArea,
+            total: lowlandArea + uplandArea
+        }
+    },
+
+    /***
      * Set a crop or livestock area value in the store for the selected landscape.
      * Triggered from SidebarMenu when a value is changed.
      * @param state
@@ -61,6 +76,9 @@ export default {
         state.data[state.landscape_id] = difference(
             formatData(state, state.bau[state.landscape_id]),
             formatData(state, new_data))
+
+        state.data[state.landscape_id].area = new_data.cropAreas.reduce((a,b)=>a+b)
+                                              + new_data.livestockAreas.reduce((a,b)=>a+b)
     },
 
     /***

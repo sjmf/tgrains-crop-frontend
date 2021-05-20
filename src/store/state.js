@@ -30,7 +30,12 @@ export const initial_state = () => ({
     area: {
         lowland: 0,
         upland: 0,
-        total: 0
+        total: 0,
+        bau: {
+            lowland: 0,
+            upland: 0,
+            total: 0
+        }
     },
 
     // Data used by chart.js to render graphs. Loaded via AJAX.
