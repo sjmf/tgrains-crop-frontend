@@ -35,19 +35,6 @@
     <div class="col s12 m6">
       <div class="card panel">
         <div class="card-content">
-          <span class="card-title">People fed from the local area</span>
-          <p>This table shows how many people can be fed using only crops produced in the local area,
-          and whether the diet that they receive is balanced.&nbsp;</p><br/>
-          <data-table
-              :titles="['Factor', 'Value', 'Change', 'Description']"
-              :values="nutriValues"/>
-        </div>
-      </div>
-    </div>
-
-    <div class="col s12 m6">
-      <div class="card panel">
-        <div class="card-content">
           <span class="card-title">Target plate</span>
           <p>The <a href="https://eatforum.org/eat-lancet-commission/" target="_blank">EATLancet report</a> suggests
             the following plate to achieve a balanced diet sustainably:</p>
@@ -57,6 +44,19 @@
                 :height="chartHeight"
                 :width="chartHeight"/>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col s12 m6">
+      <div class="card panel">
+        <div class="card-content">
+          <span class="card-title">People fed from the local area</span>
+          <p>This table shows how many people can be fed using only crops produced in the local area,
+          and whether the diet that they receive is balanced.&nbsp;</p><br/>
+          <data-table
+              :titles="['Factor', 'Value', 'Change', 'Description']"
+              :values="nutriValues"/>
         </div>
       </div>
     </div>
