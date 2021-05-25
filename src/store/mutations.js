@@ -121,6 +121,7 @@ export default {
         const livestock = state.strings[state.landscape_id].livestock
         const cropAreas = state.bau[state.landscape_id]["cropAreas"]
         const livestockAreas = state.bau[state.landscape_id]["livestockAreas"]
+        const descriptions = {...state.descriptions, ...state.area_specific_descriptions[state.landscape_id]}
 
         // Iterate over crop names and populate the landscape with the relevant data
         for(let i=0; i < crops.length; i++) {
@@ -131,7 +132,7 @@ export default {
                 'label': state.dictionary[c],
                 'value': Math.floor(cropAreas[i]),
                 'bau': Math.floor(cropAreas[i]),
-                'description': (c in state.descriptions ? state.descriptions[c] : "")
+                'description': (c in descriptions ? descriptions[c] : "")
             }
         }
 
@@ -144,7 +145,7 @@ export default {
                 'label': state.dictionary[l],
                 'value': Math.floor(livestockAreas[i]),
                 'bau': Math.floor(livestockAreas[i]),
-                'description': (l in state.descriptions ? state.descriptions[l] : "")
+                'description': (l in descriptions ? descriptions[l] : "")
             }
         }
 

@@ -134,12 +134,19 @@ export const initial_state = () => ({
 
     // Descriptions used to format tooltips. Not all crop/livestock types need one.
     descriptions: {
-        fruit_soft:   "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
-        fruit_top:    "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
-        lamb_lowland: "Lowland Lamb are grazing livestock kept in enclosed fields (i.e. not on hills)",
-        lamb_upland:  "Upland Lamb graze hills and mountains. Found predominantly in the Brecon Beacons",
-        all_beef:     "Beef cattle will be split between uplands and lowlands at a pre-defined percentage",
-        all_lamb:     "Lamb will be split between uplands and lowlands at a pre-defined percentage",
+        fruit_soft: "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
+        fruit_top: "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
+        all_feed: "Feed is assumed to be wheat. 'Wheat' under the Cereals category will go to feed humans.",
+    },
+
+    // Descriptions is merged with area-specific descriptions to populate the tooltips in mutations.js:124
+    area_specific_descriptions: {
+        101: {},
+        102: {
+            sugarbeet: "Sugar beet is not normally grown in South Wales, as there are no processing facilities",
+            all_beef: "Beef cattle will be split between uplands and lowlands at a pre-defined percentage",
+            all_lamb: "Lamb will be split between uplands and lowlands at a pre-defined percentage",
+        },
     },
 
     // Groups (and sub-groups) used in the sidebar
