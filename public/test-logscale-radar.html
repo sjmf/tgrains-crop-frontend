@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.js"></script>
+</head>
+<body>
+<p>Test</p>
+<div style="width:800px">
+  <canvas id="myChart" width="400" height="400"></canvas>
+</div>
+<script type="text/javascript">
+    // Data from basic Chart.js example:
+    var data = {
+        labels: ["Eating", "Drinking", "Sleeping", "Designing", "Coding", "Cycling", "Running"],
+        datasets: [{
+            label: "My First dataset",
+            backgroundColor: "rgba(179,181,198,0.2)",
+            borderColor: "rgba(179,181,198,1)",
+            pointBackgroundColor: "rgba(179,181,198,1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(179,181,198,1)",
+            data: [65, 59, 200, 81, 56, 55, 4]
+        },
+            {
+                label: "My Second dataset",
+                backgroundColor: "rgba(255,99,132,0.2)",
+                borderColor: "rgba(255,99,132,1)",
+                pointBackgroundColor: "rgba(255,99,132,1)",
+                pointBorderColor: "#fff",
+                pointHoverBackgroundColor: "#fff",
+                pointHoverBorderColor: "rgba(255,99,132,1)",
+                data: [28, 48, 40, 19, 96, 27, 1]
+            }
+        ]
+    };
+
+    let helpers = Chart.helpers
+    let scale_radialLinear = helpers.clone(Chart.scaleService.getScaleConstructor('radialLinear'))
+    let opts_radialLinear = helpers.clone(scale_radialLinear._defaults)
+
+    function XlogY(x,y) {
+        return Math.log(x) / Math.log(y)
+    }
+
+    let RadialLogarithmic = scale_radialLinear.extend({
+            /**
+             * Tells chart where to draw points on drawing surface
+             */
+            getDistanceFromCenterForValue: function(value) {
+                if (helpers.isNullOrUndef(value)) {
+                    return NaN;
+                }
+
+                // Handle edge case where value = 0
+                if(value === 0)
+                    value += Math.MIN_VALUE
+
+                // drawingArea – the scale to fit values to
+                // min - minimum value from input data
+                // max - maximum value from input data (value log base max)
+                // value - value to fit to drawingArea (between min and max)
+
+                if (this.options.ticks.reverse)
+                    return this.drawingArea - (this.drawingArea * XlogY(value, this.max))
+
+                return this.drawingArea * XlogY(value, this.max)
+            },
+
+            /**
+             * Logarithmic tick generation adapted from chart.js core
+             *   Generate tick marks. this.chart is the chart instance. The data object can be accessed as this.chart.data
+             *   buildTicks() should create a ticks array on the axis instance, if you intend to use any of the
+             *   implementations from the base class
+             *
+             * @param generationOptions
+             * @param dataRange
+             * @returns {[]}
+             */
+            buildTicks: function(generationOptions, dataRange) {
+                function finiteOrDefault(value, defaultValue) {
+                    const isNumberFinite = (value) => (typeof value === 'number' || value instanceof Number) && isFinite(+value);
+                    return isNumberFinite(value) ? value : defaultValue;
+                }
+                function isMajor(tickVal) {
+                    let remain = tickVal / Math.pow(10, Math.floor(helpers.log10(tickVal)));
+                    return remain === 1;
+                }
+                const log10 = helpers.log10;
+
+                this.min = this.options.ticks.min ? this.options.ticks.min : this.min;
+                this.max = this.options.ticks.max ? this.options.ticks.max : this.max;
+
+                const endExp = Math.floor(log10(this.max));
+                const endSignificand = Math.ceil(this.max / Math.pow(10, endExp));
+                const ticks = [];
+
+                let tickVal = finiteOrDefault(this.min, Math.pow(10, Math.floor(log10(this.min))));
+                let exp = Math.floor(log10(tickVal));
+                let significand = Math.floor(tickVal / Math.pow(10, exp));
+                let precision = exp < 0 ? Math.pow(10, Math.abs(exp)) : 1;
+
+                do {
+                    ticks.push({value: tickVal, major: isMajor(tickVal)});
+
+                    ++significand;
+                    if (significand === 10) {
+                        significand = 1;
+                        ++exp;
+                        precision = exp >= 0 ? 1 : precision;
+                    }
+
+                    tickVal = Math.round(significand * Math.pow(10, exp) * precision) / precision;
+                } while (exp < endExp || (exp === endExp && significand < endSignificand));
+
+                const lastTick = finiteOrDefault(this.max, tickVal);
+                ticks.push({value: lastTick, major: isMajor(tickVal)});
+                return ticks;
+            }
+        });
+
+    Chart.scaleService.registerScaleType('radialLogarithmic', RadialLogarithmic, opts_radialLinear);
+
+
+    // Instantiate chart:
+    var ctx = document.getElementById("myChart");
+    var options = {
+        tooltips: {
+            mode: 'label'
+        },
+        scale: {
+            type: 'radialLogarithmic',
+            ticks: {
+                max: 100,
+                autoSkip: true,
+                maxTicksLimit: 10,
+                // callback: Ticks.formatters.logarithmic
+            },
+        }
+    };
+
+    var myRadarChart = new Chart(ctx, {
+        type: 'radar',
+        data: data,
+        options: options
+    });
+</script>
