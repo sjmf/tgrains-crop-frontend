@@ -42,7 +42,7 @@
                 meta: {
                     pageTitle: 'TGRAINS <span class="hide-on-small-only">Crop Model</span>',
                     websiteTitle: 'TGRAINS Website',
-                    websiteUrl: 'https://tgrains.com'
+                    websiteUrl: window.location.origin.replace('//model.', '//')
                 },
                 loading: false,
                 error: false,
