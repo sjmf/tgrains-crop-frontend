@@ -1,7 +1,4 @@
-FROM node:12-alpine as build
-
-# Based on https://cli.vuejs.org/guide/deployment.html#docker-nginx
-MAINTAINER Samantha Finnigan
+FROM node:22-alpine AS build
 
 WORKDIR /usr/src/app
 
@@ -13,14 +10,14 @@ RUN npm install
 # Build using `docker build --build-arg VUE_APP_GIT_HASH=$(git rev-parse --short HEAD) .`
 # Or with docker-compose: https://stackoverflow.com/a/50734388/1681205
 ARG VUE_APP_GIT_HASH
-ENV VUE_APP_GIT_HASH ${VUE_APP_GIT_HASH}
+ENV VUE_APP_GIT_HASH=${VUE_APP_GIT_HASH}
 
 # Copy files and build app
 COPY ./ .
 RUN npm run build
 
 # Deploy
-FROM nginx:alpine as production
+FROM nginx:alpine AS production
 
 COPY --from=build /usr/src/app/dist /var/www/html/
 COPY ./conf/subsite.conf /etc/nginx/conf.d/default.conf
