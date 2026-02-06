@@ -24,7 +24,7 @@ pipelines:
           script:
             - export FRONTEND_IMAGE_NAME=${DOCKER_HUB_USERNAME}/tgrains-cropmodel-frontend
             - docker build -t $FRONTEND_IMAGE_NAME:$BITBUCKET_COMMIT -t $FRONTEND_IMAGE_NAME:latest --build-arg VUE_APP_GIT_HASH=$(git rev-parse --short HEAD) ./
-            - docker login --username $DOCKER_HUB_USERNAME --password $DOCKER_HUB_PASSWORD
+            - echo $DOCKERHUB_TOKEN | docker login --username $DOCKER_HUB_USERNAME --password-stdin
             - docker push $FRONTEND_IMAGE_NAME
 #      - step:
 #          name: "Build dist tarball"
