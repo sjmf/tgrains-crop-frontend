@@ -8,7 +8,7 @@
       <div class="collapsible-body">
         <!-- +1 here as MySQL indexes from 1! -->
         <!--- i == tags.tags[i+1].id -->
-        <tag v-for="i of tags.groups[0]"
+        <tag v-for="i of (tags.groups[0] || [])"
              :key="i"
              :id="i"
              :name="tags.tags[i].name"
@@ -24,7 +24,7 @@
       </div>
       <div class="collapsible-body">
 
-        <tag v-for="i of tags.groups[1]"
+        <tag v-for="i of (tags.groups[1] || [])"
              :key="i"
              :id="i"
              :name="tags.tags[i].name"
@@ -42,7 +42,7 @@
       <div class="collapsible-body">
 
         <span v-for="n in 3" v-bind:key="n">
-          <tag v-for="i of tags.groups[n+1]"
+          <tag v-for="i of (tags.groups[n+1] || [])"
                :key="i"
                :name="tags.tags[i].name"
                :value="tags.tags[i].selected"

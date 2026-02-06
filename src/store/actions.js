@@ -234,8 +234,13 @@ export default {
      * @returns {Promise<void>}
      */
     async loadTags() {
-        let tagData = await http.loadTags()
-        this.commit("setTags", tagData)
+        try {
+            let tagData = await http.loadTags()
+            this.commit("setTags", tagData)
+        }
+        catch (err) {
+            this.commit("raiseError", "Failed to load tags from server. " + err.toString())
+        }
     },
 
     /**
