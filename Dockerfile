@@ -1,4 +1,5 @@
 FROM node:22-alpine AS build
+LABEL maintainer="Samantha Finnigan"
 
 WORKDIR /usr/src/app
 
