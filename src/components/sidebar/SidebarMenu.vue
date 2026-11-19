@@ -127,14 +127,17 @@
              * Because we're using Vuex, we do a $store.commit rather than using v-model.
              * @param event {id, name, value}
              */
-            valueChanged(event) {
+            async valueChanged(event) {
                 this.changes=true
-                this.validateForm()
 
                 if(!isNaN(event['value'])) {
                   this.$store.commit('setFormValue', event)
-                  this.$store.dispatch('sumArea')
+                  await this.$store.dispatch('sumArea')
                 }
+
+                // Validate after the new value and area total are in the store, so that
+                // an area over the maximum disables Submit straight away
+                this.validateForm()
             },
 
             /**
