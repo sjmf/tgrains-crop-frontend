@@ -2,13 +2,13 @@
   <div v-html='identicon'
        class="avatar"
        @click="$emit('click', $event)">
-    {{ alt }}
   </div>
 </template>
 <script>
 import jdenticon from 'jdenticon/standalone'
 
 export default {
+  emits: ['click'],
   props: {
     value: String,
     size: Number,

@@ -27,8 +27,8 @@
   </div>
 </template>
 <script>
-import DataTable from "@/components/visualisations/DataTable"
-import VizProduction from "@/components/visualisations/VizProduction"
+import DataTable from "@/components/visualisations/DataTable.vue"
+import VizProduction from "@/components/visualisations/VizProduction.vue"
 import TabMixin from "./tabMixin"
 export default {
     name: 'TabProduction',

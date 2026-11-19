@@ -1,57 +1,23 @@
+<template>
+    <Bar :data="chartData" :options="options"/>
+</template>
+
 <script>
-    import { Bar, mixins } from 'vue-chartjs'
-    const { reactiveProp } = mixins
+    import { Bar } from 'vue-chartjs'
+    import { bauBarOptions } from './chartSetup'
 
     export default {
         name: 'viz-environment',
-        extends: Bar,
-        mixins: [reactiveProp],
+        components: { Bar },
         props: {
-            chartData: Object
+            chartData: Object,
+            width: { type: Number, default: 400 },
+            height: { type: Number, default: 400 }
         },
-        data() {
-            return {
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    legend: {
-                        display: false
-                    },
-                    scales: {
-                        yAxes: [{
-                            scaleLabel: {
-                                display: true,
-                                labelString: '% change from BAU state',
-                                fontSize: 14
-                            },
-                            ticks: {
-                                suggestedMax: 50,
-                                suggestedMin: -50,
-                            },
-                            type: 'linear',
-                            gridLines: {
-                                zeroLineWidth: .5,
-                                lineWidth: 0
-                            }
-                        }],
-                        xAxes: [{
-                            position: 'top',
-                            offset: true,
-                            ticks: {
-                                beginAtZero: false,
-                                fontSize: 14
-                            },
-                            gridLines: {
-                                zeroLineWidth: .5,
-                                lineWidth: 0
-                            }
-                        }]
-                    }
-                }
+        computed: {
+            options() {
+                return bauBarOptions(this.width / this.height)
             }
-        },
-        mounted() {
-            this.renderChart(this.chartData, this.options)
         }
     }
 </script>

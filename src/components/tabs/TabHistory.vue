@@ -91,13 +91,14 @@
   </div>
 </template>
 <script>
-import HistoryRow from "@/components/tabs/HistoryRow";
-import ModalSessions from "@/components/modals/ModalSessions";
-import ModalConfirm from "@/components/modals/ModalConfirm";
-import ModalTrash from "@/components/modals/ModalTrash";
+import HistoryRow from "@/components/tabs/HistoryRow.vue";
+import ModalSessions from "@/components/modals/ModalSessions.vue";
+import ModalConfirm from "@/components/modals/ModalConfirm.vue";
+import ModalTrash from "@/components/modals/ModalTrash.vue";
 
 export default {
     name: 'TabHistory',
+    emits: ['comment', 'load'],
     components: {
         ModalConfirm,
         ModalSessions,

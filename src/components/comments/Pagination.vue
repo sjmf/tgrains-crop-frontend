@@ -25,6 +25,7 @@
 <script>
 export default {
   name: 'pagination',
+  emits: ['changePage'],
   methods: {
     set_page(page) {
       if (page !== this.current_page && page > 0 && page <= this.total_pages) {

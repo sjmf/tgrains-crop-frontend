@@ -1,33 +1,41 @@
+<template>
+    <Radar :data="chartData" :options="options"/>
+</template>
+
 <script>
-  import { Radar, mixins } from 'vue-chartjs'
-  import './scale.radialLogarithmic'
-  const { reactiveProp } = mixins
+  import { Radar } from 'vue-chartjs'
+  import './chartSetup'
 
   export default {
     name: 'viz-radar',
-    extends: Radar,
-    mixins: [reactiveProp],
+    components: { Radar },
     props: {
       chartData: Object,
-      prOptions: Object
+      width: { type: Number, default: 400 },
+      height: { type: Number, default: 400 }
     },
     computed: {
       options() {
         return {
-          tooltips: {
-            mode: 'label'
+          responsive: true,
+          maintainAspectRatio: true,
+          aspectRatio: this.width / this.height,
+          plugins: {
+            tooltip: {
+              mode: 'index'
+            }
           },
-          scale: {
-            type: 'radialLogarithmic',
-            ticks: {
-              max: 100
+          scales: {
+            r: {
+              type: 'radialLogarithmic',
+              max: 100,
+              pointLabels: {
+                font: { size: 10 }
+              }
             }
           }
         }
       }
-    },
-    mounted () {
-      this.renderChart(this.chartData, this.options)
     }
   }
 </script>

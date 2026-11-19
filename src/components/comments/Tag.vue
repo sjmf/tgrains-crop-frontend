@@ -21,6 +21,7 @@
 <script>
     export default {
       name: 'Tag',
+      emits: ['change', 'filterTag', 'input'],
       props: {
           id: Number,
           name: String,

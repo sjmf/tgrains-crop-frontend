@@ -9,16 +9,16 @@
            :class="{fullwidth:hideInput}">
 
       <span>{{label}}</span>
-      <vue-slider
-        v-model="innerValue"
-        :max="innerValue + remainingArea"
-        :min="0"
-        :interval="1"
-        :tooltip="'none'"
-        :processStyle="processStyle"
-        :disabled="readonly"
-        @change="$emit('change', {'name': name, 'value': $event})">
-      </vue-slider>
+      <input type="range"
+             class="area-slider"
+             :value="innerValue"
+             :max="innerValue + remainingArea"
+             min="0"
+             step="1"
+             :style="sliderStyle"
+             :disabled="readonly"
+             @input="innerValue = $event.target.valueAsNumber"
+             @change="$emit('change', {'name': name, 'value': $event.target.valueAsNumber})">
     </label>
 
     <input v-if="!hideInput"
@@ -39,16 +39,12 @@
 </template>
 
 <script>
-    import VueSlider from 'vue-slider-component'
-    import 'vue-slider-component/theme/default.css'
-
     export default {
         name: 'VariableRow',
-        components: { VueSlider },
         props: {
             name: String,
             label: String,
-            value: [String, Number], // Blank inputs return String. Validation should catch this
+            modelValue: [String, Number], // Blank inputs return String. Validation should catch this
             bauValue: [String, Number],
             description: String,
             errorMessage: [String, Boolean],
@@ -57,22 +53,31 @@
             hideInput: Boolean,
             colourOverride: String,
         },
+        emits: ['update:modelValue', 'change'],
         computed: {
             innerValue: {
                 get() {
-                    const {value} = this;
-                    return parseInt(value)
+                    const {modelValue} = this;
+                    return parseInt(modelValue)
                 },
                 set (_val) {
-                    this.$emit('input', _val, this.name);
+                    this.$emit('update:modelValue', _val, this.name);
                 }
             },
-            processStyle() {
+            processColour() {
               if(this.colourOverride !== undefined)
-                return { backgroundColor: this.colourOverride}
+                return this.colourOverride
               if(this.innerValue === this.bauValue)
-                  return { backgroundColor: '#43A047'}
-              return { backgroundColor: '#673ab7'}
+                  return '#43A047'
+              return '#673ab7'
+            },
+            // Fill the track up to the thumb in the process colour
+            sliderStyle() {
+              const max = this.innerValue + this.remainingArea
+              const fill = max > 0 ? (this.innerValue / max) * 100 : 0
+              return {
+                background: `linear-gradient(to right, ${this.processColour} ${fill}%, #ccc ${fill}%)`
+              }
             }
         }
     }
@@ -133,12 +138,65 @@
 </style>
 
 <style>
-  .vue-slider {
-    padding:0 0 10px 0 !important;
-    margin: 2px 15px 10px 5px;
+  /* Range slider, styled after the vue-slider-component default theme (overrides Materialize) */
+  .variable-row input[type=range].area-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    width: calc(100% - 20px);
+    height: 4px;
+    padding: 0;
+    margin: 9px 15px 15px 5px;
+    border: none;
+    border-radius: 15px;
+    outline: none;
+    cursor: pointer;
   }
 
-  .vue-slider-dot-handle-focus {
+  .variable-row input[type=range].area-slider:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+
+  .variable-row input[type=range].area-slider::-webkit-slider-runnable-track {
+    height: 4px;
+    background: transparent;
+    border: none;
+  }
+
+  .variable-row input[type=range].area-slider::-moz-range-track {
+    height: 4px;
+    background: transparent;
+    border: none;
+  }
+
+  .variable-row input[type=range].area-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    margin-top: -5px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0.5px 0.5px 2px 1px rgba(0, 0, 0, 0.32);
+    transform: none;
+  }
+
+  .variable-row input[type=range].area-slider::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border: 1px solid transparent;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0.5px 0.5px 2px 1px rgba(0, 0, 0, 0.32);
+  }
+
+  .variable-row input[type=range].area-slider:focus::-webkit-slider-thumb {
+    border-color: #81C784;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+  }
+
+  .variable-row input[type=range].area-slider:focus::-moz-range-thumb {
     border-color: #81C784;
     box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
   }

@@ -11,14 +11,14 @@
         <td>{{row.label}}</td>
         <td>
           {{ show_unit(row, 'pre', 'value') ? row.unit.string : '' }}
-          {{ row.value | format_significance }}
+          {{ format_significance(row.value) }}
           {{ show_unit(row, 'post', 'value') ? row.unit.string : '' }}
         </td>
         <td v-if="'change' in row"
             v-bind:class="row.change === 0 ? '' : row.change >= 0 ? 'green-text' : 'red-text'"
             class="text-darken-2">
           {{ show_unit(row, 'pre', 'change') ? row.unit.string : '' }}
-          {{row.change | sign}} {{row.change | format_significance}}
+          {{ sign(row.change) }} {{ format_significance(row.change) }}
           {{ show_unit(row, 'post', 'change') ? row.unit.string : '' }}
         </td>
         <td v-else></td>
@@ -65,7 +65,7 @@
               }
             }
         },
-        filters: {
+        methods: {
             /***
              * Format a number removing precision and truncating, then adding 'millions', 'billions', etc.
              * https://stackoverflow.com/questions/36734201/
@@ -85,17 +85,15 @@
 
             sign(value) {
               return (value === 0 ? '' : value >= 0 ? '+' : '-')
+            },
+            show_unit(row, location, column) {
+              return ('unit' in row && row.unit.loc === location
+                  && ('which' in row.unit
+                      ? [column, 'both'].includes(row.unit.which)
+                      : column === 'value'))
+                  ? row.unit.string
+                  : ''
             }
-        },
-        methods: {
-          show_unit(row, location, column) {
-            return ('unit' in row && row.unit.loc === location
-                && ('which' in row.unit
-                    ? [column, 'both'].includes(row.unit.which)
-                    : column === 'value'))
-                ? row.unit.string
-                : ''
-          }
         }
     }
 </script>

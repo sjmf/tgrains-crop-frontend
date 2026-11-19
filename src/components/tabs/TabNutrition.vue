@@ -63,12 +63,12 @@
   </div>
 </template>
 <script>
-import VizNutrition from "@/components/visualisations/VizNutrition"
-import DataTable from "@/components/visualisations/DataTable";
+import VizNutrition from "@/components/visualisations/VizNutrition.vue"
+import DataTable from "@/components/visualisations/DataTable.vue";
 import {calcPeopleFed} from "@/store/helpers";
 import TabMixin from "@/components/tabs/tabMixin";
-import VizRadar from "@/components/visualisations/VizRadar";
-const cloneDeep = require('lodash/cloneDeep');
+import VizRadar from "@/components/visualisations/VizRadar.vue";
+import cloneDeep from 'lodash/cloneDeep';
 
 export default {
   name: 'TabNutrition',
@@ -195,10 +195,12 @@ export default {
     radarData() {
       // Copy labels (we're about to mutate them)
       let labels = cloneDeep(this.nutriLabels)
-      // Round all data to two significant figures (creates a copy)
-      let baseData = this.baseData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
-      let bauData = this.bauData.nutritionaldelivery.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
-      let eatLancet = this.baseData.eatLancetPlate.map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
+      // Round all data to two significant figures (creates a copy).
+      // The data may not have loaded yet on first render, so treat missing arrays as empty.
+      const percent = (values) => (values || []).map(a => Math.round( a * 10000 + Number.EPSILON ) / 100)
+      let baseData = percent(this.baseData.nutritionaldelivery)
+      let bauData = percent(this.bauData.nutritionaldelivery)
+      let eatLancet = percent(this.baseData.eatLancetPlate)
 
       // Rotate arrays so that Fruits is at the top (so the labels aren't obscured by the line to Whole Grains)
       baseData.unshift(baseData.pop())

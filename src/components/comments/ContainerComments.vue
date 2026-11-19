@@ -23,7 +23,6 @@
       <div class="col s12" v-show="show_add_comment">
         <comment-add
             v-bind:reply_id="reply_id"
-            v-on="$listeners"
             v-on:cancelReply="reply_id=null"
             v-on:closeForm="toggleAddComment"/>
       </div>
@@ -79,13 +78,14 @@
   </div>
 </template>
 <script>
-import CommentAdd from "@/components/comments/CommentAdd"
-import CommentCard from "@/components/comments/CommentCard";
-import CommentFilter from "@/components/comments/CommentFilter";
-import Pagination from "@/components/comments/Pagination";
+import CommentAdd from "@/components/comments/CommentAdd.vue"
+import CommentCard from "@/components/comments/CommentCard.vue";
+import CommentFilter from "@/components/comments/CommentFilter.vue";
+import Pagination from "@/components/comments/Pagination.vue";
 
 export default {
   name: 'ContainerComments',
+  emits: ['load'],
   components: {
     Pagination,
     CommentCard,

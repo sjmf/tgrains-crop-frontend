@@ -1,30 +1,40 @@
+<template>
+    <Pie :data="chartData" :options="options" :plugins="plugins"/>
+</template>
+
 <script>
-    import { mixins, generateChart } from 'vue-chartjs'
-    import 'chartjs-plugin-piechart-outlabels'
-    const { reactiveProp } = mixins
-    const OutlabeledPie = generateChart('outlabeledPie', 'outlabeledPie')
+    import { Pie } from 'vue-chartjs'
+    import OutLabels from '@energiency/chartjs-plugin-piechart-outlabels'
+    import './chartSetup'
 
     export default {
         name: 'viz-nutrition',
-        extends: OutlabeledPie,
-        mixins: [reactiveProp],
+        components: { Pie },
         props: {
             chartData: Object,
-            plugins: Array
+            width: { type: Number, default: 400 },
+            height: { type: Number, default: 400 }
         },
         data() {
             return {
-                options: {
-                    responsive: true,           // Changed as responsive doesn't work properly with tabs (display:none)
-                    maintainAspectRatio: true,  //
-                    legend: {
-                        display: false
-                    },
-                    tooltips: {
-                        enabled: false
-                    },
-                    //rotation: .5* Math.PI,
+                // Only attach outlabels to this chart: it assumes a pie controller
+                plugins: [OutLabels]
+            }
+        },
+        computed: {
+            options() {
+                return {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    aspectRatio: this.width / this.height,
+                    animation: false,
                     plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        },
                         outlabels: {
                             display: true,
                             text: '%l\n%p',
@@ -32,23 +42,11 @@
                             lineWidth: 0,
                             padding: 3,
                             stretch: 20,
-                            zoomOutPercentage: 50,
-                            //color: 'white',
-                            //backgroundColor: "",
-                            //lineColor: "rgba(255, 255, 255, 0)",  // hide lines
+                            maxZoomOutPercentage: 50,
                         }
-                    },
-                    // font: {
-                    //     size:16,
-                    //     resizable: true,
-                    //     minSize: 12,
-                    //     maxSize: 18
-                    // }
-                },
+                    }
+                }
             }
-        },
-        mounted() {
-            this.renderChart(this.chartData, this.options)
         }
     }
 </script>

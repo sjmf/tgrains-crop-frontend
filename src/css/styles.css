@@ -13,6 +13,13 @@ body {
     width:360px;
 }
 
+/* Vue mounts inside #app, so pass the sticky-footer flex column through to main */
+#app {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+}
+
 main {
     flex: 1 0 auto;
 }
@@ -121,7 +128,7 @@ a.pad.btn {
 .fade-move {
     transition: transform .5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+.fade-enter-from, .fade-leave-to {
     opacity: 0;
     max-height:0;
     overflow-y:hidden;
@@ -138,7 +145,7 @@ a.pad.btn {
 .collapse-move{
     transition: transform 1s;
 }
-.collapse-enter, .collapse-leave-to {
+.collapse-enter-from, .collapse-leave-to {
     max-height:0;
     overflow-y:hidden;
 }

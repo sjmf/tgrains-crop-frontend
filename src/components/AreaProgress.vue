@@ -19,13 +19,13 @@
       </div>
     </div>
     <div class="label" :class="{invalid: !valid}">
-      <span>{{ currentLowlandArea | formatNumber }}/{{ maxLowlandArea | formatNumber }}kha</span>
+      <span>{{ formatNumber(currentLowlandArea) }}/{{ formatNumber(maxLowlandArea) }}kha</span>
         (thousand hectares) in lowland
     </div>
     <div v-if="maxUplandArea > 1"
          class="label">
       <span>
-        {{ currentUplandArea | formatNumber }}/{{ maxUplandArea | formatNumber }}kha</span>
+        {{ formatNumber(currentUplandArea) }}/{{ formatNumber(maxUplandArea) }}kha</span>
         in upland areas
     </div>
     <div class="label"
@@ -54,12 +54,10 @@
 <script>
   export default {
     name: 'area-progress',
-    filters: {
+    methods: {
       formatNumber(value) {
         return Math.floor(parseInt(value) / 1000)
       },
-    },
-    methods: {
       percent(fraction, of_total) {
         return (fraction / of_total) * 100
       },

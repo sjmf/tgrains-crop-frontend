@@ -29,8 +29,8 @@
   </div>
 </template>
 <script>
-import VizPests from "@/components/visualisations/VizPesticides"
-import DataTable from "@/components/visualisations/DataTable"
+import VizPests from "@/components/visualisations/VizPesticides.vue"
+import DataTable from "@/components/visualisations/DataTable.vue"
 import TabMixin from "@/components/tabs/tabMixin";
 
 export default {

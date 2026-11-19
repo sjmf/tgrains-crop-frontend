@@ -57,7 +57,7 @@
             :key="index"
             :name="item.name"
             :label="item.label"
-            :value="item.value"
+            :model-value="item.value"
             :bau-value="item.bau"
             :description="item.description"
             :error-message="errors[index]"
@@ -72,10 +72,11 @@
 </template>
 
 <script>
-import VariableRow from "@/components/sidebar/VariableRow"
+import VariableRow from "@/components/sidebar/VariableRow.vue"
 
 export default {
   name: "VariableGroup",
+  emits: ['change'],
   components: {
     VariableRow,
   },

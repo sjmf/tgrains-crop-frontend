@@ -1,9 +1,6 @@
 // index.js
 
-import Vue from 'vue'
-import Vuex from 'vuex'
-
-Vue.use(Vuex)
+import { createStore } from 'vuex'
 
 // Persist all data in the browser's local storage
 import createPersistedState from 'vuex-persistedstate'
@@ -16,8 +13,8 @@ import actions from './actions'
 /***
  * Vuex data store. Global variables for the UI live here.
  */
-export default new Vuex.Store({
-    strict: process.env.NODE_ENV !== 'production',
+export default createStore({
+    strict: !import.meta.env.PROD,
     state,
     mutations,
     actions,

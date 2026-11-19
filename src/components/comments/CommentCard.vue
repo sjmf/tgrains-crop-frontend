@@ -14,14 +14,14 @@
             <span class="username">
               <span class="green-text text-darken-2"
                     @click="!reply_view ? $emit('filterUser', {'user_id': user_id, 'user_name': author}) : null">
-                {{ author | decode }}
+                {{ decode(author) }}
               </span>
             </span>
           </div>
 
           <div class="col s12 m6 right-align">
             <span class="timestamp grey-text">
-              {{ timestamp | format_datetime }}
+              {{ format_datetime(timestamp) }}
             </span>
 
             <span class="reply" v-if="!reply_view">
@@ -38,7 +38,7 @@
           <div class="col s12">
             <span class="black-text">
               <!-- Never use v-html here. If someone compromises the database, XSS becomes possible -->
-              {{ text | decode }}
+              {{ decode(text) }}
             </span>
           </div>
         </div>
@@ -106,10 +106,11 @@
 
 <script>
 import Jdenticon from '@/components/comments/Jdenticon.vue'
-import Tag from "@/components/comments/Tag";
+import Tag from "@/components/comments/Tag.vue";
 
 export default {
   name: 'comment-card',
+  emits: ['filterReply', 'filterTag', 'filterUser', 'load', 'replyToComment'],
   components: {
     Jdenticon,
     Tag
@@ -148,6 +149,15 @@ export default {
     }
   },
   methods: {
+    format_datetime(unix_timestamp) {
+        let d = new Date(unix_timestamp * 1000)
+        return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB")
+    },
+    decode(html) {
+        let txt = document.createElement("textarea");
+        txt.innerHTML = html;
+        return txt.value;
+    },
     tag_meta(id) {
       return this.$store.state.tags.tags[id]
     },
@@ -184,17 +194,6 @@ export default {
       this.$emit('load')
     }
   },
-  filters: {
-      format_datetime(unix_timestamp) {
-          let d = new Date(unix_timestamp * 1000)
-          return d.toLocaleDateString("en-GB") + " " + d.toLocaleTimeString("en-GB")
-      },
-      decode(html) {
-          let txt = document.createElement("textarea");
-          txt.innerHTML = html;
-          return txt.value;
-      }
-  }
 }
 </script>
 

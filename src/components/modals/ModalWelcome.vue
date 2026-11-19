@@ -53,7 +53,7 @@
       // Run on nextTick for edge-case when Vuex store invalidated due to new version hash
       this.$nextTick(()=> {
         // Open Welcome modal if terms not accepted
-        if (this.$store.state.acceptedTerms === false && this.$router.history.current.path !== '/ethics')
+        if (this.$store.state.acceptedTerms === false && this.$route.path !== '/ethics')
           this.open()
       })
     }

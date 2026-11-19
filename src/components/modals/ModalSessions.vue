@@ -18,7 +18,7 @@
 
         <div class="row pad" :class="{'green lighten-4': i===index}">
           <div class="col s4">
-            <em>{{s.opened | moment}}</em>
+            <em>{{ formatTime(s.opened) }}</em>
           </div>
 
           <div class="col s1">
@@ -70,9 +70,10 @@ import ModalMixin from "./modalMixin"
 
 export default {
   name: "ModalSessions",
+  emits: ['fork', 'return', 'view'],
   mixins: [ModalMixin],
-  filters: {
-    moment: function (date) {
+  methods: {
+    formatTime(date) {
       return moment(date).format('HH:mm:ss, Do MMM YYYY');
     }
   },
