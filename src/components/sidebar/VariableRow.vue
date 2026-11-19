@@ -17,8 +17,7 @@
              step="1"
              :style="sliderStyle"
              :disabled="readonly"
-             @input="innerValue = $event.target.valueAsNumber"
-             @change="$emit('change', {'name': name, 'value': $event.target.valueAsNumber})">
+             @input="onSlide($event.target.valueAsNumber)">
     </label>
 
     <input v-if="!hideInput"
@@ -54,6 +53,14 @@
             colourOverride: String,
         },
         emits: ['update:modelValue', 'change'],
+        methods: {
+            // Emit 'change' on every movement, not just on release, so the store and the
+            // area totals update live while dragging (as vue-slider-component did)
+            onSlide(value) {
+                this.innerValue = value
+                this.$emit('change', {'name': this.name, 'value': value})
+            }
+        },
         computed: {
             innerValue: {
                 get() {
