@@ -1,0 +1,562 @@
+{
+ "comments": [
+  {
+   "author": "Test Author",
+   "distance": 0,
+   "hash": "0f1e2d3c4b5a69788796a5b4c3d2e1f0",
+   "id": 1,
+   "landscape_id": 101,
+   "reply": null,
+   "reply_id": null,
+   "session": {
+    "count": 2,
+    "history": [
+     {
+      "area": {
+       "lowland": 370452,
+       "total": 370452,
+       "upland": 0
+      },
+      "changes": {
+       "changes": [],
+       "distance": 0
+      },
+      "deleted": false,
+      "index": 0,
+      "inputs": {
+       "crops": {
+        "all_barley": {
+         "bau": 56609,
+         "description": "",
+         "index": 7,
+         "label": "Barley",
+         "name": "all_barley",
+         "value": 56609
+        },
+        "all_feed": {
+         "bau": 52135,
+         "description": "Feed is assumed to be wheat. 'Wheat' under the Cereals category will go to feed humans.",
+         "index": 0,
+         "label": "Animal feed",
+         "name": "all_feed",
+         "value": 52135
+        },
+        "all_oats": {
+         "bau": 6865,
+         "description": "",
+         "index": 11,
+         "label": "Oats",
+         "name": "all_oats",
+         "value": 6865
+        },
+        "all_peas_beans": {
+         "bau": 15224,
+         "description": "",
+         "index": 6,
+         "label": "Peas & Beans",
+         "name": "all_peas_beans",
+         "value": 15224
+        },
+        "all_potato": {
+         "bau": 14711,
+         "description": "",
+         "index": 3,
+         "label": "Potatoes",
+         "name": "all_potato",
+         "value": 14711
+        },
+        "all_vegetables": {
+         "bau": 24663,
+         "description": "",
+         "index": 1,
+         "label": "Vegetables",
+         "name": "all_vegetables",
+         "value": 24663
+        },
+        "all_wheat": {
+         "bau": 80103,
+         "description": "",
+         "index": 8,
+         "label": "Wheat",
+         "name": "all_wheat",
+         "value": 80103
+        },
+        "fruit_soft": {
+         "bau": 1673,
+         "description": "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
+         "index": 9,
+         "label": "Soft fruit",
+         "name": "fruit_soft",
+         "value": 1673
+        },
+        "fruit_top": {
+         "bau": 1909,
+         "description": "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
+         "index": 2,
+         "label": "Top fruit",
+         "name": "fruit_top",
+         "value": 1909
+        },
+        "maize": {
+         "bau": 11141,
+         "description": "",
+         "index": 4,
+         "label": "Maize",
+         "name": "maize",
+         "value": 11141
+        },
+        "osr_winter": {
+         "bau": 37126,
+         "description": "",
+         "index": 5,
+         "label": "Oilseed Rape",
+         "name": "osr_winter",
+         "value": 37126
+        },
+        "sugarbeet": {
+         "bau": 26351,
+         "description": "",
+         "index": 10,
+         "label": "Sugar Beet",
+         "name": "sugarbeet",
+         "value": 26351
+        }
+       },
+       "livestock": {
+        "beef_lowland": {
+         "bau": 15639,
+         "description": "",
+         "index": 1,
+         "label": "Beef Cattle",
+         "name": "beef_lowland",
+         "value": 15639
+        },
+        "chicken": {
+         "bau": 107,
+         "description": "",
+         "index": 2,
+         "label": "Chicken",
+         "name": "chicken",
+         "value": 107
+        },
+        "dairy": {
+         "bau": 3298,
+         "description": "",
+         "index": 0,
+         "label": "Dairy Cattle",
+         "name": "dairy",
+         "value": 3298
+        },
+        "eggs": {
+         "bau": 282,
+         "description": "",
+         "index": 4,
+         "label": "Egg Production",
+         "name": "eggs",
+         "value": 282
+        },
+        "lamb_lowland": {
+         "bau": 2890,
+         "description": "",
+         "index": 5,
+         "label": "Lamb",
+         "name": "lamb_lowland",
+         "value": 2890
+        },
+        "pork": {
+         "bau": 19726,
+         "description": "",
+         "index": 3,
+         "label": "Pork",
+         "name": "pork",
+         "value": 19726
+        }
+       }
+      },
+      "outputs": {
+       "area": 370452,
+       "eatLancetPlate": [
+        0.324,
+        0.016,
+        0.061,
+        0.06,
+        0.23,
+        0.179,
+        0.048,
+        0.031,
+        0.05
+       ],
+       "environmentImpacts": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "nutritionaldelivery": [
+        0.7065174782954045,
+        0.06865042571562933,
+        0.00552748816988015,
+        0.06241373864501498,
+        0.005460633293601692,
+        0.07345339165668922,
+        0.023053888498169785,
+        0.04572293213486739,
+        0.00920002359074319
+       ],
+       "pesticideImpacts": [
+        0,
+        0,
+        0,
+        0,
+        0
+       ],
+       "production": []
+      },
+      "raw": {
+       "area": 370452,
+       "cropAreas": [
+        52135.08946744139,
+        24663.432770018826,
+        1909.0199859999998,
+        14711.88718562197,
+        11141.525948672726,
+        37126.64772653286,
+        15224.47737773804,
+        56609.27229142044,
+        80103.12507945269,
+        1673.3372840000002,
+        26351.40512303984,
+        6865.5535579734415
+       ],
+       "errorFlag": 0,
+       "grazingProps": {
+        "beef": 0.627753842680564,
+        "lamb": 0.666497397486353
+       },
+       "greenhouseGasEmissions": 789954.397252467,
+       "healthRiskFactors": [],
+       "livestockAreas": [
+        3298.282538431951,
+        15639.629566959595,
+        107.90023290830004,
+        19726.263711066058,
+        282.0148222160178,
+        2890.565651266223
+       ],
+       "maxCropArea": 406437.86137000006,
+       "maxUplandArea": 0,
+       "myUniqueLandscapeID": 101,
+       "nLeach": 32174.620665179573,
+       "nutritionaldelivery": [
+        0.7065174782954045,
+        0.06865042571562933,
+        0.00552748816988015,
+        0.06241373864501498,
+        0.005460633293601692,
+        0.07345339165668922,
+        0.023053888498169785,
+        0.04572293213486739,
+        0.00920002359074319
+       ],
+       "pesticideImpacts": [
+        1468603565.3418722,
+        5500591641.5936365,
+        8804478334.511103,
+        8928080102.439487,
+        19378629465.869225
+       ],
+       "production": 3252840.2598903165,
+       "profit": 330698980.3387884
+      },
+      "tags": [
+       1
+      ],
+      "time": 1795100786152
+     },
+     {
+      "area": {
+       "lowland": 377888,
+       "total": 377888,
+       "upland": 0
+      },
+      "changes": {
+       "changes": [
+        {
+         "dist": 7436,
+         "name": "osr_winter"
+        }
+       ],
+       "distance": 7436
+      },
+      "deleted": false,
+      "index": 1,
+      "inputs": {
+       "crops": {
+        "all_barley": {
+         "bau": 56609,
+         "description": "",
+         "index": 7,
+         "label": "Barley",
+         "name": "all_barley",
+         "value": 56609
+        },
+        "all_feed": {
+         "bau": 52135,
+         "description": "Feed is assumed to be wheat. 'Wheat' under the Cereals category will go to feed humans.",
+         "index": 0,
+         "label": "Animal feed",
+         "name": "all_feed",
+         "value": 52135
+        },
+        "all_oats": {
+         "bau": 6865,
+         "description": "",
+         "index": 11,
+         "label": "Oats",
+         "name": "all_oats",
+         "value": 6865
+        },
+        "all_peas_beans": {
+         "bau": 15224,
+         "description": "",
+         "index": 6,
+         "label": "Peas & Beans",
+         "name": "all_peas_beans",
+         "value": 15224
+        },
+        "all_potato": {
+         "bau": 14711,
+         "description": "",
+         "index": 3,
+         "label": "Potatoes",
+         "name": "all_potato",
+         "value": 14711
+        },
+        "all_vegetables": {
+         "bau": 24663,
+         "description": "",
+         "index": 1,
+         "label": "Vegetables",
+         "name": "all_vegetables",
+         "value": 24663
+        },
+        "all_wheat": {
+         "bau": 80103,
+         "description": "",
+         "index": 8,
+         "label": "Wheat",
+         "name": "all_wheat",
+         "value": 80103
+        },
+        "fruit_soft": {
+         "bau": 1673,
+         "description": "Soft fruit grows on ground plants and bushes, e.g. raspberries and strawberries",
+         "index": 9,
+         "label": "Soft fruit",
+         "name": "fruit_soft",
+         "value": 1673
+        },
+        "fruit_top": {
+         "bau": 1909,
+         "description": "Top fruit grows on trees: apples, pears, plums and cherries grow well in the UK",
+         "index": 2,
+         "label": "Top fruit",
+         "name": "fruit_top",
+         "value": 1909
+        },
+        "maize": {
+         "bau": 11141,
+         "description": "",
+         "index": 4,
+         "label": "Maize",
+         "name": "maize",
+         "value": 11141
+        },
+        "osr_winter": {
+         "bau": 37126,
+         "description": "",
+         "index": 5,
+         "label": "Oilseed Rape",
+         "name": "osr_winter",
+         "value": 44562
+        },
+        "sugarbeet": {
+         "bau": 26351,
+         "description": "",
+         "index": 10,
+         "label": "Sugar Beet",
+         "name": "sugarbeet",
+         "value": 26351
+        }
+       },
+       "livestock": {
+        "beef_lowland": {
+         "bau": 15639,
+         "description": "",
+         "index": 1,
+         "label": "Beef Cattle",
+         "name": "beef_lowland",
+         "value": 15639
+        },
+        "chicken": {
+         "bau": 107,
+         "description": "",
+         "index": 2,
+         "label": "Chicken",
+         "name": "chicken",
+         "value": 107
+        },
+        "dairy": {
+         "bau": 3298,
+         "description": "",
+         "index": 0,
+         "label": "Dairy Cattle",
+         "name": "dairy",
+         "value": 3298
+        },
+        "eggs": {
+         "bau": 282,
+         "description": "",
+         "index": 4,
+         "label": "Egg Production",
+         "name": "eggs",
+         "value": 282
+        },
+        "lamb_lowland": {
+         "bau": 2890,
+         "description": "",
+         "index": 5,
+         "label": "Lamb",
+         "name": "lamb_lowland",
+         "value": 2890
+        },
+        "pork": {
+         "bau": 19726,
+         "description": "",
+         "index": 3,
+         "label": "Pork",
+         "name": "pork",
+         "value": 19726
+        }
+       }
+      },
+      "outputs": {
+       "area": 377888,
+       "eatLancetPlate": [
+        0.324,
+        0.016,
+        0.061,
+        0.06,
+        0.23,
+        0.179,
+        0.048,
+        0.031,
+        0.05
+       ],
+       "environmentImpacts": [
+        -0.17,
+        -0.6,
+        5.18,
+        7.26,
+        6.03,
+        6.1,
+        7.47
+       ],
+       "nutritionaldelivery": [
+        0.6959158299698138,
+        0.07682702313548553,
+        0.0055650966110246895,
+        0.06280223586718754,
+        0.010122235350768383,
+        0.073342935277056,
+        0.0217182119655856,
+        0.044443672552060734,
+        0.00926275927101759
+       ],
+       "production": [
+        3.05,
+        -0.69,
+        2.01
+       ]
+      },
+      "raw": {
+       "cropAreas": [
+        52135,
+        24663,
+        1909,
+        14711,
+        11141,
+        44562,
+        15224,
+        56609,
+        80103,
+        1673,
+        26351,
+        6865
+       ],
+       "errorFlag": 0,
+       "grazingProps": {
+        "beef": 0.627753842680564,
+        "lamb": 0.666497397486353
+       },
+       "greenhouseGasEmissions": 788650.511776205,
+       "healthRiskFactors": [],
+       "livestockAreas": [
+        3298,
+        15639,
+        107,
+        19726,
+        282,
+        2890
+       ],
+       "maxCropArea": 406437.86137000006,
+       "maxUplandArea": 0,
+       "myUniqueLandscapeID": 101,
+       "nLeach": 31982.818750514496,
+       "nutritionaldelivery": [
+        0.6959158299698138,
+        0.07682702313548553,
+        0.0055650966110246895,
+        0.06280223586718754,
+        0.010122235350768383,
+        0.073342935277056,
+        0.0217182119655856,
+        0.044443672552060734,
+        0.00926275927101759
+       ],
+       "pesticideImpacts": [
+        1544625895.8206828,
+        5900047998.023214,
+        9335775613.553526,
+        9473020281.500586,
+        20825795839.251293
+       ],
+       "production": 3230241.5818599747,
+       "profit": 340794327.4102699
+      },
+      "tags": [
+       38
+      ],
+      "time": 1795100790530
+     }
+    ],
+    "id": "50a7:6b77:0fc1:e21b:29a6:c868:af66",
+    "opened": 1795100786.0
+   },
+   "session_id": "50a7:6b77:0fc1:e21b:29a6:c868:af66",
+   "state_index": 0,
+   "tags": [],
+   "text": "Comment posted by the Vue 3 migration check <b>not bold</b>",
+   "timestamp": 1795100796.0,
+   "user_id": "e2e-user-1"
+  }
+ ],
+ "filter": 0,
+ "length": 1,
+ "page": 1,
+ "size": 4,
+ "sort": 0
+}

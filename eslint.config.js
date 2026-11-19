@@ -14,5 +14,12 @@ export default [
         rules: {
             'vue/multi-word-component-names': 'off'
         }
+    },
+    {
+        // Playwright specs, fixtures and the fixture recorder run in Node
+        files: ['tests/e2e/**/*.{js,mjs}'],
+        languageOptions: {
+            globals: { ...globals.node }
+        }
     }
 ]

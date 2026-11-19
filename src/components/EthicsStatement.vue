@@ -132,23 +132,25 @@
             </p>
             <h5>Research Team:</h5>
             <table>
-              <tr>
-                <td>Angelina Sanderson Bellamy	  </td><td>Cardiff University</td>
-              </tr><tr>
-                <td>Ella Furness 			            </td><td>Cardiff University</td>
-              </tr><tr>
-                <td>Adrian Clear 			            </td><td>Northumbria University</td>
-              </tr><tr>
-                <td>Samantha Finnigan 	        	</td><td>Northumbria University</td>
-              </tr><tr>
-                <td>Alice Milne 			            </td><td>Rothamstead Research</td>
-              </tr><tr>
-                <td>Ryan Sharp			              </td><td>Rothamstead Research</td>
-              </tr><tr>
-                <td>Elliot Meador 		          	</td><td>Scotland’s Rural College (SRUC)</td>
-              </tr><tr>
-                <td>Susanna Mills			            </td><td>Newcastle University</td>
-              </tr>
+              <tbody>
+                <tr>
+                  <td>Angelina Sanderson Bellamy	  </td><td>Cardiff University</td>
+                </tr><tr>
+                  <td>Ella Furness 			            </td><td>Cardiff University</td>
+                </tr><tr>
+                  <td>Adrian Clear 			            </td><td>Northumbria University</td>
+                </tr><tr>
+                  <td>Samantha Finnigan 	        	</td><td>Northumbria University</td>
+                </tr><tr>
+                  <td>Alice Milne 			            </td><td>Rothamstead Research</td>
+                </tr><tr>
+                  <td>Ryan Sharp			              </td><td>Rothamstead Research</td>
+                </tr><tr>
+                  <td>Elliot Meador 		          	</td><td>Scotland’s Rural College (SRUC)</td>
+                </tr><tr>
+                  <td>Susanna Mills			            </td><td>Newcastle University</td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>

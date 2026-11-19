@@ -1,0 +1,347 @@
+{
+ "groups": {
+  "0": [
+   10,
+   11,
+   12,
+   13,
+   14,
+   15,
+   16,
+   17,
+   18,
+   19,
+   20,
+   21,
+   22,
+   23,
+   24,
+   25,
+   26,
+   27
+  ],
+  "1": [
+   30,
+   31,
+   32,
+   33,
+   34,
+   35,
+   36,
+   37,
+   38,
+   39,
+   40,
+   41,
+   42,
+   43,
+   44,
+   45,
+   46,
+   47
+  ],
+  "2": [
+   50,
+   51,
+   52,
+   53,
+   54
+  ],
+  "3": [
+   55,
+   56,
+   57,
+   58,
+   59,
+   60
+  ],
+  "4": [
+   61,
+   62,
+   63,
+   64,
+   65,
+   66,
+   67,
+   68,
+   69,
+   70
+  ],
+  "5": [
+   71,
+   72,
+   73,
+   74,
+   75
+  ],
+  "-2": [
+   2,
+   3
+  ],
+  "-1": [
+   1
+  ]
+ },
+ "tags": {
+  "1": {
+   "group": -1,
+   "name": "Business-as-usual"
+  },
+  "2": {
+   "group": -2,
+   "name": "Loaded"
+  },
+  "3": {
+   "group": -2,
+   "name": "Restored"
+  },
+  "10": {
+   "group": 0,
+   "name": "Small Business"
+  },
+  "11": {
+   "group": 0,
+   "name": "Food Poverty"
+  },
+  "12": {
+   "group": 0,
+   "name": "Consumption"
+  },
+  "13": {
+   "group": 0,
+   "name": "Social Media"
+  },
+  "14": {
+   "group": 0,
+   "name": "Education"
+  },
+  "15": {
+   "group": 0,
+   "name": "Regulation"
+  },
+  "16": {
+   "group": 0,
+   "name": "Government"
+  },
+  "17": {
+   "group": 0,
+   "name": "Capitalism"
+  },
+  "18": {
+   "group": 0,
+   "name": "Profits"
+  },
+  "19": {
+   "group": 0,
+   "name": "Middle-actors"
+  },
+  "20": {
+   "group": 0,
+   "name": "Wholesalers"
+  },
+  "21": {
+   "group": 0,
+   "name": "Climate Change"
+  },
+  "22": {
+   "group": 0,
+   "name": "Waste"
+  },
+  "23": {
+   "group": 0,
+   "name": "Packaging"
+  },
+  "24": {
+   "group": 0,
+   "name": "Expertise"
+  },
+  "25": {
+   "group": 0,
+   "name": "Experience"
+  },
+  "26": {
+   "group": 0,
+   "name": "Organic"
+  },
+  "27": {
+   "group": 0,
+   "name": "No-Till"
+  },
+  "30": {
+   "group": 1,
+   "name": "Soft fruit"
+  },
+  "31": {
+   "group": 1,
+   "name": "Peas & Beans"
+  },
+  "32": {
+   "group": 1,
+   "name": "Oats"
+  },
+  "33": {
+   "group": 1,
+   "name": "Sugar Beet"
+  },
+  "34": {
+   "group": 1,
+   "name": "Barley"
+  },
+  "35": {
+   "group": 1,
+   "name": "Maize"
+  },
+  "36": {
+   "group": 1,
+   "name": "Wheat"
+  },
+  "37": {
+   "group": 1,
+   "name": "Vegetables"
+  },
+  "38": {
+   "group": 1,
+   "name": "Oilseed Rape"
+  },
+  "39": {
+   "group": 1,
+   "name": "Potatoes"
+  },
+  "40": {
+   "group": 1,
+   "name": "Top fruit"
+  },
+  "41": {
+   "group": 1,
+   "name": "Animal Feed"
+  },
+  "42": {
+   "group": 1,
+   "name": "Dairy Cattle"
+  },
+  "43": {
+   "group": 1,
+   "name": "Beef Cattle"
+  },
+  "44": {
+   "group": 1,
+   "name": "Chicken"
+  },
+  "45": {
+   "group": 1,
+   "name": "Pork"
+  },
+  "46": {
+   "group": 1,
+   "name": "Egg Production"
+  },
+  "47": {
+   "group": 1,
+   "name": "Lamb"
+  },
+  "50": {
+   "group": 2,
+   "name": "Production"
+  },
+  "51": {
+   "group": 2,
+   "name": "Greenhouse Gas Emissions"
+  },
+  "52": {
+   "group": 2,
+   "name": "Nitrogen Leaching"
+  },
+  "53": {
+   "group": 2,
+   "name": "Profit"
+  },
+  "54": {
+   "group": 2,
+   "name": "Calorie Production"
+  },
+  "55": {
+   "group": 3,
+   "name": "Pesticide Impacts"
+  },
+  "56": {
+   "group": 3,
+   "name": "Ground Water"
+  },
+  "57": {
+   "group": 3,
+   "name": "Fish"
+  },
+  "58": {
+   "group": 3,
+   "name": "Birds"
+  },
+  "59": {
+   "group": 3,
+   "name": "Bees"
+  },
+  "60": {
+   "group": 3,
+   "name": "Beneficial Arthropods"
+  },
+  "61": {
+   "group": 4,
+   "name": "Nutrition"
+  },
+  "62": {
+   "group": 4,
+   "name": "Vegetables"
+  },
+  "63": {
+   "group": 4,
+   "name": "Tubers"
+  },
+  "64": {
+   "group": 4,
+   "name": "Whole Grains"
+  },
+  "65": {
+   "group": 4,
+   "name": "Plant Protein"
+  },
+  "66": {
+   "group": 4,
+   "name": "Animal Protein"
+  },
+  "67": {
+   "group": 4,
+   "name": "Added Sugars"
+  },
+  "68": {
+   "group": 4,
+   "name": "Added Fats"
+  },
+  "69": {
+   "group": 4,
+   "name": "Dairy"
+  },
+  "70": {
+   "group": 4,
+   "name": "Fruit"
+  },
+  "71": {
+   "group": 5,
+   "name": "Health"
+  },
+  "72": {
+   "group": 5,
+   "name": "Stroke"
+  },
+  "73": {
+   "group": 5,
+   "name": "Cancer"
+  },
+  "74": {
+   "group": 5,
+   "name": "Heart Disease"
+  },
+  "75": {
+   "group": 5,
+   "name": "Diabetes"
+  }
+ }
+}

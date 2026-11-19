@@ -4,7 +4,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
     plugins: [vue()],
 
     // Keep the VUE_APP_ prefix so VUE_APP_GIT_HASH (Dockerfile, CI) reaches import.meta.env
@@ -23,5 +23,21 @@ export default defineConfig({
                 target: 'http://127.0.0.1:8000'
             }
         }
+    },
+
+    // `vite preview --mode e2e` (Playwright) gets no API proxy, so a request the mocks miss
+    // fails the test instead of silently reaching a backend running locally
+    preview: mode === 'e2e' ? { proxy: {} } : {},
+
+    // Unit and component tests (Vitest). The Playwright e2e tests live in tests/e2e.
+    test: {
+        environment: 'jsdom',
+        include: ['tests/unit/**/*.spec.js'],
+        env: { VUE_APP_GIT_HASH: 'testing' },
+        coverage: {
+            provider: 'v8',
+            include: ['src/**/*.{js,vue}'],
+            reporter: ['text-summary', 'html']
+        }
     }
-})
+}))

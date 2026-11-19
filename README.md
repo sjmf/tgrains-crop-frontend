@@ -25,6 +25,9 @@ VUE_APP_GIT_HASH=testing
 
  (this exists so that when a new version of the code is pushed to the production server, the Vuex store will be reloaded from default).
 
+### Testing
+`npm run test:all` runs lint, the unit tests (Vitest) and the end-to-end tests (Playwright, with the API mocked). See [TESTING.md](TESTING.md).
+
 I quite like JetBrains WebStorm for development, but you can use whatever IDE you like by configuring it to run this command as the 'run' command.
 
 
