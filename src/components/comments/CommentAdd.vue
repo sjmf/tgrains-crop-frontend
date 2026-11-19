@@ -146,11 +146,12 @@
   </div>
 </template>
 <script>
-    import TagSelect from "@/components/comments/TagSelect";
-    import CommentCard from "@/components/comments/CommentCard";
+    import TagSelect from "@/components/comments/TagSelect.vue";
+    import CommentCard from "@/components/comments/CommentCard.vue";
 
     export default {
         name: 'CommentAdd',
+        emits: ['cancelReply', 'closeForm'],
         components: {
           CommentCard,
           TagSelect

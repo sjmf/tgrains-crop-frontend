@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-    import AreaProgress from "@/components/AreaProgress";
+    import AreaProgress from "@/components/AreaProgress.vue";
     import store from "../store";
 
     export default {

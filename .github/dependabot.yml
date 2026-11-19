@@ -16,24 +16,6 @@ updates:
     groups:
       npm-minor-and-patch:
         update-types: ["minor", "patch"]
-    ignore:
-      # The app is Vue 2 + Vuex 3 + vue-router 3 + Chart.js 2; majors are a migration, not an update
-      - dependency-name: "vue"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vue-template-compiler"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vuex"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vue-router"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "chart.js"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "vue-chartjs"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "eslint-plugin-vue"
-        update-types: ["version-update:semver-major"]
 
   - package-ecosystem: "github-actions"
     directory: "/"

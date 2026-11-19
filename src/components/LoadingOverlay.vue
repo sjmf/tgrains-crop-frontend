@@ -1,5 +1,5 @@
 <template>
-  <fragment v-if="loading">
+  <template v-if="loading">
     <div class="card-aligner" :class="{offset: offset}">
       <div class="card">
         <div class="card-content">
@@ -21,7 +21,7 @@
       </div>
     </div>
     <div class="loading"></div>
-  </fragment>
+  </template>
 </template>
 <script>
     export default {

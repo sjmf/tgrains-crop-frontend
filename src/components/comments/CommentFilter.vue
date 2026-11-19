@@ -124,10 +124,10 @@
 </template>
 
 <script>
-const range = require('lodash/range');
+import range from 'lodash/range';
 
-import CommentCard from "@/components/comments/CommentCard";
-import Tag from "@/components/comments/Tag";
+import CommentCard from "@/components/comments/CommentCard.vue";
+import Tag from "@/components/comments/Tag.vue";
 
 export default {
   name: "CommentFilter",
@@ -241,8 +241,7 @@ export default {
       else if (this.tags !== undefined)
         value = 4
 
-      // $set maintains Vue reactivity
-      this.$set(this, 'filter_value', value)
+      this.filter_value = value
       this.setMaterialFormSelectSelected('#filter-select', value)
     },
 

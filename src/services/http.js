@@ -40,7 +40,7 @@ export default {
         } else {
             const regex = /(invalid_argument: )(ERROR: )(.+)$/gm
             let match = regex.exec(response.data.status)
-            let errormessage = ""
+            let errormessage
 
             // Parse error messages from model
             if(Array.isArray(match) && match.length > 0) {

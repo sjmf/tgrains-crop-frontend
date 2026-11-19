@@ -1,48 +1,32 @@
-import Vue from 'vue'
+import { createApp } from 'vue'
 import App from './App.vue'
-
-// Import fragment plugin for multi-root components
-import Fragment from 'vue-fragment'
-Vue.use(Fragment.Plugin)
 
 // Import Axios for HTTP AJAX requests
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-Vue.use(VueAxios, axios)
 
-// Import Materialize library for UI and attach it to the Vue prototype
-import Material from 'materialize-css'
+// Import Materialize library for UI
 import M from 'materialize-css'
-Vue.use(Material);
-Vue.prototype.$_M = M
 
 import 'typeface-roboto';
-import 'material-icons';
+import 'material-icons/iconfont/filled.css';
 
-require('@/css/app.scss');
-require('@/css/styles.css');
+import '@/css/app.scss';
+import '@/css/styles.css';
 
-// Import and set up smooth scrolling
-import VueSmoothScroll from 'vue2-smooth-scroll'
-Vue.use(VueSmoothScroll, {
-  duration: 400,
-  updateHistory: false,
-})
-
-// Import the vue router
+// Import the vue router and data store
 import router from './router'
-
-/// Disable “development mode” warning
-// Vue.config.productionTip = false
+import store from './store'
 
 // Setup vue
-new Vue({
-  render: h => h(App),
-  router,
+const app = createApp(App)
 
-  data: function() {
-    return {
-      title: 'T-GRAINS Crop Model',
-    }
-  }
-}).$mount('#app')
+app.use(router)
+app.use(store)
+app.use(VueAxios, axios)
+
+// Attach Materialize to every component as this.$_M
+app.config.globalProperties.$_M = M
+
+// Mount once the initial route has resolved: App.vue reads $route.params on mount
+router.isReady().then(() => app.mount('#app'))

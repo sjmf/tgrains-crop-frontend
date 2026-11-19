@@ -55,7 +55,7 @@
   </ul>
 </template>
 <script>
-import Tag from "@/components/comments/Tag";
+import Tag from "@/components/comments/Tag.vue";
 
 export default {
   name: 'TagSelect',

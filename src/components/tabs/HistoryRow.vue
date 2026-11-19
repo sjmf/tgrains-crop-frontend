@@ -8,7 +8,7 @@
           <strong>{{index +1}}.</strong>&nbsp;
           <i v-if="index === historyIndex" class="tiny material-icons">live_tv</i>
           <i v-else class="tiny material-icons">timer</i>
-          <span class="datetime"> {{ time | moment }}</span>
+          <span class="datetime"> {{ formatTime(time) }}</span>
         </div>
 
         <div class="col s5">
@@ -26,13 +26,13 @@
           </a>
         </div>
 
-        <fragment v-else>
+        <template v-else>
         <!-- NB: using v-show here as v-if seems to replace the component too soon,
                  triggering the anchor for #comment-head when load clicked... :/ -->
         <div class="col s3" v-show="index === historyIndex">
-          <a href="#comment-head" v-smooth-scroll
+          <a href="#comment-head"
              class="btn green right btn-small btn-flat waves-effect waves-green nobr"
-             @click="$emit('comment')">
+             @click.prevent="scrollToComments(); $emit('comment')">
             <i class="material-icons right">comment</i>Comment
           </a>
         </div>
@@ -48,7 +48,7 @@
             <i class="material-icons">delete</i>
           </a>
         </div>
-        </fragment>
+        </template>
 
       </div>
     </div>
@@ -56,10 +56,11 @@
 </template>
 
 <script>
-import Tag from "@/components/comments/Tag";
+import Tag from "@/components/comments/Tag.vue";
 import moment from 'moment';
 export default {
   name: 'history-row',
+  emits: ['comment', 'load'],
   components: {
     Tag
   },
@@ -71,11 +72,6 @@ export default {
     deleted: Boolean,
     trashView: Boolean,
   },
-  filters: {
-    moment: function (date) {
-      return moment(date).format('HH:mm:ss, Do MMM YYYY');
-    }
-  },
   computed: {
     historyIndex() {
       return this.$store.state.historyIndex
@@ -85,6 +81,12 @@ export default {
     }
   },
   methods: {
+    formatTime(date) {
+      return moment(date).format('HH:mm:ss, Do MMM YYYY');
+    },
+    scrollToComments() {
+      document.getElementById('comment-head').scrollIntoView({ behavior: 'smooth' })
+    },
     loadState() {
       // Load state from history and activate its tags
       this.$store.commit("loadFromHistory", {

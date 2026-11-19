@@ -1,6 +1,6 @@
 // Import materialize-css colors
-@import "~materialize-css/sass/components/color-variables";
-@import "~materialize-css/sass/components/color-classes";
+@import "materialize-css/sass/components/color-variables";
+@import "materialize-css/sass/components/color-classes";
 
 // 1. Colors
 // ==========================================================================
@@ -24,7 +24,7 @@ $footer-copyright-bg-color: $primary-color !default;
 
 
 // Now import the rest of materialize-css to apply the colour changes
-@import "~materialize-css/sass/materialize";
+@import "materialize-css/sass/materialize";
 
 // Other Rules
 // ==========================================================================

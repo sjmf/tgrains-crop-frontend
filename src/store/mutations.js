@@ -1,10 +1,9 @@
 // mutations.js
-import Vue from 'vue'
 
 import {difference, distanceFromBAU, formatData, createUniqueID, setUndef} from "@/store/helpers";
 import {initial_state} from "@/store/state";
 
-const cloneDeep = require('lodash/cloneDeep');
+import cloneDeep from 'lodash/cloneDeep';
 
 export default {
     /**
@@ -272,14 +271,13 @@ export default {
      * @param tags
      */
     pushHistory(state, tags = []) {
-        // Get automatic tags for non-bau states
-        let result;
-        if(tags !== [1]) {
-            result = distanceFromBAU(state)
+        // Get automatic tags from the changes (none for a business-as-usual state).
+        // `changes` must always be set: history consumers read changes.distance.
+        let result = distanceFromBAU(state)
 
-            for(let c of result.changes)
-                tags.push(state.tags.mapping[c.name])
-        }
+        for(let c of result.changes)
+            tags.push(state.tags.mapping[c.name])
+
         // Keep unique tags only
         tags = [...new Set(tags)]
 
@@ -440,13 +438,8 @@ export default {
     setTagSelected(state, payload) {
         let [id, value] = Object.values(payload)
 
-        /*
-         * Maintain reactivity by using Vue.set as 'tags' is loaded after page via AJAX!
-         * https://medium.com/js-dojo/reactivity-in-vue-js-and-its-pitfalls-de07a29c9407
-         * Basically, don't do this: `state.tags.tags[id].selected = value`
-         *     as the prop `selected` doesn't yet exist and isn't watched by Vue
-         */
-        Vue.set(state.tags.tags[id], 'selected', value)
+        // Vue 3 tracks properties added after load ('tags' arrives via AJAX), so plain assignment is reactive
+        state.tags.tags[id].selected = value
     },
 
     /**
@@ -455,16 +448,20 @@ export default {
      * @param index
      */
     activateTags(state, index) {
+        // Tags load asynchronously, and may not have arrived yet on first page load
+        if (!Array.isArray(state.tags.groups[1]))
+            return
+
         // First, deactivate crop/livestock area tags
         for (let id of state.tags.groups[1]) {
-            Vue.set(state.tags.tags[id], 'selected', false)  // Reactive prop
+            state.tags.tags[id].selected = false
         }
 
         // Load tags from group 1 only (input areas)
         let history = state.history[index]
         for(let id of history.tags) {
             if(state.tags.tags[id].group === 1) {
-                Vue.set(state.tags.tags[id], 'selected', true)  // Reactive prop
+                state.tags.tags[id].selected = true
             }
         }
     },

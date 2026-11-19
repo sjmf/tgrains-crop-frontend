@@ -31,11 +31,14 @@
       <!-- VISUALISATION CONTAINERS (TABBED) -->
       <div class="col s12">
         <div class="container">
-          <keep-alive>
-            <router-view @load="(index) => $emit('load', index)"
+          <router-view v-slot="{ Component }">
+            <keep-alive>
+              <component :is="Component"
+                         @load="(index) => $emit('load', index)"
                          @comment="(index) => $refs.containerComments.attachState(index)"
                          :chart-height="chartHeight"/>
-          </keep-alive>
+            </keep-alive>
+          </router-view>
         </div>
       </div>
 
@@ -54,15 +57,16 @@
 </template>
 
 <script>
-    import LandscapeJumbotron from "@/components/LandscapeJumbotron";
-    import TabBar from "@/components/tabs/TabBar";
-    import LoadingOverlay from "@/components/LoadingOverlay";
-    import VizDebug from "@/components/visualisations/VizDebug";
-    import ContainerComments from "@/components/comments/ContainerComments";
-    import MessageBox from "@/components/MessageBox";
+    import LandscapeJumbotron from "@/components/LandscapeJumbotron.vue";
+    import TabBar from "@/components/tabs/TabBar.vue";
+    import LoadingOverlay from "@/components/LoadingOverlay.vue";
+    import VizDebug from "@/components/visualisations/VizDebug.vue";
+    import ContainerComments from "@/components/comments/ContainerComments.vue";
+    import MessageBox from "@/components/MessageBox.vue";
 
     export default {
         name: "ContainerMain",
+        emits: ['load'],
         components: {
             LoadingOverlay,
             TabBar,

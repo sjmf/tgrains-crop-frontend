@@ -1,15 +1,12 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
 import ContainerMain from '../components/ContainerMain.vue'
-import TabEnvironment from "@/components/tabs/TabEnvironment";
-import TabProduction from "@/components/tabs/TabProduction";
-import TabNutrition from "@/components/tabs/TabNutrition";
-import TabHistory from "@/components/tabs/TabHistory";
-import RouteError from "@/components/RouteError";
-import EthicsStatement from "@/components/EthicsStatement";
-
-Vue.use(VueRouter)
+import TabEnvironment from "@/components/tabs/TabEnvironment.vue";
+import TabProduction from "@/components/tabs/TabProduction.vue";
+import TabNutrition from "@/components/tabs/TabNutrition.vue";
+import TabHistory from "@/components/tabs/TabHistory.vue";
+import RouteError from "@/components/RouteError.vue";
+import EthicsStatement from "@/components/EthicsStatement.vue";
 
 const tabs = [
   {
@@ -37,7 +34,7 @@ const routes = [
   },
   {
     path: '/landscape/:id',
-    redirect: '/landscape/:id/production',
+    redirect: to => `/landscape/${to.params.id}/production`,
     component: ContainerMain,
     children: tabs,
   },
@@ -46,13 +43,13 @@ const routes = [
     component: EthicsStatement,
   },
   {
-    path: '*',
+    path: '/:pathMatch(.*)*',
     component: RouteError
   }
 ]
 
-const router = new VueRouter({
-  mode: 'history',
+const router = createRouter({
+  history: createWebHistory(),
   routes
 })
 

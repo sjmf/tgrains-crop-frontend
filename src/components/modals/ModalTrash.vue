@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import HistoryRow from "@/components/tabs/HistoryRow";
+import HistoryRow from "@/components/tabs/HistoryRow.vue";
 import ModalMixin from "@/components/modals/modalMixin";
 
 export default {

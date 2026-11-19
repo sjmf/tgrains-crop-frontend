@@ -1,5 +1,4 @@
 <template>
-  <fragment>
     <!-- NAVIGATION -->
     <navbar-header
         :website-title="meta.websiteTitle"
@@ -18,19 +17,16 @@
 
     <!-- FOOTER -->
     <container-footer></container-footer>
-  </fragment>
 </template>
 
 <script>
     import NavbarHeader from '@/components/NavbarHeader.vue'
-    import SidebarMenu from '@/components/sidebar/SidebarMenu';
-    import ContainerFooter from '@/components/ContainerFooter';
-    import ModalWelcome from '@/components/modals/ModalWelcome';
-    import store from "@/store";
+    import SidebarMenu from '@/components/sidebar/SidebarMenu.vue';
+    import ContainerFooter from '@/components/ContainerFooter.vue';
+    import ModalWelcome from '@/components/modals/ModalWelcome.vue';
 
     export default {
         name: 'App',
-        store,
         components: {
             ContainerFooter,
             SidebarMenu,

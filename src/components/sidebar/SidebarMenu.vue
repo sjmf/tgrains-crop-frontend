@@ -5,7 +5,7 @@
 
     <!-- VALUE SELECT SIDEBAR -->
     <ul>
-      <land-area-menu v-on="$listeners"/>
+      <land-area-menu/>
 
       <li>
         <div class="divider"></div>
@@ -70,9 +70,9 @@
 </template>
 
 <script>
-    import LandAreaMenu from "@/components/sidebar/LandAreaMenu"
-    import LoadingOverlay from "@/components/LoadingOverlay";
-    import VariableGroup from "@/components/sidebar/VariableGroup";
+    import LandAreaMenu from "@/components/sidebar/LandAreaMenu.vue"
+    import LoadingOverlay from "@/components/LoadingOverlay.vue";
+    import VariableGroup from "@/components/sidebar/VariableGroup.vue";
 
     export default {
         name: 'SidebarMenu',
@@ -142,17 +142,15 @@
              * If errors are found, we disable the 'submit' button to prevent kicking off a model job with bad data.
              */
             validateForm() {
-                // To make properties reactive, we need to use Vue.set (this.$set is an alias)
-                // See https://vuejs.org/v2/guide/reactivity.html#Change-Detection-Caveats
                 for (let item in this.crops) {
                     if (Object.prototype.hasOwnProperty.call(this.crops, item)) {
-                        this.$set(this.errors, item, this.checkErrors(this.crops[item].value))
+                        this.errors[item] = this.checkErrors(this.crops[item].value)
                     }
                 }
 
                 for (let item in this.livestock) {
                     if (Object.prototype.hasOwnProperty.call(this.livestock, item)) {
-                        this.$set(this.errors, item, this.checkErrors(this.livestock[item].value))
+                        this.errors[item] = this.checkErrors(this.livestock[item].value)
                     }
                 }
 
