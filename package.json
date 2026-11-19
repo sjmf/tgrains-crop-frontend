@@ -18,7 +18,7 @@
     "materialize-css": "^1.0.0",
     "moment": "^2.30.0",
     "typeface-roboto": "^1.1.13",
-    "vue": "^2.7.16",
+    "vue": "^3.0.0",
     "vue-axios": "^3.6.0",
     "vue-chartjs": "^3.5.1",
     "vue-fragment": "^1.6.0",
