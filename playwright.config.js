@@ -21,7 +21,7 @@ export default defineConfig({
         { name: 'chromium', use: { ...devices['Desktop Chrome'], viewport: { width: 1400, height: 900 } } },
     ],
     webServer: {
-        command: `npm run build && npx vite preview --port ${port} --strictPort`,
+        command: `npx vite build --mode e2e && npx vite preview --mode e2e --port ${port} --strictPort`,
         url: `http://localhost:${port}`,
         env: { VUE_APP_GIT_HASH: 'e2e' },
         reuseExistingServer: !process.env.CI,

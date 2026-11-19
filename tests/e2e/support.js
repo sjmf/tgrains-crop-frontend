@@ -7,22 +7,20 @@ import { readFileSync } from 'node:fs'
 const fixture = (name) => JSON.parse(readFileSync(new URL(`./fixtures/${name}.json`, import.meta.url)))
 
 /**
- * Install the mocked API on a page. It mimics the real flow: strings and model runs reply 303 to
- * /api/status/<id>, which reports PENDING once before SUCCESS; BAU comes straight from the cache.
- * Returns an object recording every API request, for assertions.
+ * Install the mocked API on a page and return an object recording every API request.
+ *
+ * The real API answers strings and model runs with a 303 to /api/status/<id>, which the app polls.
+ * Playwright's page.route does not see the request the browser makes when it follows a redirect,
+ * so the mock answers those calls with the finished task directly (BAU already comes straight from
+ * the cache). Redirect handling and polling are covered by tests/unit/services/http.spec.js.
  */
 export async function mockApi(page) {
     const api = { requests: [], comments: structuredClone(fixture('comments-101').comments) }
-    const tasks = {}       // task id -> { polls, body }
-    let nextTask = 0
 
     const json = (route, body, status = 200, headers = {}) =>
         route.fulfill({ status, headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) })
-    const deferred = (route, body) => {
-        const id = `task-${nextTask++}`
-        tasks[id] = { polls: 0, body }
-        return json(route, { task_id: id }, 303, { Location: `/api/status/${id}` })
-    }
+    // A Celery task that has already finished: the body /api/status/<id> would return
+    const finished = (route, body) => json(route, body)
     const commentList = (url) => ({
         comments: api.comments, filter: 0, length: api.comments.length,
         page: Number(url.searchParams.get('page') || 1), size: Number(url.searchParams.get('size') || 4), sort: 0,
@@ -37,14 +35,9 @@ export async function mockApi(page) {
         try { body = req.postDataJSON() } catch { body = req.postData() }
         api.requests.push({ method: req.method(), path, query: Object.fromEntries(url.searchParams), body })
 
-        if (req.method() === 'GET' && path === '/api/strings') return deferred(route, fixture(`strings-${landscape}`))
+        if (req.method() === 'GET' && path === '/api/strings') return finished(route, fixture(`strings-${landscape}`))
         if (req.method() === 'GET' && path === '/api/model') return json(route, fixture(`bau-${landscape}`))
-        if (req.method() === 'POST' && path === '/api/model') return deferred(route, fixture(`model-${body.landscape_id}`))
-        if (req.method() === 'GET' && path.startsWith('/api/status/')) {
-            const task = tasks[path.split('/').pop()]
-            if (!task) return json(route, { state: 'FAILURE', status: 'unknown task' })
-            return json(route, task.polls++ === 0 ? { state: 'PENDING', status: '' } : task.body)
-        }
+        if (req.method() === 'POST' && path === '/api/model') return finished(route, fixture(`model-${body.landscape_id}`))
         if (req.method() === 'GET' && path === '/api/tags') return json(route, fixture('tags'))
         if (req.method() === 'GET' && path === '/api/comment') return json(route, commentList(url))
         if (req.method() === 'POST' && path === '/api/comment') {

@@ -36,9 +36,12 @@ Coverage only counts unit tests; the UI flows are covered by the e2e suite.
 [Playwright](https://playwright.dev) drives Chromium against the production build
 (`vite build` + `vite preview` on port 4173, started by `playwright.config.js`).
 **No backend is needed**: `support.js` answers every `/api/**` request from the JSON fixtures in
-`tests/e2e/fixtures/`, mimicking the real flow (303 to `/api/status/<id>`, one `PENDING` poll,
-then `SUCCESS`; BAU straight from the cache). Any request to an unmocked route fails the test,
-and so does any console error or uncaught page error.
+`tests/e2e/fixtures/`. Strings and model runs come back as already-finished Celery tasks, because
+Playwright can't intercept the request a browser makes when following the real API's 303 redirect;
+the redirect and status polling are unit-tested in `tests/unit/services/http.spec.js` instead.
+Any request to an unmocked route fails the test, and so does any console error or uncaught page
+error. The preview server runs with `--mode e2e`, which turns off its `/api` proxy, so a request
+the mocks miss can't quietly reach a backend you happen to have running locally.
 
 | Spec | Covers |
 |---|---|
