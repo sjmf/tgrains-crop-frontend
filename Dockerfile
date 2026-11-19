@@ -18,7 +18,7 @@ COPY ./ .
 RUN npm run build
 
 # Deploy
-FROM nginx:alpine AS production
+FROM nginx:1.31.9-alpine AS production
 
 COPY --from=build /usr/src/app/dist /var/www/html/
 COPY ./conf/subsite.conf /etc/nginx/conf.d/default.conf
