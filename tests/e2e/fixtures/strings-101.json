@@ -1,0 +1,39 @@
+{
+ "result": {
+  "crops": [
+   "all_feed",
+   "all_vegetables",
+   "fruit_top",
+   "all_potato",
+   "maize",
+   "osr_winter",
+   "all_peas_beans",
+   "all_barley",
+   "all_wheat",
+   "fruit_soft",
+   "sugarbeet",
+   "all_oats"
+  ],
+  "food_groups": [
+   "whole_grain",
+   "starchy_veg",
+   "dairy",
+   "animal_protein",
+   "plant_protein",
+   "fat",
+   "sugar",
+   "vegetable",
+   "fruit"
+  ],
+  "livestock": [
+   "dairy",
+   "beef_lowland",
+   "chicken",
+   "pork",
+   "eggs",
+   "lamb_lowland"
+  ]
+ },
+ "state": "SUCCESS",
+ "status": ""
+}

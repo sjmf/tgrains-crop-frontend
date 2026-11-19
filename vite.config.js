@@ -23,5 +23,17 @@ export default defineConfig({
                 target: 'http://127.0.0.1:8000'
             }
         }
+    },
+
+    // Unit and component tests (Vitest). The Playwright e2e tests live in tests/e2e.
+    test: {
+        environment: 'jsdom',
+        include: ['tests/unit/**/*.spec.js'],
+        env: { VUE_APP_GIT_HASH: 'testing' },
+        coverage: {
+            provider: 'v8',
+            include: ['src/**/*.{js,vue}'],
+            reporter: ['text-summary', 'html']
+        }
     }
 })
